@@ -1,0 +1,277 @@
+/* =========================================================
+   SIPHER Personas – App Styles
+   ========================================================= */
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg:          #f4f5f7;
+  --surface:     #ffffff;
+  --border:      #e2e5ec;
+  --text:        #1a1d23;
+  --text-muted:  #6b7280;
+  --accent:      #4f46e5;
+  --accent-light:#ede9fe;
+  --radius:      10px;
+  --shadow:      0 1px 4px rgba(0,0,0,.08), 0 4px 16px rgba(0,0,0,.06);
+
+  /* Group colours */
+  --c-employed:   #3b82f6;
+  --c-self:       #8b5cf6;
+  --c-retired:    #f59e0b;
+  --c-unemployed: #ef4444;
+  --c-student:    #10b981;
+  --c-sick:       #f97316;
+  --c-other:      #6b7280;
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  font-size: 14px;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* ----- Header ----- */
+header {
+  background: var(--accent);
+  color: #fff;
+  padding: 0 24px;
+  height: 56px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 2px 8px rgba(79,70,229,.35);
+}
+header h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
+header span { font-size: 13px; opacity: .75; }
+
+/* ----- Controls bar ----- */
+.controls {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 14px 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+  position: sticky;
+  top: 0;
+  z-index: 10;
+}
+
+.controls label { font-weight: 600; font-size: 13px; white-space: nowrap; }
+
+select {
+  padding: 6px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  font-size: 13px;
+  background: var(--surface);
+  color: var(--text);
+  min-width: 260px;
+  cursor: pointer;
+}
+select:focus { outline: 2px solid var(--accent); border-color: transparent; }
+
+/* Group filter tabs */
+.group-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-left: auto;
+}
+
+.tab {
+  padding: 5px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 2px solid transparent;
+  background: var(--bg);
+  color: var(--text-muted);
+  transition: all .15s;
+  white-space: nowrap;
+}
+.tab:hover { background: var(--accent-light); color: var(--accent); }
+.tab.active {
+  border-color: var(--tab-color, var(--accent));
+  background: color-mix(in srgb, var(--tab-color, var(--accent)) 12%, white);
+  color: var(--tab-color, var(--accent));
+}
+
+/* ----- Main content ----- */
+main {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.summary-bar {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 18px;
+}
+.summary-bar strong { color: var(--text); }
+
+/* ----- Empty / loading states ----- */
+.state-msg {
+  text-align: center;
+  padding: 80px 24px;
+  color: var(--text-muted);
+}
+.state-msg .icon { font-size: 48px; margin-bottom: 12px; }
+.state-msg p { font-size: 15px; }
+
+/* ----- Persona grid ----- */
+.persona-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 18px;
+}
+
+/* ----- Group section header ----- */
+.group-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 8px;
+  margin-bottom: -4px;
+}
+.group-header .group-dot {
+  width: 12px; height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.group-header h2 {
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--text);
+}
+.group-header .group-count {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+/* ----- Card ----- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  border-top: 4px solid var(--card-color, var(--accent));
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  transition: transform .15s, box-shadow .15s;
+}
+.card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0,0,0,.12), 0 8px 24px rgba(0,0,0,.08);
+}
+
+.card-head {
+  padding: 14px 16px 10px;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.card-title {
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--text);
+  line-height: 1.3;
+}
+
+.card-size {
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--bg);
+  border-radius: 12px;
+  padding: 3px 8px;
+  white-space: nowrap;
+  color: var(--text-muted);
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+.card-group-badge {
+  display: inline-block;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: .5px;
+  padding: 2px 8px;
+  border-radius: 4px;
+  margin: 0 16px 10px;
+  background: color-mix(in srgb, var(--card-color, var(--accent)) 14%, white);
+  color: var(--card-color, var(--accent));
+}
+
+/* Stats table */
+.card-stats {
+  padding: 0 16px 14px;
+  flex: 1;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px 12px;
+}
+
+.stat-item { display: flex; flex-direction: column; gap: 1px; }
+.stat-label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: .4px;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+.stat-value {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+  line-height: 1.4;
+}
+
+/* Employment breakdown */
+.emp-breakdown {
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+  font-size: 12px;
+  color: var(--text-muted);
+  line-height: 1.7;
+}
+.emp-breakdown strong { color: var(--text); font-weight: 600; }
+
+/* Profile flags */
+.flag-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--border);
+}
+.flag {
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 12px;
+  font-weight: 600;
+}
+.flag.yes { background: #d1fae5; color: #065f46; }
+.flag.no  { background: var(--bg); color: var(--text-muted); text-decoration: line-through; }
+
+/* Responsive */
+@media (max-width: 600px) {
+  .controls { padding: 12px 16px; }
+  main { padding: 16px; }
+  .group-tabs { margin-left: 0; }
+  select { min-width: 100%; }
+}

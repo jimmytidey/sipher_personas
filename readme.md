@@ -30,8 +30,8 @@ data/
 
 ## Notes
 
-- All variable definitions, clip/floor/recode rules are in `data_processing/ukhls_variables.py`
-- Step 4 applies all `recode`, `floor`, and `clip` values from `ukhls_variables.py` and selects `cluster=True` features only
+- All variable definitions, clip/floor/recode rules are in `data_processing/config_variables.py`
+- Step 4 applies all `recode`, `floor`, and `clip` values from `config_variables.py` and selects `cluster=True` features only
 - Step 5 is purely Z-score (StandardScaler) — no manual mappings
 - Step 6 reads both the normalised matrix (for clustering) and the feature-eng real values (for the DNA report)
 - Step 7 joins the normalised feature vectors onto the full SIPHER synthetic population (52M rows) ready for regional clustering

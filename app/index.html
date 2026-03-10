@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>SIPHER Personas</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <header>
+    <h1>SIPHER Personas</h1>
+    <span>Synthetic Population Cluster Explorer</span>
+  </header>
+
+  <div class="controls">
+    <label for="la-select">Local Authority</label>
+    <select id="la-select" disabled>
+      <option value="">Loading…</option>
+    </select>
+
+    <div class="group-tabs" id="group-tabs"></div>
+  </div>
+
+  <main>
+    <p class="summary-bar" id="summary-bar"></p>
+    <div id="main-content"></div>
+  </main>
+
+  <script src="app.js"></script>
+</body>
+</html>

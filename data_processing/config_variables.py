@@ -1,4 +1,4 @@
-# data_processing/ukhls_variables.py
+# data_processing/config_variables.py
 #
 # Single source of truth for all UKHLS variables used in this pipeline.
 # Each entry is a dict with:
