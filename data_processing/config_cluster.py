@@ -13,12 +13,9 @@ WAVE      = "o"
 K_DEFAULT = 2   # fallback K if a group entry has no "k"
 
 GROUPS = {
+    # Matches jbstat canonical group labels in config_variables.py
     "Employed": {
-        "jbstat": ["Employed"],
-        "k": 3,
-    },
-    "Self-employed": {
-        "jbstat": ["Self-employed"],
+        "jbstat": ["Employed"],   # paid employment, self-employed, apprenticeship, furlough, laid off
         "k": 3,
     },
     "Retired": {
@@ -27,15 +24,18 @@ GROUPS = {
     },
     "Unemployed": {
         "jbstat": ["Unemployed"],
-        "k": 3,
+        "k": 2,
     },
     "Student": {
-        "jbstat": ["Full-time student"],
-        "k": 3, 
+        "jbstat": ["Student"],    # full-time student + govt training
+        "k": 2,
     },
-    "Other": {
-        "jbstat": ["Maternity leave", "Family care", "LT sick/disabled",
-                   "Govt scheme", "Unpaid family work", "Other"],
-        "k": 3,
+    "On leave": {
+        "jbstat": ["On leave"],   # maternity, parental, adoption, family care
+        "k": 2,
+    },
+    "Inactive": {
+        "jbstat": ["Inactive"],   # LT sick/disabled, unpaid family business, other, missing
+        "k": 2,
     },
 }

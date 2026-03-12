@@ -9,8 +9,14 @@ from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 
 BASE_DIR = Path(__file__).resolve().parents[1]
-CLUSTERS_PATH = BASE_DIR / "data" / "6_cluster" / "LA_london_clusters.csv"
-GEO_PATH = BASE_DIR / "data" / "0_raw" / "admin_geography_mappings.csv"
+
+# Production paths
+PROD_CLUSTERS_PATH = BASE_DIR / "data" / "6_cluster" / "LA_london_clusters.csv"
+PROD_GEO_PATH      = BASE_DIR / "data" / "0_raw" / "admin_geography_mappings.csv"
+
+# Test paths  (data_test/ folder, built from test_config_variables)
+TEST_CLUSTERS_PATH = BASE_DIR / "data_test" / "6_cluster" / "LA_clusters.csv"
+TEST_GEO_PATH      = BASE_DIR / "data_test" / "0_raw" / "admin_geography_mappings.csv"
 
 app = FastAPI(title="SIPHER Persona API", version="2.0.0")
 
@@ -22,24 +28,28 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# Data loaders (cached at startup)
+# Data loaders — cached per path so prod and test coexist in memory
 # ---------------------------------------------------------------------------
 
-@lru_cache(maxsize=1)
-def load_clusters() -> pd.DataFrame:
-    if not CLUSTERS_PATH.exists():
-        raise FileNotFoundError(f"Clusters file not found: {CLUSTERS_PATH}")
-    return pd.read_csv(CLUSTERS_PATH)
+@lru_cache(maxsize=4)
+def load_clusters(path: Path) -> pd.DataFrame:
+    if not path.exists():
+        raise FileNotFoundError(f"Clusters file not found: {path}")
+    return pd.read_csv(path)
 
 
-@lru_cache(maxsize=1)
-def load_la_names() -> dict[str, str]:
+@lru_cache(maxsize=4)
+def load_la_names(path: Path) -> dict[str, str]:
     """Return {ladcd: ladnm} from the geography lookup CSV."""
-    if not GEO_PATH.exists():
+    if not path.exists():
         return {}
-    geo = pd.read_csv(GEO_PATH, usecols=["ladcd", "ladnm"], encoding="latin-1")
+    geo = pd.read_csv(path, usecols=["ladcd", "ladnm"], encoding="latin-1")
     geo = geo.dropna(subset=["ladnm"])
     return geo.drop_duplicates("ladcd").set_index("ladcd")["ladnm"].to_dict()
+
+
+def _paths(test: bool) -> tuple[Path, Path]:
+    return (TEST_CLUSTERS_PATH, TEST_GEO_PATH) if test else (PROD_CLUSTERS_PATH, PROD_GEO_PATH)
 
 
 # ---------------------------------------------------------------------------
@@ -52,11 +62,14 @@ def health() -> dict[str, str]:
 
 
 @app.get("/las")
-def list_las() -> list[dict[str, str]]:
+def list_las(
+    test: bool = Query(default=False, description="Serve from data_test/ when true"),
+) -> list[dict[str, str]]:
     """Return sorted list of all Local Authorities in the cluster data."""
+    clusters_path, geo_path = _paths(test)
     try:
-        df = load_clusters()
-        names = load_la_names()
+        df    = load_clusters(clusters_path)
+        names = load_la_names(geo_path)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -65,10 +78,14 @@ def list_las() -> list[dict[str, str]]:
 
 
 @app.get("/la/{ladcd}/groups")
-def get_groups(ladcd: str) -> list[str]:
+def get_groups(
+    ladcd: str,
+    test: bool = Query(default=False, description="Serve from data_test/ when true"),
+) -> list[str]:
     """Return the list of employment groups present for a given LA."""
+    clusters_path, _ = _paths(test)
     try:
-        df = load_clusters()
+        df = load_clusters(clusters_path)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -83,10 +100,12 @@ def get_groups(ladcd: str) -> list[str]:
 def get_personas(
     ladcd: str,
     group: str | None = Query(default=None, description="Filter by employment group"),
+    test: bool = Query(default=False, description="Serve from data_test/ when true"),
 ) -> list[dict[str, Any]]:
     """Return persona (tribe) rows for a given LA, optionally filtered by group."""
+    clusters_path, _ = _paths(test)
     try:
-        df = load_clusters()
+        df = load_clusters(clusters_path)
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

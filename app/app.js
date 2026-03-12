@@ -4,6 +4,16 @@
 
 const API_BASE = "http://localhost:8000";
 
+// Read ?test=true from the page URL
+const IS_TEST = new URLSearchParams(window.location.search).get("test") === "true";
+
+// Append &test=true to every API path when in test mode
+function apiPath(path) {
+  if (!IS_TEST) return path;
+  const sep = path.includes("?") ? "&" : "?";
+  return path + sep + "test=true";
+}
+
 const GROUP_COLORS = {
   "Employed":        "#3b82f6",
   "Self-employed":   "#8b5cf6",
@@ -43,9 +53,17 @@ const summaryEl   = document.getElementById("summary-bar");
 
 // ----- Boot -----
 async function init() {
+  // Show test-mode banner if ?test=true
+  if (IS_TEST) {
+    const banner = document.createElement("div");
+    banner.id = "test-banner";
+    banner.textContent = "⚠️ TEST MODE — showing data_test/ output";
+    document.body.prepend(banner);
+  }
+
   renderState("loading", "Loading Local Authorities…");
   try {
-    const las = await apiFetch("/las");
+    const las = await apiFetch(apiPath("/las"));
     populateLaSelect(las);
   } catch (e) {
     renderState("error", `Could not reach API at ${API_BASE}. Is it running?<br><code>uvicorn api.main:app --reload</code>`);
@@ -71,7 +89,7 @@ laSelect.addEventListener("change", async () => {
   currentGroup = "All";
   renderState("loading", "Loading personas…");
   try {
-    allPersonas = await apiFetch(`/la/${code}/personas`);
+    allPersonas = await apiFetch(apiPath(`/la/${code}/personas`));
     buildGroupTabs();
     renderPersonas();
   } catch (e) {
@@ -179,6 +197,12 @@ function buildCard(persona) {
   // Employment status text
   const empStatus = persona["Employment status"] || "—";
 
+  // Religion
+  const religion = persona["Religion"];
+  const religionHtml = (religion && religion !== "None/Not applicable")
+    ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}</div>`
+    : "";
+
   // Flag chips
   const flagsHtml = FLAG_COLS.map(col => {
     const v = persona[col];
@@ -197,6 +221,7 @@ function buildCard(persona) {
       <div class="emp-breakdown">
         <strong>Employment mix:</strong> ${empStatus}
       </div>
+      ${religionHtml}
       <div class="flag-row">${flagsHtml}</div>
     </div>
   `;

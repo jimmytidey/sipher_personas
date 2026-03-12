@@ -275,3 +275,14 @@ main {
   .group-tabs { margin-left: 0; }
   select { min-width: 100%; }
 }
+
+/* Test mode banner */
+#test-banner {
+  background: #f59e0b;
+  color: #1a1d23;
+  text-align: center;
+  padding: 8px 16px;
+  font-weight: 600;
+  font-size: 0.85rem;
+  letter-spacing: 0.03em;
+}
