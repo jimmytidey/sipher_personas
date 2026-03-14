@@ -29,6 +29,7 @@ def build_dna_row(
     variable_map: dict[str, str],
     categorical_vars: set[str],
     category_maps:    dict[str, dict],
+    continuous_vars:  set[str] | None = None,
 ) -> dict:
     """
     Build one row of a DNA persona table from a subset of respondents.
@@ -56,7 +57,7 @@ def build_dna_row(
                 row[label] = ' | '.join(parts)
             else:
                 row[label] = cat_map.get(mode_val, str(mode_val))
-        elif series.dropna().isin([0.0, 1.0]).all():
+        elif base_code not in (continuous_vars or set()) and series.dropna().isin([0.0, 1.0]).all():
             row[label] = f"{series.mean():.0%}"
         else:
             row[label] = round(series.mean(), 1)
@@ -93,6 +94,7 @@ def cluster_by_groups(
     category_maps:    dict[str, dict],
     k_default:        int = 2,
     min_cluster_size: int = 5,
+    continuous_vars:  set[str] | None = None,
 ) -> pd.DataFrame:
     """
     Split respondents by employment group, run KMeans within each group,
@@ -153,6 +155,7 @@ def cluster_by_groups(
             dna_rows.append(build_dna_row(
                 label, sub_prof, wave,
                 summary_vars, variable_map, categorical_vars, category_maps,
+                continuous_vars=continuous_vars,
             ))
 
     if not dna_rows:

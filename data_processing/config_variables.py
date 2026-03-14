@@ -30,18 +30,13 @@ VARIABLES = {
         "cluster":     False,
         "one_hot":     None,
     },
-    #"disdif": {
-    #    "code":        "disdif",
-    #    "label":       "Disability indicator (multi-response 1-96)",
-    #    "categorical": True,
-    #    "categories":  None,   # exploded into disability_* columns downstream
-    #    "fill":        None,
-    #    "cluster":     False,
-    #    "one_hot":     None,   # handled separately by DISABILITY_LABELS expansion
-    #},
+
+    # =========================================================================
+    # CLUSTER FEATURES  (cluster: True — used directly as K-Means inputs)
+    # =========================================================================
 
     # -------------------------------------------------------------------------
-    # 1. Core Demographics
+    # 1. Demographics
     # -------------------------------------------------------------------------
     "age_dv": {
         "code":        "age_dv",
@@ -52,22 +47,13 @@ VARIABLES = {
         "cluster":     True,
         "one_hot":     None,
     },
-    "sex_dv": {
-        "code":        "sex_dv",
-        "label":       "Gender",
-        "categorical": True,
-        "categories":  {1.0: "Male", 2.0: "Female", 0.0: "Not known"},
-        "fill":        0.0,
-        "cluster":     False,  
-        "one_hot":     [1.0],
-    },
     "englang": { # unless respondent stated specifically, assume English is their first language (most common category) rather than treating as missing
         "code":        "englang",
         "label":       "English is not first language",
         "categorical": True,
         "categories":  {1.0: "Yes", 2.0: "No"},
         "fill":        1.0,
-        "cluster":     True,   # OHE to englang_1 used as cluster feature
+        "cluster":     True,   # OHE to englang_2 used as cluster feature
         "one_hot":     [2.0],
     },
     "oprlg1": {
@@ -112,12 +98,12 @@ VARIABLES = {
             97.0: "Other",
         },
         "fill":        -8.0,
-        "cluster":     False,  # kept in profile output but excluded from distance calc
+        "cluster":     True,
         "one_hot":     True,
     },
 
     # -------------------------------------------------------------------------
-    # 2. Socioeconomic & Education
+    # 2. Socioeconomic
     # -------------------------------------------------------------------------
     "hiqual_dv": {
         "code":        "hiqual_dv",
@@ -133,17 +119,6 @@ VARIABLES = {
         "one_hot":     None,
         "recode":      {9.0: 5.0},  # "None" (9) → 5 to keep scale 1–5
     },
-    "payn_dv": {
-        "code":        "payn_dv",
-        "label":       "Monthly net pay (take-home)",
-        "categorical": False,
-        "categories":  None,
-        "fill":        0,
-        "cluster":     True,
-        "one_hot":     None,
-        "floor":       0,    # non-positive values (inapplicable/not in work) → 0
-        "clip":        8000,  # caps extreme outliers that distort clustering
-    },
     "fimngrs_dv": {
         "code":        "fimngrs_dv",
         "label":       "Total monthly personal income (gross)",
@@ -153,44 +128,37 @@ VARIABLES = {
         "cluster":     True,
         "one_hot":     None,
         "floor":       0,    # non-positive values (inapplicable/not in work) → 0
-        "clip":        8000, 
-          # caps extreme outliers that distort clustering
-    },    
+        "clip":        8000, # caps extreme outliers that distort clustering
+    },
     "jbnssec8_dv": {
         "code":        "jbnssec8_dv",
         "label":       "Social class (NS-SEC 8)",
         "categorical": False,  # ordinal scale — treated as continuous
         "categories":  {
-            -9.0: "Missing",
-            0.0: "Unknown",
-            1.0: "Large employers & higher management",
-            2.0: "Higher professional",
-            3.0: "Lower management & professional",
-            4.0: "Intermediate",
-            5.0: "Small employers & own account",
-            6.0: "Lower supervisory & technical",
-            7.0: "Semi-routine",
-            8.0: "Routine",
+            -9.0: "Missing",       # missing
+            -8.0: "Inapplicable",  # inapplicable (non-employed respondents)
+             0.0: "Unknown",
+             1.0: "Large employers & higher management",
+             2.0: "Higher professional",
+             3.0: "Lower management & professional",
+             4.0: "Intermediate",
+             5.0: "Small employers & own account",
+             6.0: "Lower supervisory & technical",
+             7.0: "Semi-routine",
+             8.0: "Routine",
         },
-        "recode": {-9.0: 0.0},
+        "recode": {
+            -9.0: 0.0,  # missing       → 0 (Unknown)
+            -8.0: 0.0,  # inapplicable  → 0 (Unknown; non-employed so no NS-SEC)
+        },
         "fill":        "mode",
         "cluster":     True,
         "one_hot":     None,
     },
 
-
     # -------------------------------------------------------------------------
-    # 3. Household & Environment
+    # 3. Household
     # -------------------------------------------------------------------------
-    "hhsize": {
-        "code":        "hhsize",
-        "label":       "Household size",
-        "categorical": False,
-        "categories":  None,
-        "fill":        1,
-        "cluster":     True,
-        "one_hot":     None,
-    },
     "nchild_dv": {
         "code":        "nchild_dv",
         "label":       "Number of own children in household",
@@ -199,12 +167,57 @@ VARIABLES = {
         "fill":        0,
         "cluster":     True,
         "one_hot":     None,
-        'floor':       0,    
+        'floor':       0,
         'clip':        7,   # caps extreme outliers that distort clustering
     },
 
+    # =========================================================================
+    # CONTEXT VARIABLES  (cluster: False — profiling / display only)
+    # =========================================================================
+
     # -------------------------------------------------------------------------
-    # 4. Health & Wellbeing
+    # 4. Demographics
+    # -------------------------------------------------------------------------
+    "sex_dv": {
+        "code":        "sex_dv",
+        "label":       "Gender",
+        "categorical": True,
+        "categories":  {1.0: "Male", 2.0: "Female", 0.0: "Not known"},
+        "fill":        0.0,
+        "cluster":     False,
+        "one_hot":     [1.0],
+    },
+
+    # -------------------------------------------------------------------------
+    # 5. Household & Environment
+    # -------------------------------------------------------------------------
+    "hhsize": {
+        "code":        "hhsize",
+        "label":       "Household size",
+        "categorical": False,
+        "categories":  None,
+        "fill":        1,
+        "cluster":     False,
+        "one_hot":     None,
+    },
+
+    # -------------------------------------------------------------------------
+    # 6. Income
+    # -------------------------------------------------------------------------
+    "payn_dv": {
+        "code":        "payn_dv",
+        "label":       "Monthly net pay (take-home)",
+        "categorical": False,
+        "categories":  None,
+        "fill":        0,
+        "cluster":     False,
+        "one_hot":     None,
+        "floor":       0,    # non-positive values (inapplicable/not in work) → 0
+        "clip":        8000,  # caps extreme outliers that distort clustering
+    },
+
+    # -------------------------------------------------------------------------
+    # 7. Health & Wellbeing
     # -------------------------------------------------------------------------
     "sf12mcs_dv": {
         "code":        "sf12mcs_dv",
@@ -212,7 +225,7 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        "median",
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
     },
     "sf12pcs_dv": {
@@ -221,12 +234,12 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        "median",
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
     },
 
     # -------------------------------------------------------------------------
-    # 5. Community & Local Services
+    # 8. Community & Local Services
     # -------------------------------------------------------------------------
     "nbrsnci_dv": {
         "code":        "nbrsnci_dv",
@@ -288,7 +301,7 @@ VARIABLES = {
     },
 
     # -------------------------------------------------------------------------
-    # 6. Transport Habits
+    # 9. Transport Habits
     # -------------------------------------------------------------------------
     "jbttwt": {
         "code":        "jbttwt",
@@ -329,8 +342,8 @@ VARIABLES = {
         "label":       "Has use of a car or van",
         "categorical": True,
         "categories":  {1.0: "Yes", 2.0: "No"},
-        "fill":        2.0,   
-        "cluster":     False,  
+        "fill":        2.0,
+        "cluster":     False,
         "one_hot":     None,
     },
     "jbpl": {
@@ -342,7 +355,7 @@ VARIABLES = {
             3.0: "Driving/travel",   4.0: "Various",
         },
         "fill":        "mode",
-        "cluster":     True,   # OHE to jbpl_1 used as cluster feature (works at home)
+        "cluster":     False,
         "one_hot":     [1.0],
     },
     "wktrvfar": {
@@ -367,17 +380,19 @@ VARIABLES = {
             97.0: "Other",
         },
         "fill":        "mode",
-        "cluster":     False,   # OHE to wktrvfar_1 used as cluster feature (drives to work)
+        "cluster":     False,
         "one_hot":     [1.0],
         "group_labels": {
              1.0: "Drives to work",
         }
-    },  
+    },
 
     # -------------------------------------------------------------------------
-    # 7. Job Detail  (context variables — not direct cluster features)
+    # 10. Employment
     # -------------------------------------------------------------------------
     "jbstat": {
+        "code":        "jbstat",
+        "label":       "Employment status",
         "code":        "jbstat",
         "label":       "Employment status",
         "categorical": True,
@@ -404,16 +419,30 @@ VARIABLES = {
             97.0: "Doing something else",
         },
         # ── collapse raw codes into 6 canonical groups for clustering ─────
-        # After recode, only these 6 codes remain: 1, 3, 4, 5, 7, 8
+        # All 18 raw codes are mapped explicitly below.
+        # Canonical codes after recode: 1=Employed, 3=Unemployed, 4=Retired,
+        #                               5=On leave, 7=Student, 8=Inactive
         "recode": {
-             2.0: 1.0,   # paid employment        → 1  (Employed)
-            11.0: 7.0,   # apprenticeship         → 7  (Student / training)
+            # ── Employed (1) ─────────────────────────────────────────────
+             1.0: 1.0,   # self-employed          → 1  (Employed)
+             2.0: 1.0,   # paid employment (ft/pt)→ 1  (Employed)
             12.0: 1.0,   # furlough               → 1  (Employed)
             13.0: 1.0,   # temporarily laid off   → 1  (Employed)
-             6.0: 5.0,   # family care            → 5  (On leave)
+            # ── Unemployed (3) ───────────────────────────────────────────
+             3.0: 3.0,   # unemployed             → 3  (Unemployed)
+            # ── Retired (4) ──────────────────────────────────────────────
+             4.0: 4.0,   # retired                → 4  (Retired)
+            # ── On leave (5) ─────────────────────────────────────────────
+             5.0: 5.0,   # maternity leave        → 5  (On leave)
+             6.0: 5.0,   # family care or home    → 5  (On leave)
             14.0: 5.0,   # shared parental leave  → 5  (On leave)
             15.0: 5.0,   # adoption leave         → 5  (On leave)
-             9.0: 7.0,   # govt training          → 7  (Student)
+            # ── Student / training (7) ───────────────────────────────────
+             7.0: 7.0,   # full-time student      → 7  (Student / training)
+             9.0: 7.0,   # govt training scheme   → 7  (Student / training)
+            11.0: 7.0,   # apprenticeship         → 7  (Student / training)
+            # ── Inactive (8) ─────────────────────────────────────────────
+             8.0: 8.0,   # LT sick or disabled    → 8  (Inactive)
             10.0: 8.0,   # unpaid family business → 8  (Inactive)
             97.0: 8.0,   # doing something else   → 8  (Inactive)
             -1.0: 8.0,   # don't know             → 8  (Inactive)
@@ -431,7 +460,7 @@ VARIABLES = {
             8.0: "Inactive",
         },
         "fill":        "mode",
-        "cluster":     True,  # raw column not a cluster feature; OHE columns (jbstat_*) are used downstream
+        "cluster":     False,  # split variable only — groups defined in 6_cluster.ipynb; raw column is constant within each group so adds nothing to K-Means
         "one_hot":     True,
     },
     #"jlsic07_cc": {

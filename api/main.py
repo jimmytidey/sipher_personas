@@ -1,6 +1,5 @@
 from __future__ import annotations
 
-from functools import lru_cache
 from pathlib import Path
 from typing import Any
 
@@ -28,17 +27,15 @@ app.add_middleware(
 )
 
 # ---------------------------------------------------------------------------
-# Data loaders — cached per path so prod and test coexist in memory
+# Data loaders — uncached so the CSV is read fresh on every request
 # ---------------------------------------------------------------------------
 
-@lru_cache(maxsize=4)
 def load_clusters(path: Path) -> pd.DataFrame:
     if not path.exists():
         raise FileNotFoundError(f"Clusters file not found: {path}")
     return pd.read_csv(path)
 
 
-@lru_cache(maxsize=4)
 def load_la_names(path: Path) -> dict[str, str]:
     """Return {ladcd: ladnm} from the geography lookup CSV."""
     if not path.exists():

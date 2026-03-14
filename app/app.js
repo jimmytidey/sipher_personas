@@ -24,21 +24,34 @@ const GROUP_COLORS = {
   "Other":           "#6b7280",
 };
 
-// Numeric stats to show on cards (key = column name, label = display label, unit = suffix)
-const STATS = [
-  { key: "Derived age at interview",            label: "Avg. age",            unit: " yrs",  round: 1 },
-  { key: "Monthly net pay (take-home)",         label: "Monthly take-home",   unit: "",      fmt: "currency" },
-  { key: "Mental health score (SF-12 MCS)",     label: "Mental health",       unit: "/100",  round: 1 },
-  { key: "Physical health score (SF-12 PCS)",   label: "Physical health",     unit: "/100",  round: 1 },
-  { key: "Social class (NS-SEC 8)",             label: "Social class",        unit: "",      round: 1 },
-  { key: "Household size",                      label: "Household size",      unit: "",      round: 1 },
-  { key: "Number of children in household",     label: "Children",            unit: "",      round: 1 },
-  { key: "Minutes spent travelling to work",    label: "Commute",             unit: " min",  round: 0 },
-  { key: "Miles driven in last 12 months",      label: "Miles/year",          unit: "",      fmt: "number", round: 0 },
-  { key: "Highest qualification",               label: "Avg. qual level",     unit: "",      round: 1 },
-];
+// Numeric stats to show on cards — cluster variables only
+const NSSEC_LABELS = {
+  0: "Unknown",
+  1: "Large employers & higher management",
+  2: "Higher professional",
+  3: "Lower management & professional",
+  4: "Intermediate",
+  5: "Small employers & own account",
+  6: "Lower supervisory & technical",
+  7: "Semi-routine",
+  8: "Routine",
+};
 
-const FLAG_COLS = ["Employed", "Unemployed", "Retired", "Full-time student", "LT sick/disabled"];
+const HIQUAL_LABELS = {
+  1: "Degree",
+  2: "Other Higher",
+  3: "A-Level",
+  4: "GCSE",
+  5: "Other / None",
+};
+
+const STATS = [
+  { key: "Derived age at interview",              label: "Avg. age",          unit: " yrs",  round: 1 },
+  { key: "Total monthly personal income (gross)", label: "Monthly income",    unit: "",      fmt: "currency" },
+  { key: "Social class (NS-SEC 8)",               label: "Employment type",  unit: "",      lookup: NSSEC_LABELS },
+  { key: "Number of own children in household",   label: "Children",          unit: "",      round: 1 },
+  { key: "Highest qualification",                 label: "Qual. level",      unit: "",      lookup: HIQUAL_LABELS },
+];
 
 // ----- State -----
 let currentLa   = null;
@@ -181,34 +194,36 @@ function buildCard(persona) {
   const totalPop = formatNum(persona.size);
 
   // Stats rows
-  const statsHtml = STATS.map(({ key, label, unit, fmt, round }) => {
+  const statsHtml = STATS.map(({ key, label, unit, fmt, round, lookup }) => {
     const raw = persona[key];
     let val = "—";
     const num = Number(raw);
     if (raw !== null && raw !== undefined && raw !== "" && !(num < 0)) {
-      if (fmt === "currency") val = "£" + formatNum(Math.round(num));
-      else if (fmt === "number") val = formatNum(Math.round(num));
+      if (lookup)           val = lookup[Math.round(num)] ?? String(Math.round(num));
+      else if (fmt === "currency") val = "£" + formatNum(Math.round(num));
+      else if (fmt === "number")   val = formatNum(Math.round(num));
       else if (round !== undefined) val = num.toFixed(round) + (unit || "");
       else val = String(raw) + (unit || "");
     }
     return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
   }).join("");
 
-  // Employment status text
-  const empStatus = persona["Employment status"] || "—";
-
-  // Religion
+  // Categorical cluster variables
   const religion = persona["Religion"];
-  const religionHtml = (religion && religion !== "None/Not applicable")
+  const religionHtml = religion
     ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}</div>`
     : "";
 
-  // Flag chips
-  const flagsHtml = FLAG_COLS.map(col => {
-    const v = persona[col];
-    const isYes = v === "Yes" || v === true || v === 1;
-    return `<span class="flag ${isYes ? "yes" : "no"}">${col}</span>`;
-  }).join("");
+  const englangRaw = persona["English is not first language"];
+  const englangVal = englangRaw === "Yes" ? "No" : englangRaw === "No" ? "Yes" : englangRaw;
+  const englangHtml = englangVal
+    ? `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangVal}</div>`
+    : "";
+
+  const empStatus = persona["Employment status"];
+  const empStatusHtml = empStatus
+    ? `<div class="emp-breakdown"><strong>Employment status:</strong> ${empStatus}</div>`
+    : "";
 
   card.innerHTML = `
     <div class="card-head">
@@ -218,11 +233,9 @@ function buildCard(persona) {
     <span class="card-group-badge" style="--card-color:${color}">${persona.group}</span>
     <div class="card-stats">
       <div class="stats-grid">${statsHtml}</div>
-      <div class="emp-breakdown">
-        <strong>Employment mix:</strong> ${empStatus}
-      </div>
+      ${empStatusHtml}
       ${religionHtml}
-      <div class="flag-row">${flagsHtml}</div>
+      ${englangHtml}
     </div>
   `;
   return card;

@@ -9,33 +9,49 @@
 #                Omit to use all CLUSTER_VARS defined in config_variables.py.
 # ─────────────────────────────────────────────────────────────────────────────
 
-WAVE      = "o"
-K_DEFAULT = 2   # fallback K if a group entry has no "k"
+WAVE     = "o"
+
+# ── Number of clusters to aim for ────────────────────────────────────────────
+# Used as the K for flat clustering (USE_GROUPED_CLUSTERING = False) and as the
+# default K for every employment group (USE_GROUPED_CLUSTERING = True).
+# The actual number produced per unit may be lower when a group is too small
+# (enforced by MIN_CLUSTER_SIZE in the notebook).
+TARGET_K = 10
+
+K_DEFAULT = TARGET_K   # kept for backward-compatibility; don't edit directly
+
+# When True (default), the population is first split by employment status (GROUPS)
+# and K-Means is run independently within each group — producing e.g. "Employed 1",
+# "Retired 2" etc.
+# When False, the entire unit population is clustered together in one pass using
+# TARGET_K clusters.
+USE_GROUPED_CLUSTERING = True
+
 
 GROUPS = {
     # Matches jbstat canonical group labels in config_variables.py
     "Employed": {
         "jbstat": ["Employed"],   # paid employment, self-employed, apprenticeship, furlough, laid off
-        "k": 3,
+        "k": TARGET_K,
     },
     "Retired": {
         "jbstat": ["Retired"],
-        "k": 3,
+        "k": TARGET_K,
     },
     "Unemployed": {
         "jbstat": ["Unemployed"],
-        "k": 2,
+        "k": TARGET_K,
     },
     "Student": {
         "jbstat": ["Student"],    # full-time student + govt training
-        "k": 2,
+        "k": TARGET_K,
     },
     "On leave": {
         "jbstat": ["On leave"],   # maternity, parental, adoption, family care
-        "k": 2,
+        "k": TARGET_K,
     },
     "Inactive": {
         "jbstat": ["Inactive"],   # LT sick/disabled, unpaid family business, other, missing
-        "k": 2,
+        "k": TARGET_K,
     },
 }
