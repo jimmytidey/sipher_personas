@@ -1,5 +1,7 @@
 fastapi
-uvicorn
+uvicorn[standard]
+gunicorn
+aiofiles
 pandas
 numpy
 httpx

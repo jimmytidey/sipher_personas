@@ -6,8 +6,12 @@ from typing import Any
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
+from fastapi.staticfiles import StaticFiles
 
-BASE_DIR = Path(__file__).resolve().parents[1]
+_API_DIR  = Path(__file__).resolve().parent
+_ROOT_DIR = _API_DIR.parent
+# Use api/data/ when it exists (self-contained deployment), else fall back to project root
+BASE_DIR = _API_DIR if (_API_DIR / "data").exists() else _ROOT_DIR
 
 # Production paths
 PROD_CLUSTERS_PATH = BASE_DIR / "data" / "6_cluster" / "LA_london_clusters.csv"
@@ -17,7 +21,7 @@ PROD_GEO_PATH      = BASE_DIR / "data" / "0_raw" / "admin_geography_mappings.csv
 TEST_CLUSTERS_PATH = BASE_DIR / "data_test" / "6_cluster" / "LA_clusters.csv"
 TEST_GEO_PATH      = BASE_DIR / "data_test" / "0_raw" / "admin_geography_mappings.csv"
 
-app = FastAPI(title="SIPHER Persona API", version="2.0.0")
+app = FastAPI(title="Archetypes API", version="2.0.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -46,7 +50,12 @@ def load_la_names(path: Path) -> dict[str, str]:
 
 
 def _paths(test: bool) -> tuple[Path, Path]:
-    return (TEST_CLUSTERS_PATH, TEST_GEO_PATH) if test else (PROD_CLUSTERS_PATH, PROD_GEO_PATH)
+    clusters, geo = (TEST_CLUSTERS_PATH, TEST_GEO_PATH) if test else (PROD_CLUSTERS_PATH, PROD_GEO_PATH)
+    # Prefer the GPT-described version when it exists
+    described = clusters.parent / (clusters.stem + "_described.csv")
+    if described.exists():
+        clusters = described
+    return clusters, geo
 
 
 # ---------------------------------------------------------------------------
@@ -120,3 +129,12 @@ def get_personas(
 
     # Replace NaN with None for clean JSON serialisation
     return la_df.where(la_df.notna(), other=None).to_dict(orient="records")
+
+
+# ---------------------------------------------------------------------------
+# Serve the frontend static files — MUST be mounted last (catch-all)
+# ---------------------------------------------------------------------------
+
+_APP_DIR = _ROOT_DIR / "app"
+if _APP_DIR.exists():
+    app.mount("/", StaticFiles(directory=_APP_DIR, html=True), name="frontend")

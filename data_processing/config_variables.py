@@ -165,10 +165,19 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        0,
-        "cluster":     True,
+        "cluster":     False,  # replaced by has_child for clustering
         "one_hot":     None,
         'floor':       0,
-        'clip':        7,   # caps extreme outliers that distort clustering
+        'clip':        7,
+    },
+    "has_child": {
+        "code":        "has_child",
+        "label":       "Has children",
+        "categorical": False,
+        "categories":  None,
+        "fill":        0,
+        "cluster":     True,   # binary 0/1 derived from nchild_dv > 0
+        "one_hot":     None,
     },
 
     # =========================================================================
@@ -197,7 +206,7 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        1,
-        "cluster":     False,
+        "cluster":     True,
         "one_hot":     None,
     },
 
@@ -301,7 +310,38 @@ VARIABLES = {
     },
 
     # -------------------------------------------------------------------------
-    # 9. Transport Habits
+    # 9. Digital Habits
+    # -------------------------------------------------------------------------
+    "netpusenew": {
+        "code":        "netpusenew",
+        "label":       "Internet use frequency",
+        "categorical": True,
+        "categories":  {
+            -7.0: "Proxy",
+            -2.0: "Refusal",
+            -1.0: "Don't know",
+             1.0: "Every day",
+             2.0: "Several times a week",
+             3.0: "About once a week",
+             4.0: "Several times a month",
+             5.0: "About once a month",
+             6.0: "Less often",
+             7.0: "Never",
+             8.0: "No internet access",
+             9.0: "No home internet",
+        },
+        "recode": {
+            -7.0: 7.0,   # proxy     → Never (unknown)
+            -2.0: 7.0,   # refusal   → Never
+            -1.0: 7.0,   # don't know → Never
+        },
+        "fill":        "mode",
+        "cluster":     False,
+        "one_hot":     None,
+    },
+
+    # -------------------------------------------------------------------------
+    # 10. Transport Habits
     # -------------------------------------------------------------------------
     "jbttwt": {
         "code":        "jbttwt",

@@ -31,7 +31,7 @@ from data_processing.config_variables import (
     CATEGORY_MAPS,
     ONE_HOT_VARS,
 )
-from data_processing.config_cluster import WAVE, K_DEFAULT, GROUPS
+from data_processing.config_cluster import WAVE, MAX_TOTAL_CLUSTERS, GROUPS
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 # Feature columns expected after notebook 4 (OHE applied).
@@ -460,7 +460,7 @@ class TestClusterByGroups:
             variable_map     = VARIABLE_MAP,
             categorical_vars = CATEGORICAL_VARS,
             category_maps    = CATEGORY_MAPS,
-            k_default        = 2,
+            max_total_clusters = 2,
         )
 
     def test_dna_table_has_two_tribes(self, dna_table: pd.DataFrame):

@@ -10,7 +10,8 @@ from __future__ import annotations
 
 import numpy  as np
 import pandas as pd
-from sklearn.cluster import KMeans
+from sklearn.cluster  import KMeans
+from sklearn.metrics  import silhouette_score
 
 
 # ── DNA helpers ───────────────────────────────────────────────────────────────
@@ -79,22 +80,63 @@ def fit_kmeans(X: np.ndarray, k: int, random_state: int = 42) -> np.ndarray:
     return km.fit_predict(X)
 
 
+def best_k_by_silhouette(
+    X:              np.ndarray,
+    max_k:          int,
+    min_silhouette: float = 0.05,
+    random_state:   int   = 42,
+) -> int:
+    """
+    Try k = 2..max_k and return the k that maximises silhouette score.
+
+    Returns 1 if no k achieves a score >= min_silhouette, meaning the data
+    has no meaningful cluster structure beyond a single group.
+
+    Parameters
+    ----------
+    X              : feature matrix (already normalised).
+    max_k          : upper bound (typically min(group_k, n // min_cluster_size)).
+    min_silhouette : minimum silhouette score required to prefer k > 1.
+                     0.05 is a deliberately low bar — raise to e.g. 0.15 to
+                     require more clearly separated clusters.
+    """
+    n = len(X)
+    if max_k <= 1 or n < 4:
+        return 1
+
+    best_k     = 1
+    best_score = min_silhouette  # must beat this floor to win
+
+    for k in range(2, min(max_k, n // 2) + 1):
+        km     = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=random_state)
+        labels = km.fit_predict(X)
+        if len(set(labels)) < 2:
+            continue
+        score = silhouette_score(X, labels, sample_size=min(5_000, n), random_state=random_state)
+        if score > best_score:
+            best_score = score
+            best_k     = k
+
+    return best_k
+
+
 # ── Employment-group clustering ───────────────────────────────────────────────
 
 def cluster_by_groups(
-    df_features:      pd.DataFrame,
-    df_profile:       pd.DataFrame,
-    feature_cols:     list[str],
-    groups:           dict,
-    group_col_map:    dict[str, str | None],
-    wave:             str,
-    summary_vars:     list[str],
-    variable_map:     dict[str, str],
-    categorical_vars: set[str],
-    category_maps:    dict[str, dict],
-    k_default:        int = 2,
-    min_cluster_size: int = 5,
-    continuous_vars:  set[str] | None = None,
+    df_features:        pd.DataFrame,
+    df_profile:         pd.DataFrame,
+    feature_cols:       list[str],
+    groups:             list[str],
+    group_col_map:      dict[str, str | None],
+    wave:               str,
+    summary_vars:       list[str],
+    variable_map:       dict[str, str],
+    categorical_vars:   set[str],
+    category_maps:      dict[str, dict],
+    max_total_clusters: int   = 10,
+    min_cluster_size:   int   = 5,
+    continuous_vars:    set[str] | None = None,
+    min_silhouette:     float = 0.05,
 ) -> pd.DataFrame:
     """
     Split respondents by employment group, run KMeans within each group,
@@ -102,48 +144,68 @@ def cluster_by_groups(
 
     Parameters
     ----------
-    df_features   : DataFrame with pidp + normalised feature columns.
-    df_profile    : DataFrame with pidp + real/raw columns used for DNA labels.
-                    May be the same as df_features if features are sufficient.
-    feature_cols  : Column names (with wave prefix) to pass to KMeans.
-    groups        : config_cluster.GROUPS dict.
-    group_col_map : { group_name → binary column name in df_features (or None for catch-all) }
-    wave          : Wave prefix string, e.g. "o".
-    summary_vars  : base codes to include in DNA rows (config_variables.SUMMARY_VARS).
-    variable_map  : base_code → human label (config_variables.VARIABLE_MAP).
-    categorical_vars : set of categorical base codes.
-    category_maps : base_code → {numeric → label} (config_variables.CATEGORY_MAPS).
-    k_default     : fallback k when group config omits "k".
-    min_cluster_size : effective_k = min(k, n // min_cluster_size).
+    df_features         : DataFrame with pidp + normalised feature columns.
+    df_profile          : DataFrame with pidp + real/raw columns for DNA labels.
+    feature_cols        : Column names (with wave prefix) to pass to KMeans.
+    groups              : Ordered list of group names (config_cluster.GROUPS).
+    group_col_map       : { group_name → binary OHE column, or None for catch-all }
+    wave                : Wave prefix string, e.g. "o".
+    summary_vars        : base codes to include in DNA rows.
+    variable_map        : base_code → human label.
+    categorical_vars    : set of categorical base codes.
+    category_maps       : base_code → {numeric → label}.
+    max_total_clusters  : total cluster budget shared across all groups;
+                          each group's k = max(1, round(budget * n_group / n_total)).
+    min_cluster_size    : caps effective_k to n // min_cluster_size.
+    min_silhouette      : silhouette score floor; if no k > 1 beats this,
+                          the group is kept as a single cluster (k=1).
+                          Set to 0.0 to always use the full proportional k.
 
     Returns
     -------
     DataFrame sorted by size descending, one row per tribe.
     """
-    dna_rows = []
-    assigned = pd.Series(False, index=df_features.index)
+    # ── Pass 1: measure group sizes to allocate k proportionally ─────────────
+    assigned   = pd.Series(False, index=df_features.index)
+    group_masks: dict[str, pd.Series] = {}
+    group_sizes: dict[str, int]       = {}
 
-    for gname, gcfg in groups.items():
+    for gname in groups:
         col = group_col_map.get(gname)
-
         if col and col in df_features.columns:
             mask = df_features[col] == 1.0
         elif col is None:
-            mask = ~assigned   # "Other" catch-all
+            mask = ~assigned   # catch-all — must come last
         else:
             continue
+        group_masks[gname] = mask
+        group_sizes[gname] = int(mask.sum())
+        assigned |= mask
 
-        group_feat    = df_features[mask]
+    total_pop = sum(group_sizes.values()) or 1
+    group_k = {
+        gname: max(1, round(max_total_clusters * n / total_pop))
+        for gname, n in group_sizes.items()
+    }
+
+    # ── Pass 2: cluster each group with its proportional k ───────────────────
+    dna_rows = []
+    for gname in groups:
+        if gname not in group_masks:
+            continue
+        group_feat    = df_features[group_masks[gname]]
         group_profile = df_profile[df_profile['pidp'].isin(group_feat['pidp'])]
 
         if group_feat.empty:
             continue
-        assigned |= mask
 
-        k           = gcfg.get('k', k_default)
-        n           = len(group_feat)
-        effective_k = min(k, max(1, n // min_cluster_size))
-        labels      = fit_kmeans(group_feat[feature_cols].values, effective_k)
+        k       = group_k[gname]
+        n       = len(group_feat)
+        max_k   = min(k, max(1, n // min_cluster_size))
+        chosen_k = best_k_by_silhouette(
+            group_feat[feature_cols].values, max_k, min_silhouette
+        )
+        labels  = fit_kmeans(group_feat[feature_cols].values, chosen_k)
 
         group_feat = group_feat.copy()
         group_feat['_tribe_sub'] = labels
@@ -151,7 +213,7 @@ def cluster_by_groups(
         for sub_id in sorted(group_feat['_tribe_sub'].unique()):
             sub_pidps = group_feat[group_feat['_tribe_sub'] == sub_id]['pidp']
             sub_prof  = group_profile[group_profile['pidp'].isin(sub_pidps)]
-            label     = f"{gname} {sub_id + 1}" if effective_k > 1 else gname
+            label     = f"{gname} {sub_id + 1}" if chosen_k > 1 else gname
             dna_rows.append(build_dna_row(
                 label, sub_prof, wave,
                 summary_vars, variable_map, categorical_vars, category_maps,
