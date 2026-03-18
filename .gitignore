@@ -1,6 +1,12 @@
 data/
 data_
 
+# Allow the small cluster CSV committed into api/ for deployment
+# (geo CSV is 384MB - too large for GitHub, LA names fall back to codes without it)
+!api/data/
+!api/data/6_cluster/
+!api/data/6_cluster/**
+
 # Python bytecode / cache
 __pycache__/
 *.py[cod]
