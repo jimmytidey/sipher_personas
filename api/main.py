@@ -15,11 +15,9 @@ BASE_DIR = _API_DIR if (_API_DIR / "data").exists() else _ROOT_DIR
 
 # Production paths
 PROD_CLUSTERS_PATH = BASE_DIR / "data" / "6_cluster" / "LA_london_clusters.csv"
-PROD_GEO_PATH      = BASE_DIR / "data" / "0_raw" / "admin_geography_mappings.csv"
 
 # Test paths  (data_test/ folder, built from test_config_variables)
 TEST_CLUSTERS_PATH = BASE_DIR / "data_test" / "6_cluster" / "LA_clusters.csv"
-TEST_GEO_PATH      = BASE_DIR / "data_test" / "0_raw" / "admin_geography_mappings.csv"
 
 app = FastAPI(title="Archetypes API", version="2.0.0")
 
@@ -40,22 +38,11 @@ def load_clusters(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
 
 
-def load_la_names(path: Path) -> dict[str, str]:
-    """Return {ladcd: ladnm} from the geography lookup CSV."""
-    if not path.exists():
-        return {}
-    geo = pd.read_csv(path, usecols=["ladcd", "ladnm"], encoding="latin-1")
-    geo = geo.dropna(subset=["ladnm"])
-    return geo.drop_duplicates("ladcd").set_index("ladcd")["ladnm"].to_dict()
-
-
-def _paths(test: bool) -> tuple[Path, Path]:
-    clusters, geo = (TEST_CLUSTERS_PATH, TEST_GEO_PATH) if test else (PROD_CLUSTERS_PATH, PROD_GEO_PATH)
+def _clusters_path(test: bool) -> Path:
+    clusters = TEST_CLUSTERS_PATH if test else PROD_CLUSTERS_PATH
     # Prefer the GPT-described version when it exists
     described = clusters.parent / (clusters.stem + "_described.csv")
-    if described.exists():
-        clusters = described
-    return clusters, geo
+    return described if described.exists() else clusters
 
 
 # ---------------------------------------------------------------------------
@@ -72,15 +59,17 @@ def list_las(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
 ) -> list[dict[str, str]]:
     """Return sorted list of all Local Authorities in the cluster data."""
-    clusters_path, geo_path = _paths(test)
     try:
-        df    = load_clusters(clusters_path)
-        names = load_la_names(geo_path)
+        df = load_clusters(_clusters_path(test))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
+    name_map = (
+        df[["unit_id", "la_name"]].drop_duplicates("unit_id").set_index("unit_id")["la_name"].to_dict()
+        if "la_name" in df.columns else {}
+    )
     la_codes = sorted(df["unit_id"].dropna().unique().tolist())
-    return [{"code": code, "name": names.get(code, code)} for code in la_codes]
+    return [{"code": code, "name": name_map.get(code, code)} for code in la_codes]
 
 
 @app.get("/la/{ladcd}/groups")
@@ -89,9 +78,8 @@ def get_groups(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
 ) -> list[str]:
     """Return the list of employment groups present for a given LA."""
-    clusters_path, _ = _paths(test)
     try:
-        df = load_clusters(clusters_path)
+        df = load_clusters(_clusters_path(test))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -109,9 +97,8 @@ def get_personas(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
 ) -> list[dict[str, Any]]:
     """Return persona (tribe) rows for a given LA, optionally filtered by group."""
-    clusters_path, _ = _paths(test)
     try:
-        df = load_clusters(clusters_path)
+        df = load_clusters(_clusters_path(test))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
