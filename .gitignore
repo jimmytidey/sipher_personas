@@ -1,5 +1,7 @@
 data/
-data_
+
+# Deployment artefacts
+deploy.zip
 
 # Allow the small cluster CSV committed into api/ for deployment
 # (geo CSV is 384MB - too large for GitHub, LA names fall back to codes without it)
