@@ -246,6 +246,11 @@ function buildCard(persona, totalPop) {
     ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}</div>`
     : "";
 
+  const ethnicity = persona["Ethnic group"];
+  const ethnicityHtml = ethnicity
+    ? `<div class="emp-breakdown"><strong>Ethnic group:</strong> ${ethnicity}</div>`
+    : "";
+
   const englangRaw = persona["English is not first language"];
   const englangVal = englangRaw === "Yes" ? "No" : englangRaw === "No" ? "Yes" : "Yes";
   const englangHtml = `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangVal}</div>`;
@@ -274,6 +279,7 @@ function buildCard(persona, totalPop) {
     <div class="card-stats">
       <div class="stats-grid">${statsHtml}</div>
       ${descriptionHtml}
+      ${ethnicityHtml}
       ${religionHtml}
       ${englangHtml}
     </div>

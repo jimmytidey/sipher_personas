@@ -76,7 +76,7 @@ def fit_kmeans(X: np.ndarray, k: int, random_state: int = 42) -> np.ndarray:
     n = len(X)
     if k <= 1 or n < 2:
         return np.zeros(n, dtype=int)
-    km = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=random_state)
+    km = KMeans(n_clusters=k, init='k-means++', n_init=3, random_state=random_state)
     return km.fit_predict(X)
 
 
@@ -84,6 +84,7 @@ def best_k_by_silhouette(
     X:              np.ndarray,
     max_k:          int,
     min_silhouette: float = 0.05,
+    patience:       int   = 2,
     random_state:   int   = 42,
 ) -> int:
     """
@@ -99,23 +100,31 @@ def best_k_by_silhouette(
     min_silhouette : minimum silhouette score required to prefer k > 1.
                      0.05 is a deliberately low bar — raise to e.g. 0.15 to
                      require more clearly separated clusters.
+    patience       : stop searching after this many consecutive k values that
+                     fail to improve on the current best score.
     """
     n = len(X)
     if max_k <= 1 or n < 4:
         return 1
 
-    best_k     = 1
-    best_score = min_silhouette  # must beat this floor to win
+    best_k         = 1
+    best_score     = min_silhouette  # must beat this floor to win
+    no_improve     = 0
 
     for k in range(2, min(max_k, n // 2) + 1):
-        km     = KMeans(n_clusters=k, init='k-means++', n_init=10, random_state=random_state)
+        km     = KMeans(n_clusters=k, init='k-means++', n_init=3, random_state=random_state)
         labels = km.fit_predict(X)
         if len(set(labels)) < 2:
             continue
-        score = silhouette_score(X, labels, sample_size=min(5_000, n), random_state=random_state)
+        score = silhouette_score(X, labels, sample_size=min(2_000, n), random_state=random_state)
         if score > best_score:
             best_score = score
             best_k     = k
+            no_improve = 0
+        else:
+            no_improve += 1
+            if no_improve >= patience:
+                break
 
     return best_k
 

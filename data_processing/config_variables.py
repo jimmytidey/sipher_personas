@@ -101,6 +101,87 @@ VARIABLES = {
         "cluster":     True,
         "one_hot":     True,
     },
+    "racel": {
+        "code":        "racel",
+        "label":       "Ethnic group",
+        "categorical": True,
+        # ── all raw codes as they appear in the UKHLS data ───────────────
+        "categories":  {
+            -9.0: "Missing",
+            -8.0: "Inapplicable",
+            -7.0: "Proxy",
+            -2.0: "Refusal",
+            -1.0: "Don't know",
+             1.0: "White: British/English/Scottish/Welsh",
+             2.0: "White: Irish",
+             3.0: "White: Gypsy or Irish Traveller",
+             4.0: "White: Other",
+             5.0: "Mixed: White and Black Caribbean",
+             6.0: "Mixed: White and Black African",
+             7.0: "Mixed: White and Asian",
+             8.0: "Mixed: Other",
+             9.0: "Asian: Indian",
+            10.0: "Asian: Pakistani",
+            11.0: "Asian: Bangladeshi",
+            12.0: "Asian: Chinese",
+            13.0: "Asian: Other",
+            14.0: "Black: Caribbean",
+            15.0: "Black: African",
+            16.0: "Black: Other",
+            17.0: "Arab",
+            97.0: "Other ethnic group",
+        },
+        # ── collapse into 8 canonical groups ─────────────────────────────
+        "recode": {
+            # All non-stated codes → 0
+            -9.0:  0.0,   # missing        → 0  (Not stated)
+            -8.0:  0.0,   # inapplicable   → 0  (Not stated)
+            -7.0:  0.0,   # proxy          → 0  (Not stated)
+            -2.0:  0.0,   # refusal        → 0  (Not stated)
+            -1.0:  0.0,   # don't know     → 0  (Not stated)
+            # ── White / Mixed (1) ─────────────────────────────────────────
+             1.0:  1.0,   # White British/English/Scottish/Welsh → 1
+             2.0:  1.0,   # White Irish                         → 1
+             3.0:  1.0,   # White Gypsy or Irish Traveller      → 1
+             4.0:  1.0,   # White Other                         → 1
+             5.0:  1.0,   # Mixed: White and Black Caribbean    → 1
+             6.0:  1.0,   # Mixed: White and Black African      → 1
+             7.0:  1.0,   # Mixed: White and Asian              → 1
+             8.0:  1.0,   # Mixed: Other                        → 1
+            # ── Indian (2) ────────────────────────────────────────────────
+             9.0:  2.0,   # Asian: Indian                       → 2
+            # ── Pakistani / Bangladeshi (3) ───────────────────────────────
+            10.0:  3.0,   # Asian: Pakistani                    → 3
+            11.0:  3.0,   # Asian: Bangladeshi                  → 3
+            # ── Other Asian (4) ───────────────────────────────────────────
+            12.0:  4.0,   # Asian: Chinese                      → 4
+            13.0:  4.0,   # Asian: Other Asian                  → 4
+            # ── Arab (5) ──────────────────────────────────────────────────
+            17.0:  5.0,   # Arab                                → 5
+            # ── Caribbean (6) ─────────────────────────────────────────────
+            14.0:  6.0,   # Black: Caribbean                    → 6
+            # ── African (7) ───────────────────────────────────────────────
+            15.0:  7.0,   # Black: African                      → 7
+            # ── Other (8) ─────────────────────────────────────────────────
+            16.0:  8.0,   # Black: Other                        → 8
+            97.0:  8.0,   # Other ethnic group                  → 8
+        },
+        # ── display labels for post-recode canonical codes ────────────────
+        "group_labels": {
+            0.0: "Not stated",
+            1.0: "White / Mixed",
+            2.0: "Indian",
+            3.0: "Pakistani / Bangladeshi",
+            4.0: "Other Asian",
+            5.0: "Arab",
+            6.0: "Caribbean",
+            7.0: "African",
+            8.0: "Other",
+        },
+        "fill":    0,
+        "cluster": True,
+        "one_hot": True,
+    },
 
     # -------------------------------------------------------------------------
     # 2. Socioeconomic

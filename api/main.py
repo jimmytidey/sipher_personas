@@ -14,7 +14,7 @@ _ROOT_DIR = _API_DIR.parent
 BASE_DIR = _API_DIR if (_API_DIR / "data").exists() else _ROOT_DIR
 
 # Production paths
-PROD_CLUSTERS_PATH = BASE_DIR / "data" / "clusters" / "LA_london_clusters_described.csv"
+PROD_CLUSTERS_PATH = BASE_DIR / "data" / "clusters" / "LA_london_clusters.csv"
 
 # Test paths  (data_test/ folder, built from test_config_variables)
 TEST_CLUSTERS_PATH = BASE_DIR / "data_test" / "6_cluster" / "LA_clusters.csv"
