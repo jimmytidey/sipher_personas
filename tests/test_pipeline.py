@@ -22,8 +22,9 @@ from sklearn.cluster import KMeans
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from data_processing import normalise, cluster_funcs
-from data_processing.config_variables import (
+import data_pipeline.helpers.normalise as normalise
+import data_pipeline.helpers.cluster as cluster_funcs
+from data_pipeline.config_variables import (
     CLUSTER_VARS,
     SUMMARY_VARS,
     VARIABLE_MAP,
@@ -31,7 +32,7 @@ from data_processing.config_variables import (
     CATEGORY_MAPS,
     ONE_HOT_VARS,
 )
-from data_processing.config_cluster import WAVE, MAX_TOTAL_CLUSTERS, GROUPS
+from data_pipeline.config_cluster import WAVE, MAX_TOTAL_CLUSTERS, GROUPS
 
 # ── helpers ──────────────────────────────────────────────────────────────────
 # Feature columns expected after notebook 4 (OHE applied).
@@ -200,7 +201,7 @@ class TestOHEEncoding:
     @pytest.fixture(scope="class")
     def ohe_df(self) -> pd.DataFrame:
         """Load raw file, apply recode then OHE — mirrors notebook 4."""
-        from data_processing.config_variables import VARIABLES, RECODE_MAPS
+        from data_pipeline.config_variables import VARIABLES, RECODE_MAPS
         df = pd.read_csv(RAW_DIR / "ukhls" / "o_indresp.tab", sep="\t")
         # Step 1: apply recode maps (e.g. jbstat 2→1 for Employed)
         for base, recode in RECODE_MAPS.items():

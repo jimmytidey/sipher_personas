@@ -47,7 +47,7 @@ from pathlib import Path
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT))
 
-from data_processing.config_variables import VARIABLE_MAP   # base codes only
+from data_pipeline.config_variables import VARIABLE_MAP   # base codes only
 
 RAW  = ROOT / "data_test" / "0_raw"
 
@@ -232,5 +232,5 @@ if __name__ == "__main__":
     write_csv(RAW / "ukhls"  / "o_indresp.tab",     RESPONDENTS, delimiter="\t")
 
     print(f"\nDone. {len(RESPONDENTS[0]) - 1} columns per respondent.")
-    print("Set USE_TEST_DATA = True in data_processing/config_paths.py, then run")
+    print("Set USE_TEST_DATA = True in data_pipeline/config_paths.py, then run")
     print("notebooks 1 → 2 → 3 → 4 → 5 → 6 to generate data_test/6_cluster/LA_clusters.csv")

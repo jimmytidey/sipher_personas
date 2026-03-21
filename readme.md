@@ -30,7 +30,7 @@ data/
 
 ## Notes
 
-- All variable definitions, clip/floor/recode rules are in `data_processing/config_variables.py`
+- All variable definitions, clip/floor/recode rules are in `data_pipeline/config_variables.py`
 - Step 4 applies all `recode`, `floor`, and `clip` values from `config_variables.py` and selects `cluster=True` features only
 - Step 5 is purely Z-score (StandardScaler) — no manual mappings
 - Step 6 reads both the normalised matrix (for clustering) and the feature-eng real values (for the DNA report)
