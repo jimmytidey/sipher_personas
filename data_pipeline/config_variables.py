@@ -15,6 +15,9 @@
 #   floor       - (optional) lower bound to clip (e.g. 0 to zero-out negative pay)
 #   recode      - (optional) dict of {raw_value -> new_value} applied before use
 #   bin_width   - (optional) fixed histogram bin width for visualisation (overrides auto-binning)
+#   backfill    - list of values that trigger a look-back through older waves (e.g.
+#                 [-9, -7, -2, -1]); NaN always triggers if a list is provided.
+#                 Use None or [] to disable backfill for this variable.
 #   xwave       - (optional) True if this variable should be sourced from xwavedat.pkl
 #                 (looked up by code); xwave vars are never backfilled
 #   transform   - (optional) transformation applied during feature engineering, e.g.
@@ -33,7 +36,7 @@ VARIABLES = {
         "fill":        None,
         "cluster":     False,
         "one_hot":     None,
-        "backfill":    False,
+        "backfill":    None,
     },
 
     # =========================================================================
@@ -51,15 +54,15 @@ VARIABLES = {
         "fill":        0,
         "cluster":     True,
         "one_hot":     None,
-        "backfill":    False,
+        "backfill":    None,
         "xwave":       True,
         "transform":   "birth_year_to_age",
     },
-        "sex_dv": { 
+        "sex_dv": { # very few missing values, so no need to remap
         "code":        "sex_dv",
         "label":       "Gender",
         "categorical": True,
-        "backfill":    False,
+        "backfill":    None,
         "categories":  {-20.0: "No data from BHPS", -9.0: "Missing", 0.0: "Inconsistent", 1.0: "Male", 2.0: "Female"},
         "fill":        0.0,
         "cluster":     True,
@@ -71,9 +74,10 @@ VARIABLES = {
         "code":        "ff_oprlg1",
         "label":       "Religion",
         "categorical": True,
-        "backfill":    True,
+        "backfill":    [-9, -8, -2, -1],
         # ── all raw codes as they appear in the UKHLS data ───────────────
         "categories":  {
+            -9.0: "Missing",
             -8.0: "Inapplicable",
             -1.0: "Missing / not stated",
              2.0: "Church of England/Anglican",
@@ -96,6 +100,9 @@ VARIABLES = {
         },
         # ── collapse all Christian denominations into one code ────────────
         "recode": {
+            -9.0: 1,  # not religious                             
+            -8.0: 1,  # not religious    
+            -1.0: 1,  # not religious    
              3.0: 2.0,   # Roman Catholic                      → 2 (Christian)
              4.0: 2.0,   # Church of Scotland                  → 2 (Christian)
              5.0: 2.0,   # Free Church / Free Presbyterian     → 2 (Christian)
@@ -106,20 +113,20 @@ VARIABLES = {
             10.0: 2.0,   # Other Christian                     → 2 (Christian)
             11.0: 2.0,   # Christian (no denomination)          → 2 (Christian)
             17.0: 2.0,   # Church of Wales                     → 2 (Christian)
-            97.0: -8.0,  # Other                               → inapplicable
+            97.0: 17.0,  # Other                               → inapplicable
         },
         # ── display labels for post-recode canonical codes ────────────────
         "group_labels": {
-            -8.0: "None/Not applicable",
-            -1.0: "Missing / not stated",
-             2.0: "Christian",
+            1.0: "Not religious",
+            2.0: "Christian",
             12.0: "Muslim/Islam",
             13.0: "Hindu",
             14.0: "Jewish",
             15.0: "Sikh",
             16.0: "Buddhist",
+            17.0: "Other",
         },
-        "fill":        -8.0,
+        "fill":        1.0,
         "cluster":     True,
         "one_hot":     True,
     },
@@ -128,7 +135,7 @@ VARIABLES = {
         "label":       "Ethnic group",
         "xwave":       True,
         "categorical": True,
-        "backfill":    False,
+        "backfill":    None,
         # ── all raw codes as they appear in the UKHLS data ───────────────
         "categories":  {
             -9.0: "Missing",
@@ -202,6 +209,7 @@ VARIABLES = {
         "categories":  {-9.0: "Missing", -7.0: "Proxy", -2.0: "Refusal", -1.0: "Don't know", 1.0: "Yes", 2.0: "No"},
         "recode":      {
             -9.0: 1.0,  # Missing          → Yes (assume English)
+            -8.0: 1.0,  # Inapplicable     → Yes (assume English)
             -7.0: 1.0,  # Proxy            → Yes (assume English)
             -2.0: 1.0,  # Refusal          → Yes (assume English)
             -1.0: 1.0,  # Don't know       → Yes (assume English)
@@ -209,7 +217,7 @@ VARIABLES = {
         "group_labels": {1.0: "Yes", 2.0: "No"},
         "fill":        1.0,
         "cluster":     True,
-        "backfill":    True,
+        "backfill":    [-9, -8, -7, -2, -1],
     },
     # -------------------------------------------------------------------------
     # 2. Socioeconomic
@@ -218,22 +226,29 @@ VARIABLES = {
         "code":        "hiqual_dv",
         "label":       "Highest qualification",
         "categorical": False,  # ordinal scale — treated as continuous for clustering but categorical for labelling
-        "backfill":    True,
+        "backfill":    [-9, -8, -2, -1],
         "categories":  {
-            1.0: "Degree",       2.0: "Other Higher",
-            3.0: "A-Level",      4.0: "GCSE",
-            5.0: "Other / None",
+            -9.0: "Missing",     -8.0: "Inapplicable",
+            -2.0: "Refusal",     -1.0: "Don't know",
+             1.0: "Degree",       2.0: "Other higher degree",
+             3.0: "A-level etc",  4.0: "GCSE etc",
+             5.0: "Other qualification", 9.0: "No qualification",
         },
         "fill":        5.0,
         "cluster":     True,
         "one_hot":     None,
-        "recode":      {9.0: 5.0},  # "None" (9) → 5 to keep scale 1–5
+        "recode":      {9.0: 6.0},  # "No qualification" (9) → 6
+        "group_labels": {
+            1.0: "Degree",              2.0: "Other higher degree",
+            3.0: "A-level etc",         4.0: "GCSE etc",
+            5.0: "Other qualification", 6.0: "No qualification",
+        },
     },
     "fimngrs_dv": {
         "code":        "fimngrs_dv",
         "label":       "Total monthly personal income (gross)",
         "categorical": False,
-        "backfill":    False, #we want their current income  
+        "backfill":    None, #we want their current income  
         "categories":  None,
         "fill":        0.0,
         "cluster":     True,
@@ -245,11 +260,13 @@ VARIABLES = {
         "code":        "jbnssec8_dv",
         "label":       "Job type (NS-SEC 8)",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    False, # we want their current job type  
+        "backfill":    None, # we want their current job type  
         "categories":  {
-            -8.0: "Inapplicable",  # inapplicable (non-employed respondents)
-            -1.0: "Missing",
-             0.0: "Unknown",
+            -9.0: "Missing",
+            -8.0: "Inapplicable",
+            -7.0: "Proxy respondent",
+            -2.0: "Refusal",
+            -1.0: "Don't know",
              1.0: "Large employers & higher management",
              2.0: "Higher professional",
              3.0: "Lower management & professional",
@@ -260,8 +277,22 @@ VARIABLES = {
              8.0: "Routine",
         },
         "recode": {
+            -9.0: 0.0,  # missing       → 0 (Unknown)
             -8.0: 0.0,  # inapplicable  → 0 (Unknown; non-employed so no NS-SEC)
-            -1.0: 0.0,  # missing       → 0 (Unknown)
+            -7.0: 0.0,  # proxy         → 0 (Unknown)
+            -2.0: 0.0,  # refusal       → 0 (Unknown)
+            -1.0: 0.0,  # don't know    → 0 (Unknown)
+        },
+        "group_labels": {
+            0.0: "Unknown / not applicable",
+            1.0: "Large employers & higher management",
+            2.0: "Higher professional",
+            3.0: "Lower management & professional",
+            4.0: "Intermediate",
+            5.0: "Small employers & own account",
+            6.0: "Lower supervisory & technical",
+            7.0: "Semi-routine",
+            8.0: "Routine",
         },
         "fill":        "mode",
         "cluster":     True,
@@ -275,7 +306,7 @@ VARIABLES = {
         "code":        "nchild_dv",
         "label":       "Number of own children in household",
         "categorical": False,
-        "backfill":    False,
+        "backfill":    None,
         "categories":  None,
         "fill":        0,
         "cluster":     True, 
@@ -292,7 +323,7 @@ VARIABLES = {
         "code":        "has_child",
         "label":       "Has children",
         "categorical": False,
-        "backfill":    False,
+        "backfill":    None,
         "categories":  None,
         "fill":        0,
         "cluster":     True,   # binary 0/1 derived from nchild_dv > 0
@@ -310,7 +341,7 @@ VARIABLES = {
         "code":        "hhsize",
         "label":       "Household size",
         "categorical": False,
-        "backfill":    False, # we want their current household size
+        "backfill":    None, # we want their current household size
         "categories":  None,
         "fill":        1,
         "cluster":     True,
@@ -324,7 +355,7 @@ VARIABLES = {
         "code":        "payn_dv",
         "label":       "Monthly net pay (take-home)",
         "categorical": False,
-        "backfill":    False, # we want their current payn_dv (net pay) rather than fimngrs_dv (gross income) for profiling, even though gross income is used for clustering due to less missingness
+        "backfill":    None, # we want their current payn_dv (net pay) rather than fimngrs_dv (gross income) for profiling, even though gross income is used for clustering due to less missingness
         "categories":  None,
         "fill":        0,
         "cluster":     False,
@@ -337,7 +368,7 @@ VARIABLES = {
         "code":        "payo_dv",
         "label":       "Personal income — administrative / derived (UKHLS)",
         "categorical": False,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        0,
         "cluster":     False,
@@ -348,7 +379,7 @@ VARIABLES = {
         "code":        "hiquao_dv",
         "label":       "Highest qualification — administrative / derived (UKHLS)",
         "categorical": False,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        5.0,
         "cluster":     False,
@@ -362,7 +393,7 @@ VARIABLES = {
         "code":        "sf12mcs_dv",
         "label":       "Mental health score (SF-12 MCS)",
         "categorical": False,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
         "cluster":     False,
@@ -372,7 +403,7 @@ VARIABLES = {
         "code":        "sf12pcs_dv",
         "label":       "Physical health score (SF-12 PCS)",
         "categorical": False,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
         "cluster":     False,
@@ -386,7 +417,7 @@ VARIABLES = {
         "code":        "nbrsnci_dv",
         "label":       "Buckner Neighbourhood Cohesion Index",
         "categorical": True,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
         "cluster":     False,
@@ -397,7 +428,7 @@ VARIABLES = {
         "code":        "locsera",
         "label":       "Standard of local services: Schools",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
             4.0: "Poor",      5.0: "Very Poor/Bad",
@@ -410,7 +441,7 @@ VARIABLES = {
         "code":        "locserc",
         "label":       "Standard of local services: Public transport",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
             4.0: "Poor",      5.0: "Very Poor/Bad",
@@ -423,7 +454,7 @@ VARIABLES = {
         "code":        "locserd",
         "label":       "Standard of local services: Shopping",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
             4.0: "Poor",      5.0: "Very Poor/Bad",
@@ -436,7 +467,7 @@ VARIABLES = {
         "code":        "locsere",
         "label":       "Standard of local services: Leisure",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
             4.0: "Poor",      5.0: "Very Poor/Bad",
@@ -453,7 +484,7 @@ VARIABLES = {
         "code":        "netpusenew",
         "label":       "Internet use frequency",
         "categorical": True,
-        "backfill":    False, # we want their current internet use rather than backfilling from other waves where they might have been offline
+        "backfill":    None, # we want their current internet use rather than backfilling from other waves where they might have been offline
         "categories":  {
             -8.0: "Inapplicable",
             -1.0: "Missing / not stated",
@@ -483,7 +514,7 @@ VARIABLES = {
         "code":        "jbttwt",
         "label":       "Minutes spent travelling to work",
         "categorical": False,
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "zero",
         "cluster":     False,
@@ -494,7 +525,7 @@ VARIABLES = {
         "code":        "envhabit8",
         "label":       "Environmental habit: public transport use",
         "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    True,
+        "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Always",        2.0: "Very often",
             3.0: "Quite often",   4.0: "Not very often",
@@ -508,7 +539,7 @@ VARIABLES = {
         "code":        "carmiles",
         "label":       "Miles driven in last 12 months",
         "categorical": False,
-        "backfill":    False, # we want their current car miles rather than backfilling from other waves where they might have been driving more/less
+        "backfill":    None, # we want their current car miles rather than backfilling from other waves where they might have been driving more/less
         "categories":  None,
         "fill":        "zero",
         "cluster":     False,
@@ -520,7 +551,7 @@ VARIABLES = {
         "code":        "caruse",
         "label":       "Has use of a car or van",
         "categorical": True,
-        "backfill":    False, # we want their current car use rather than backfilling from other waves where they might have had different access to a car
+        "backfill":    None, # we want their current car use rather than backfilling from other waves where they might have had different access to a car
         "categories":  {1.0: "Yes", 2.0: "No"},
         "fill":        2.0,
         "cluster":     False,
@@ -530,7 +561,7 @@ VARIABLES = {
         "code":        "jbpl",
         "label":       "Work location",
         "categorical": True,
-        "backfill":    False, # we want their current work location rather than backfilling from other waves where they might have been working somewhere else (e.g. at home during lockdown but not in other waves)
+        "backfill":    None, # we want their current work location rather than backfilling from other waves where they might have been working somewhere else (e.g. at home during lockdown but not in other waves)
         "categories":  {
             1.0: "At home",          2.0: "Employer premises",
             3.0: "Driving/travel",   4.0: "Various",
@@ -543,7 +574,7 @@ VARIABLES = {
         "code":        "wktrvfar",
         "label":       "Main mode of transport to work",
         "categorical": True,
-        "backfill":    False,  # we want their current transport mode rather than backfilling from other waves where they might have been using different modes (e.g. not driving during lockdown but driving in other waves)
+        "backfill":    None,  # we want their current transport mode rather than backfilling from other waves where they might have been using different modes (e.g. not driving during lockdown but driving in other waves)
         "categories":  {
             -8.0: "Inapplicable",
             -1.0: "Missing / not stated",
@@ -576,7 +607,7 @@ VARIABLES = {
         "code":        "jbstat",
         "label":       "Employment status",
         "categorical": True,
-        "backfill":    False, # we want their current employment status rather than backfilling from other waves where they might have had different employment status (e.g. employed in some waves but unemployed/retired in others)
+        "backfill":    None, # we want their current employment status rather than backfilling from other waves where they might have had different employment status (e.g. employed in some waves but unemployed/retired in others)
         # ── all raw codes as they appear in the UKHLS data ───────────────
         "categories":  {
             -8.0: "Inapplicable",

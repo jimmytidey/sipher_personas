@@ -44,20 +44,20 @@ const HIQUAL_LABELS = {
   2: "Other Higher",
   3: "A-Level",
   4: "GCSE",
-  5: "Other / None",
+  5: "Other qualification",
+  6: "No qualification",
 };
 
 const STATS = [
-  { key: "Derived age at interview",              label: "Avg. age",          unit: " yrs",  round: 1 },
+  { key: "Age in years",                           label: "Avg. age",          unit: " yrs",  round: 1 },
   { key: "Total monthly personal income (gross)", label: "Monthly income",    unit: "",      fmt: "currency" },
-  { key: "Social class (NS-SEC 8)",               label: "Employment type",  unit: "",      lookup: NSSEC_LABELS },
+  { key: "Job type (NS-SEC 8)",                    label: "Employment type",  unit: "",      lookup: NSSEC_LABELS },
   { key: "Number of own children in household",   label: "Children",          unit: "",      round: 0 },
   { key: "Highest qualification",                 label: "Qual. level",      unit: "",      lookup: HIQUAL_LABELS },
 ];
 
 // Extra variables revealed when a card is expanded
 const EXTRA_VARS = [
-  { key: "Gender",                                        label: "Gender" },
   { key: "Household size",                                label: "Household size",           round: 1 },
   { key: "Has children",                                  label: "Has children" },
   { key: "Monthly net pay (take-home)",                   label: "Monthly net pay",          fmt: "currency" },
@@ -242,18 +242,27 @@ function buildCard(persona, totalPop) {
 
   // Categorical cluster variables
   const religion = persona["Religion"];
+  const religionPct = persona["Religion %"];
   const religionHtml = religion
-    ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}</div>`
+    ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}${religionPct != null ? ` (${religionPct}%)` : ""}</div>`
     : "";
 
   const ethnicity = persona["Ethnic group"];
+  const ethnicityPct = persona["Ethnic group %"];
   const ethnicityHtml = ethnicity
-    ? `<div class="emp-breakdown"><strong>Ethnic group:</strong> ${ethnicity}</div>`
+    ? `<div class="emp-breakdown"><strong>Ethnic group:</strong> ${ethnicity}${ethnicityPct != null ? ` (${ethnicityPct}%)` : ""}</div>`
     : "";
 
   const englangRaw = persona["English is not first language"];
+  const englangPct = persona["English is not first language %"];
   const englangVal = englangRaw === "Yes" ? "No" : englangRaw === "No" ? "Yes" : "Yes";
-  const englangHtml = `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangVal}</div>`;
+  const englangHtml = `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangVal}${englangPct != null ? ` (${englangPct}%)` : ""}</div>`;
+
+  const gender = persona["Gender"];
+  const genderPct = persona["Gender %"];
+  const genderHtml = gender
+    ? `<div class="emp-breakdown"><strong>Gender:</strong> ${gender}${genderPct != null ? ` (${genderPct}%)` : ""}</div>`
+    : "";
 
   const descriptionHtml = persona.gpt_description
     ? `<div class="card-description">${persona.gpt_description}</div>`
@@ -279,6 +288,7 @@ function buildCard(persona, totalPop) {
     <div class="card-stats">
       <div class="stats-grid">${statsHtml}</div>
       ${descriptionHtml}
+      ${genderHtml}
       ${ethnicityHtml}
       ${religionHtml}
       ${englangHtml}
