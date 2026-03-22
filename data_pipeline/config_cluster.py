@@ -13,7 +13,7 @@ WAVE = "o"
 
 # ── Total cluster budget ─────────────────────────────────────────────────────
 # Shared proportionally across all employment groups.
-MAX_TOTAL_CLUSTERS = 25
+MAX_TOTAL_CLUSTERS = 30
 
 # When True (default), the population is first split by employment status (GROUPS)
 # and K-Means is run independently within each group — producing e.g. "Employed 1",

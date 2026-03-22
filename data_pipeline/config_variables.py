@@ -52,7 +52,7 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        0,
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
         "backfill":    None,
         "xwave":       True,
@@ -65,71 +65,68 @@ VARIABLES = {
         "backfill":    None,
         "categories":  {-20.0: "No data from BHPS", -9.0: "Missing", 0.0: "Inconsistent", 1.0: "Male", 2.0: "Female"},
         "fill":        0.0,
-        "cluster":     True,
+        "cluster":     False,
         "xwave":       True,
     },
 
 
-    "ff_oprlg1": {
-        "code":        "ff_oprlg1",
-        "label":       "Religion",
-        "categorical": True,
-        "backfill":    [-9, -8, -2, -1],
-        # ── all raw codes as they appear in the UKHLS data ───────────────
-        "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -1.0: "Missing / not stated",
-             2.0: "Church of England/Anglican",
-             3.0: "Roman Catholic",
-             4.0: "Church of Scotland",
-             5.0: "Free Church / Free Presbyterian",
-             6.0: "Episcopalian",
-             7.0: "Methodist",
-             8.0: "Baptist",
-             9.0: "Congregational / URC",
-            10.0: "Other Christian",
-            11.0: "Christian (no denomination)",
-            12.0: "Muslim/Islam",
-            13.0: "Hindu",
-            14.0: "Jewish",
-            15.0: "Sikh",
-            16.0: "Buddhist",
-            17.0: "Church of Wales",
-            97.0: "Other",
-        },
-        # ── collapse all Christian denominations into one code ────────────
-        "recode": {
-            -9.0: 1,  # not religious                             
-            -8.0: 1,  # not religious    
-            -1.0: 1,  # not religious    
-             3.0: 2.0,   # Roman Catholic                      → 2 (Christian)
-             4.0: 2.0,   # Church of Scotland                  → 2 (Christian)
-             5.0: 2.0,   # Free Church / Free Presbyterian     → 2 (Christian)
-             6.0: 2.0,   # Episcopalian                        → 2 (Christian)
-             7.0: 2.0,   # Methodist                           → 2 (Christian)
-             8.0: 2.0,   # Baptist                             → 2 (Christian)
-             9.0: 2.0,   # Congregational / URC                → 2 (Christian)
-            10.0: 2.0,   # Other Christian                     → 2 (Christian)
-            11.0: 2.0,   # Christian (no denomination)          → 2 (Christian)
-            17.0: 2.0,   # Church of Wales                     → 2 (Christian)
-            97.0: 17.0,  # Other                               → inapplicable
-        },
-        # ── display labels for post-recode canonical codes ────────────────
-        "group_labels": {
-            1.0: "Not religious",
-            2.0: "Christian",
-            12.0: "Muslim/Islam",
-            13.0: "Hindu",
-            14.0: "Jewish",
-            15.0: "Sikh",
-            16.0: "Buddhist",
-            17.0: "Other",
-        },
-        "fill":        1.0,
-        "cluster":     True,
-        "one_hot":     True,
-    },
+    # "ff_oprlg1": {
+    #     "code":        "ff_oprlg1",
+    #     "label":       "Religion",
+    #     "categorical": True,
+    #     "backfill":    [-9, -8, -2, -1],
+    #     "categories":  {
+    #         -9.0: "Missing",
+    #         -8.0: "Inapplicable",
+    #         -1.0: "Missing / not stated",
+    #          2.0: "Church of England/Anglican",
+    #          3.0: "Roman Catholic",
+    #          4.0: "Church of Scotland",
+    #          5.0: "Free Church / Free Presbyterian",
+    #          6.0: "Episcopalian",
+    #          7.0: "Methodist",
+    #          8.0: "Baptist",
+    #          9.0: "Congregational / URC",
+    #         10.0: "Other Christian",
+    #         11.0: "Christian (no denomination)",
+    #         12.0: "Muslim/Islam",
+    #         13.0: "Hindu",
+    #         14.0: "Jewish",
+    #         15.0: "Sikh",
+    #         16.0: "Buddhist",
+    #         17.0: "Church of Wales",
+    #         97.0: "Other",
+    #     },
+    #     "recode": {
+    #         -9.0: 1,  # not religious
+    #         -8.0: 1,  # not religious
+    #         -1.0: 1,  # not religious
+    #          3.0: 2.0,   # Roman Catholic                      → 2 (Christian)
+    #          4.0: 2.0,   # Church of Scotland                  → 2 (Christian)
+    #          5.0: 2.0,   # Free Church / Free Presbyterian     → 2 (Christian)
+    #          6.0: 2.0,   # Episcopalian                        → 2 (Christian)
+    #          7.0: 2.0,   # Methodist                           → 2 (Christian)
+    #          8.0: 2.0,   # Baptist                             → 2 (Christian)
+    #          9.0: 2.0,   # Congregational / URC                → 2 (Christian)
+    #         10.0: 2.0,   # Other Christian                     → 2 (Christian)
+    #         11.0: 2.0,   # Christian (no denomination)          → 2 (Christian)
+    #         17.0: 2.0,   # Church of Wales                     → 2 (Christian)
+    #         97.0: 17.0,  # Other                               → inapplicable
+    #     },
+    #     "group_labels": {
+    #         1.0: "Not religious",
+    #         2.0: "Christian",
+    #         12.0: "Muslim/Islam",
+    #         13.0: "Hindu",
+    #         14.0: "Jewish",
+    #         15.0: "Sikh",
+    #         16.0: "Buddhist",
+    #         17.0: "Other",
+    #     },
+    #     "fill":        1.0,
+    #     "cluster":     True,
+    #     "one_hot":     True,
+    # },
     "racel_dv": {
         "code":        "racel_dv",
         "label":       "Ethnic group",
@@ -216,7 +213,7 @@ VARIABLES = {
         },
         "group_labels": {1.0: "Yes", 2.0: "No"},
         "fill":        1.0,
-        "cluster":     True,
+        "cluster":     False,
         "backfill":    [-9, -8, -7, -2, -1],
     },
     # -------------------------------------------------------------------------
@@ -235,7 +232,7 @@ VARIABLES = {
              5.0: "Other qualification", 9.0: "No qualification",
         },
         "fill":        5.0,
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
         "recode":      {9.0: 6.0},  # "No qualification" (9) → 6
         "group_labels": {
@@ -251,7 +248,7 @@ VARIABLES = {
         "backfill":    None, #we want their current income  
         "categories":  None,
         "fill":        0.0,
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
         "floor":       0,    # non-positive values (inapplicable/not in work) → 0
         "clip":        8000, # caps extreme outliers that distort clustering
@@ -295,7 +292,7 @@ VARIABLES = {
             8.0: "Routine",
         },
         "fill":        "mode",
-        "cluster":     True,
+        "cluster":     False,
         "one_hot":     None,
     },
 

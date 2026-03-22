@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from pathlib import Path
 from typing import Any
 
@@ -12,6 +13,8 @@ _API_DIR  = Path(__file__).resolve().parent
 _ROOT_DIR = _API_DIR.parent
 # Use api/data/ when it exists (self-contained deployment), else fall back to project root
 BASE_DIR = _API_DIR if (_API_DIR / "data").exists() else _ROOT_DIR
+
+PORTRAIT_DIR = _API_DIR / "data" / "portraits"
 
 # Production paths
 PROD_CLUSTERS_PATH = BASE_DIR / "data" / "clusters" / "LA_london_clusters.csv"
@@ -114,13 +117,25 @@ def get_personas(
                 detail=f"Group '{group}' not found for LA '{ladcd}'",
             )
 
-    # Replace NaN with None for clean JSON serialisation
-    return la_df.where(la_df.notna(), other=None).to_dict(orient="records")
+    records = la_df.where(la_df.notna(), other=None).to_dict(orient="records")
+
+    for rec in records:
+        uid = rec.get("unit_id", "")
+        tribe = rec.get("tribe_label", "")
+        safe = re.sub(r'[^a-zA-Z0-9]+', '_', f"{uid}_{tribe}").strip('_').lower()
+        fname = f"{safe}.png"
+        if (PORTRAIT_DIR / fname).exists():
+            rec["portrait_url"] = f"/portraits/{fname}"
+
+    return records
 
 
 # ---------------------------------------------------------------------------
-# Serve the frontend static files — MUST be mounted last (catch-all)
+# Static files — portraits, then frontend catch-all (MUST be last)
 # ---------------------------------------------------------------------------
+
+if PORTRAIT_DIR.exists():
+    app.mount("/portraits", StaticFiles(directory=PORTRAIT_DIR), name="portraits")
 
 _APP_DIR = _ROOT_DIR / "app"
 if _APP_DIR.exists():

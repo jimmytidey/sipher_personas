@@ -241,27 +241,26 @@ function buildCard(persona, totalPop) {
   }).join("");
 
   // Categorical cluster variables
-  const religion = persona["Religion"];
-  const religionPct = persona["Religion %"];
-  const religionHtml = religion
-    ? `<div class="emp-breakdown"><strong>Religion:</strong> ${religion}${religionPct != null ? ` (${religionPct}%)` : ""}</div>`
-    : "";
-
   const ethnicity = persona["Ethnic group"];
   const ethnicityPct = persona["Ethnic group %"];
   const ethnicityHtml = ethnicity
     ? `<div class="emp-breakdown"><strong>Ethnic group:</strong> ${ethnicity}${ethnicityPct != null ? ` (${ethnicityPct}%)` : ""}</div>`
     : "";
 
-  const englangRaw = persona["English is not first language"];
-  const englangPct = persona["English is not first language %"];
-  const englangVal = englangRaw === "Yes" ? "No" : englangRaw === "No" ? "Yes" : "Yes";
-  const englangHtml = `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangVal}${englangPct != null ? ` (${englangPct}%)` : ""}</div>`;
+  const englangRaw = persona["English is my first language"];
+  const englangPct = persona["English is my first language %"];
+  const englangHtml = englangRaw
+    ? `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangRaw}${englangPct != null ? ` (${englangPct}%)` : ""}</div>`
+    : "";
 
   const gender = persona["Gender"];
   const genderPct = persona["Gender %"];
   const genderHtml = gender
     ? `<div class="emp-breakdown"><strong>Gender:</strong> ${gender}${genderPct != null ? ` (${genderPct}%)` : ""}</div>`
+    : "";
+
+  const portraitHtml = persona.portrait_url
+    ? `<img class="card-portrait" src="${API_BASE}${persona.portrait_url}" alt="${persona.gpt_title || persona.tribe_label}" />`
     : "";
 
   const descriptionHtml = persona.gpt_description
@@ -282,15 +281,17 @@ function buildCard(persona, totalPop) {
 
   card.innerHTML = `
     <div class="card-head">
-      <div class="card-title-block">${titleBlockHtml}</div>
-      <span class="card-size">${pct}</span>
+      ${portraitHtml}
+      <div class="card-head-text">
+        <div class="card-title-block">${titleBlockHtml}</div>
+        <span class="card-size">${pct}</span>
+      </div>
     </div>
     <div class="card-stats">
       <div class="stats-grid">${statsHtml}</div>
       ${descriptionHtml}
       ${genderHtml}
       ${ethnicityHtml}
-      ${religionHtml}
       ${englangHtml}
     </div>
     <button class="card-expand-btn" aria-expanded="false">
