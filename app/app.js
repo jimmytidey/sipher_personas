@@ -87,6 +87,11 @@ const laSelect    = document.getElementById("la-select");
 const tabContainer = document.getElementById("group-tabs");
 const mainEl      = document.getElementById("main-content");
 const summaryEl   = document.getElementById("summary-bar");
+const siteIntro   = document.getElementById("site-intro");
+
+function setSiteIntroVisible(show) {
+  if (siteIntro) siteIntro.hidden = !show;
+}
 
 // ----- Boot -----
 async function init() {
@@ -98,7 +103,7 @@ async function init() {
     document.body.prepend(banner);
   }
 
-  renderState("loading", "Loading Local Authorities…");
+  renderState("loading", "Loading local authorities…");
   try {
     const las = await apiFetch(apiPath("/las"));
     populateLaSelect(las);
@@ -108,7 +113,7 @@ async function init() {
 }
 
 function populateLaSelect(las) {
-  laSelect.innerHTML = '<option value="">— Select a Local Authority —</option>';
+  laSelect.innerHTML = '<option value="">— Select a local authority —</option>';
   las.forEach(({ code, name }) => {
     const opt = document.createElement("option");
     opt.value = code;
@@ -116,14 +121,20 @@ function populateLaSelect(las) {
     laSelect.appendChild(opt);
   });
   laSelect.disabled = false;
-  renderState("empty", "Select a Local Authority above to explore its personas.");
+  setSiteIntroVisible(true);
+  renderState("empty", "");
 }
 
 laSelect.addEventListener("change", async () => {
   const code = laSelect.value;
-  if (!code) { renderState("empty", "Select a Local Authority above."); return; }
+  if (!code) {
+    setSiteIntroVisible(true);
+    renderState("empty", "");
+    return;
+  }
   currentLa    = code;
   currentGroup = "All";
+  setSiteIntroVisible(false);
   renderState("loading", "Loading personas…");
   try {
     allPersonas = await apiFetch(apiPath(`/la/${code}/personas`));
@@ -217,7 +228,23 @@ function buildCard(persona, totalPop) {
   card.className = "card";
   card.style.setProperty("--card-color", color);
 
-  const pct = totalPop > 0 ? ((Number(persona.size) / totalPop) * 100).toFixed(1) + "% of LA" : "—";
+  const clusterN = Number(persona.size);
+  const countPart =
+    persona.size != null && persona.size !== "" && !isNaN(clusterN) && clusterN >= 0
+      ? `${formatNum(Math.round(clusterN))} people`
+      : null;
+  const pctPart =
+    totalPop > 0 && !isNaN(clusterN) && clusterN >= 0
+      ? `${((clusterN / totalPop) * 100).toFixed(1)}% of LA`
+      : null;
+  const pct =
+    pctPart && countPart
+      ? `${pctPart} (${countPart})`
+      : pctPart
+        ? pctPart
+        : countPart
+          ? countPart
+          : "—";
 
   // GPT-generated title & description (may be absent before notebook 9 is run)
   const gptTitle = persona.gpt_title;
@@ -318,10 +345,11 @@ function buildCard(persona, totalPop) {
 function renderState(type, message) {
   const icons = { loading: "⏳", empty: "🗺️", error: "⚠️" };
   summaryEl.textContent = "";
+  const textHtml = message ? `<p>${message}</p>` : "";
   mainEl.innerHTML = `
     <div class="state-msg">
       <div class="icon">${icons[type] ?? ""}</div>
-      <p>${message}</p>
+      ${textHtml}
     </div>
   `;
 }
