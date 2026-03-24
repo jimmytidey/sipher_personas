@@ -9,7 +9,6 @@
 #   group_labels- (optional) post-recode display labels {canonical_code -> label};
 #                 overrides categories in CATEGORY_MAPS when present
 #   fill        - imputation strategy: "mode" | "median" | "zero" | None
-#   cluster     - True if this variable should be used as a K-Means feature
 #   one_hot     - list of category codes (float) to one-hot encode, or None
 #   clip        - (optional) upper bound to clip outliers before clustering/viz
 #   floor       - (optional) lower bound to clip (e.g. 0 to zero-out negative pay)
@@ -22,11 +21,26 @@
 #                 (looked up by code); xwave vars are never backfilled
 #   transform   - (optional) transformation applied during feature engineering, e.g.
 #                 "birth_year_to_age"
+#
+# K-Means inputs: see config_cluster.CLUSTER_VARS (re-exported below as CLUSTER_VARS).
+#
+# LLM-curated variables (digital / migration / public services) are defined in
+# config_variables_llm_generated.LLM_GENERATED_VARIABLES and merged in below
+# after the hand-written block (hand-written keys win on duplicate names).
+
+# Notebooks often run with cwd=data_pipeline/ and use `import config_variables` (flat).
+# In that case `data_pipeline` is not a package on sys.path — use same-directory imports.
+try:
+    from data_pipeline import config_cluster
+    from data_pipeline.config_variables_llm_generated import LLM_GENERATED_VARIABLES
+except ModuleNotFoundError:  # pragma: no cover
+    import config_cluster
+    from config_variables_llm_generated import LLM_GENERATED_VARIABLES
 
 VARIABLES = {
 
     # -------------------------------------------------------------------------
-    # 0. Anchors & Processing  (never clustered — identifiers / raw sources)
+    # 0. Anchors & Processing  (identifiers / raw sources)
     # -------------------------------------------------------------------------
     "pidp": {
         "code":        "pidp",
@@ -34,13 +48,12 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        None,
-        "cluster":     False,
         "one_hot":     None,
         "backfill":    None,
     },
 
     # =========================================================================
-    # CLUSTER FEATURES  (cluster: True — used directly as K-Means inputs)
+    # Core survey variables (K-Means membership is in config_cluster.CLUSTER_VARS)
     # =========================================================================
 
     # -------------------------------------------------------------------------
@@ -52,7 +65,6 @@ VARIABLES = {
         "categorical": False,
         "categories":  None,
         "fill":        0,
-        "cluster":     False,
         "one_hot":     None,
         "backfill":    None,
         "xwave":       True,
@@ -65,7 +77,6 @@ VARIABLES = {
         "backfill":    None,
         "categories":  {-20.0: "No data from BHPS", -9.0: "Missing", 0.0: "Inconsistent", 1.0: "Male", 2.0: "Female"},
         "fill":        0.0,
-        "cluster":     False,
         "xwave":       True,
     },
 
@@ -154,67 +165,51 @@ VARIABLES = {
             17.0: "Arab",
             97.0: "Other ethnic group",
         },
-        # ── collapse into 8 canonical groups ─────────────────────────────
+        # ── collapse into 10 canonical groups (White and Mixed separate) ─
         "recode": {
             -9.0:  0.0,   # missing                             → 0 (Not stated)
-            # ── White / Mixed (1) ─────────────────────────────────────────
+            # ── White (1) ─────────────────────────────────────────────────
              1.0:  1.0,   # White British etc.                  → 1
              2.0:  1.0,   # White Irish                         → 1
              4.0:  1.0,   # White Other                         → 1
-             5.0:  1.0,   # Mixed: White and Black Caribbean    → 1
-             6.0:  1.0,   # Mixed: White and Black African      → 1
-             7.0:  1.0,   # Mixed: White and Asian              → 1
-             8.0:  1.0,   # Mixed: Other                        → 1
-            # ── Indian (2) ────────────────────────────────────────────────
-             9.0:  2.0,   # Asian: Indian                       → 2
-            # ── Pakistani / Bangladeshi (3) ───────────────────────────────
-            10.0:  3.0,   # Asian: Pakistani                    → 3
-            11.0:  3.0,   # Asian: Bangladeshi                  → 3
-            # ── Other Asian (4) ───────────────────────────────────────────
-            12.0:  4.0,   # Asian: Chinese                      → 4
-            13.0:  4.0,   # Asian: Other Asian                  → 4
-            # ── Arab (5) ──────────────────────────────────────────────────
-            17.0:  5.0,   # Arab                                → 5
-            # ── Caribbean (6) ─────────────────────────────────────────────
-            14.0:  6.0,   # Black: Caribbean                    → 6
-            # ── African (7) ───────────────────────────────────────────────
-            15.0:  7.0,   # Black: African                      → 7
-            # ── Other (8) ─────────────────────────────────────────────────
-            16.0:  7.0,   # Black: Other                        → 7
-            97.0:  8.0,   # Other ethnic group                  → 8
+            # ── Mixed (2) ─────────────────────────────────────────────────
+             5.0:  2.0,   # Mixed: White and Black Caribbean    → 2
+             6.0:  2.0,   # Mixed: White and Black African      → 2
+             7.0:  2.0,   # Mixed: White and Asian              → 2
+             8.0:  2.0,   # Mixed: Other                        → 2
+            # ── Indian (3) ────────────────────────────────────────────────
+             9.0:  3.0,   # Asian: Indian                       → 3
+            # ── Pakistani / Bangladeshi (4) ───────────────────────────────
+            10.0:  4.0,   # Asian: Pakistani                    → 4
+            11.0:  4.0,   # Asian: Bangladeshi                  → 4
+            # ── Other Asian (5) ───────────────────────────────────────────
+            12.0:  5.0,   # Asian: Chinese                      → 5
+            13.0:  5.0,   # Asian: Other Asian                  → 5
+            # ── Arab (6) ──────────────────────────────────────────────────
+            17.0:  6.0,   # Arab                                → 6
+            # ── Caribbean (7) ─────────────────────────────────────────────
+            14.0:  7.0,   # Black: Caribbean                    → 7
+            # ── African (8) ───────────────────────────────────────────────
+            15.0:  8.0,   # Black: African                      → 8
+            16.0:  8.0,   # Black: Other                        → 8
+            # ── Other (9) ─────────────────────────────────────────────────
+            97.0:  9.0,   # Other ethnic group                  → 9
         },
         # ── display labels for post-recode canonical codes ────────────────
         "group_labels": {
             0.0: "Not stated",
-            1.0: "White / Mixed",
-            2.0: "Indian",
-            3.0: "Pakistani / Bangladeshi",
-            4.0: "Other Asian",
-            5.0: "Arab",
-            6.0: "Caribbean",
-            7.0: "African",
-            8.0: "Other",
+            1.0: "White",
+            2.0: "Mixed",
+            3.0: "Indian",
+            4.0: "Pakistani / Bangladeshi",
+            5.0: "Other Asian",
+            6.0: "Arab",
+            7.0: "Caribbean",
+            8.0: "African",
+            9.0: "Other",
         },
         "fill":    0,
-        "cluster": True,
         "one_hot": True,
-    },
-    "englang": {
-        "code":        "englang",
-        "label":       "English is my first language",
-        "categorical": True,
-        "categories":  {-9.0: "Missing", -7.0: "Proxy", -2.0: "Refusal", -1.0: "Don't know", 1.0: "Yes", 2.0: "No"},
-        "recode":      {
-            -9.0: 1.0,  # Missing          → Yes (assume English)
-            -8.0: 1.0,  # Inapplicable     → Yes (assume English)
-            -7.0: 1.0,  # Proxy            → Yes (assume English)
-            -2.0: 1.0,  # Refusal          → Yes (assume English)
-            -1.0: 1.0,  # Don't know       → Yes (assume English)
-        },
-        "group_labels": {1.0: "Yes", 2.0: "No"},
-        "fill":        1.0,
-        "cluster":     False,
-        "backfill":    [-9, -8, -7, -2, -1],
     },
     # -------------------------------------------------------------------------
     # 2. Socioeconomic
@@ -232,7 +227,6 @@ VARIABLES = {
              5.0: "Other qualification", 9.0: "No qualification",
         },
         "fill":        5.0,
-        "cluster":     False,
         "one_hot":     None,
         "recode":      {9.0: 6.0},  # "No qualification" (9) → 6
         "group_labels": {
@@ -248,7 +242,6 @@ VARIABLES = {
         "backfill":    None, #we want their current income  
         "categories":  None,
         "fill":        0.0,
-        "cluster":     False,
         "one_hot":     None,
         "floor":       0,    # non-positive values (inapplicable/not in work) → 0
         "clip":        8000, # caps extreme outliers that distort clustering
@@ -292,7 +285,6 @@ VARIABLES = {
             8.0: "Routine",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
 
@@ -306,29 +298,48 @@ VARIABLES = {
         "backfill":    None,
         "categories":  None,
         "fill":        0,
-        "cluster":     True, 
         "one_hot":     None,
         'floor':       0,
         'clip':        7,
+        # Optional derived binary for profiling / exports — not in config_cluster.CLUSTER_VARS (use nchild_dv in K-Means)
         'create_binary_derrived_feature': {
             'feature_name': 'has_child',
             'threshold': 0,
-            'cluster': True,
-        } 
+        }
     },
-    "has_child": { # binary feature derived from nchild_dv > 0, included as a cluster feature because it might capture different information than just the count of children (e.g. presence of any children vs none might be more relevant for clustering than the exact number)
+    "has_child": { # binary 0/1 from nchild_dv > 0; kept for CSV/API — excluded from clustering (see CLUSTER_VARS)
         "code":        "has_child",
         "label":       "Has children",
         "categorical": False,
         "backfill":    None,
         "categories":  None,
         "fill":        0,
-        "cluster":     True,   # binary 0/1 derived from nchild_dv > 0
+        "one_hot":     None,
+    },
+    # Derived in 4_feature_eng from ukborn + pacob + macob (not a UKHLS column)
+    "immigrant_gen": {
+        "code":        "immigrant_gen",
+        "label":       "Immigrant generation",
+        "categorical": True,
+        "backfill":    None,
+        "categories":  {
+            0.0: "Not stated",
+            1.0: "First generation (born outside UK)",
+            2.0: "Second generation (UK-born, ≥1 parent born abroad)",
+            3.0: "Third+ generation (UK-born, both parents UK-born)",
+        },
+        "group_labels": {
+            0.0: "Not stated",
+            1.0: "First generation",
+            2.0: "Second generation",
+            3.0: "Third+ generation",
+        },
+        "fill":        "mode",
         "one_hot":     None,
     },
 
     # =========================================================================
-    # CONTEXT VARIABLES  (cluster: False — profiling / display only)
+    # CONTEXT VARIABLES  (profiling / display — not in CLUSTER_VARS unless listed there)
     # =========================================================================
 
     # -------------------------------------------------------------------------
@@ -341,7 +352,6 @@ VARIABLES = {
         "backfill":    None, # we want their current household size
         "categories":  None,
         "fill":        1,
-        "cluster":     True,
         "one_hot":     None,
     },
 
@@ -355,7 +365,6 @@ VARIABLES = {
         "backfill":    None, # we want their current payn_dv (net pay) rather than fimngrs_dv (gross income) for profiling, even though gross income is used for clustering due to less missingness
         "categories":  None,
         "fill":        0,
-        "cluster":     False,
         "one_hot":     None,
         "floor":       0,    # non-positive values (inapplicable/not in work) → 0
         "clip":        8000,  # caps extreme outliers that distort clustering
@@ -368,7 +377,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        0,
-        "cluster":     False,
         "one_hot":     None,
         "floor":       0,
     },
@@ -379,7 +387,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        5.0,
-        "cluster":     False,
         "one_hot":     None,
     },
 
@@ -393,7 +400,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
-        "cluster":     False,
         "one_hot":     None,
     },
     "sf12pcs_dv": {
@@ -403,7 +409,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
-        "cluster":     False,
         "one_hot":     None,
     },
 
@@ -417,7 +422,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "median",
-        "cluster":     False,
         "one_hot":     None,
         "bin_width":   1,   # show as 5 count-bars: 0-1, 1-2, 2-3, 3-4, 4-5
     },
@@ -431,7 +435,6 @@ VARIABLES = {
             4.0: "Poor",      5.0: "Very Poor/Bad",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
     "locserc": {
@@ -444,7 +447,6 @@ VARIABLES = {
             4.0: "Poor",      5.0: "Very Poor/Bad",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
     "locserd": {
@@ -457,7 +459,6 @@ VARIABLES = {
             4.0: "Poor",      5.0: "Very Poor/Bad",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
     "locsere": {
@@ -470,7 +471,6 @@ VARIABLES = {
             4.0: "Poor",      5.0: "Very Poor/Bad",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
 
@@ -500,7 +500,6 @@ VARIABLES = {
             -1.0: 7.0,   # missing / not stated → Never
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
 
@@ -514,7 +513,6 @@ VARIABLES = {
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
         "fill":        "zero",
-        "cluster":     False,
         "one_hot":     None,
         "clip":        120,   # caps extreme outliers that distort clustering
     },
@@ -529,7 +527,6 @@ VARIABLES = {
             5.0: "Never",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     None,
     },
     "carmiles": {
@@ -539,7 +536,6 @@ VARIABLES = {
         "backfill":    None, # we want their current car miles rather than backfilling from other waves where they might have been driving more/less
         "categories":  None,
         "fill":        "zero",
-        "cluster":     False,
         "one_hot":     None,
         "floor":       0,    # non-positive values (inapplicable/no car) → 0
         "clip":        50_000,  # ~1,000 miles/week — clips erroneous entries
@@ -551,7 +547,6 @@ VARIABLES = {
         "backfill":    None, # we want their current car use rather than backfilling from other waves where they might have had different access to a car
         "categories":  {1.0: "Yes", 2.0: "No"},
         "fill":        2.0,
-        "cluster":     False,
         "one_hot":     None,
     },
     "jbpl": {
@@ -564,7 +559,6 @@ VARIABLES = {
             3.0: "Driving/travel",   4.0: "Various",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     [1.0],
     },
     "wktrvfar": {
@@ -588,7 +582,6 @@ VARIABLES = {
             97.0: "Other",
         },
         "fill":        "mode",
-        "cluster":     False,
         "one_hot":     [1.0],
         "group_labels": {
              1.0: "Drives to work",
@@ -666,7 +659,6 @@ VARIABLES = {
             8.0: "Inactive",
         },
         "fill":        "mode",
-        "cluster":     False,  # split variable only — groups defined in 6_cluster.ipynb; raw column is constant within each group so adds nothing to K-Means
         "one_hot":     True,
     },
     #"jlsic07_cc": {
@@ -821,6 +813,12 @@ VARIABLES = {
     #},
 }
 
+# Append LLM-generated definitions (e.g. netuse, ukborn, servuse1). Keys already
+# defined above (e.g. pidp, netpusenew) are left unchanged.
+for _code, _spec in LLM_GENERATED_VARIABLES.items():
+    if _code not in VARIABLES:
+        VARIABLES[_code] = _spec
+
 # -----------------------------------------------------------------------------
 # Convenience accessors derived from VARIABLES (single source of truth)
 # -----------------------------------------------------------------------------
@@ -841,8 +839,12 @@ CATEGORY_MAPS = {
 CATEGORICAL_VARS = {k for k, v in VARIABLES.items() if v["categorical"]}
 CONTINUOUS_VARS  = {k for k, v in VARIABLES.items() if not v["categorical"]}
 
-# Variables used as K-Means features (cluster=True)
-CLUSTER_VARS = [k for k, v in VARIABLES.items() if v["cluster"]]
+CLUSTER_VARS = list(config_cluster.CLUSTER_VARS)
+_unknown = [c for c in CLUSTER_VARS if c not in VARIABLES]
+if _unknown:
+    raise ValueError(
+        f"config_cluster.CLUSTER_VARS has unknown variable codes (not in VARIABLES): {_unknown}"
+    )
 
 # Variables shown in the regional cluster summary table (all variables now included)
 SUMMARY_VARS = list(VARIABLES.keys())

@@ -28,13 +28,13 @@
 #     age_dv=25  hiqual_dv=1  payn_dv=3000  jbnssec8_dv=1  fimngrs_dv=3500
 #     hhsize=4   nchild_dv=2  sf12mcs_dv=55  sf12pcs_dv=55
 #     nbrsnci_dv=4  locsera/c/d/e=1  jbttwt=30  envhabit8=1
-#     carmiles=5000  jbpl=1 (at home)  wktrvfar=1 (walk)  englang=1
+#     carmiles=5000  jbpl=1 (at home)  wktrvfar=1 (walk)
 #
 #   Cluster B  → older, low earner, no quals, poor health
 #     age_dv=65  hiqual_dv=5  payn_dv=0  jbnssec8_dv=8  fimngrs_dv=500
 #     hhsize=1   nchild_dv=0  sf12mcs_dv=30  sf12pcs_dv=30
 #     nbrsnci_dv=1  locsera/c/d/e=5  jbttwt=0  envhabit8=5
-#     carmiles=0  jbpl=2 (employer premises)  wktrvfar=2 (car driver)  englang=2
+#     carmiles=0  jbpl=2 (employer premises)  wktrvfar=2 (car driver)
 #
 # The clusters differ on many dimensions — k=2 KMeans separates them cleanly.
 
@@ -80,7 +80,6 @@ _A = {
     # Demographics
     "age_dv":       25.0,
     "sex_dv":       1.0,      # Male
-    "englang":      1.0,      # Yes
     "oprlg1":       -8.0,     # Inapplicable
     # Socioeconomic
     "hiqual_dv":    1.0,      # Degree
@@ -122,7 +121,6 @@ _A = {
 _B = {
     "age_dv":       65.0,
     "sex_dv":       2.0,      # Female
-    "englang":      2.0,      # No
     "oprlg1":       -8.0,
     "hiqual_dv":    5.0,      # Other/None
     "payn_dv":      0.0,

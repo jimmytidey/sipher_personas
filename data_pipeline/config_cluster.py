@@ -11,6 +11,18 @@
 
 WAVE = "o"
 
+# ── K-Means feature variables ─────────────────────────────────────────────────
+# Base codes (no wave prefix). Order is preserved where column order matters.
+# Each name must be a key in VARIABLES (config_variables.py).
+CLUSTER_VARS = [
+    "racel_dv",
+    "doby_dv",  # age in years (after birth_year_to_age in feature engineering)
+    "fimngrs_dv",  # gross monthly personal income (clipped in feature eng)
+    "nchild_dv",
+    # "has_child",  # binary 0/1 — redundant with nchild_dv for K-Means; keep column in data, exclude from distance
+    "hhsize",
+]
+
 # ── Total cluster budget ─────────────────────────────────────────────────────
 # Shared proportionally across all employment groups.
 MAX_TOTAL_CLUSTERS = 30

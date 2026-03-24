@@ -1,0 +1,4 @@
+variable_code,mean,n_missing,min,max,std_dev,n,note
+doby_dv,38.35,0,0,101,23,20177,"UKHLS stats are derived age (years); comparable to o_doby_dv after birth_year_to_age in feature eng"
+fimngrs_dv,2399.46,0,-5328.04,392624.1,3679.13,32849,
+nchild_dv,0.29,0,0,8.0,0.7,48896,

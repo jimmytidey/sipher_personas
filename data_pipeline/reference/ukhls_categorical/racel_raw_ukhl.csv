@@ -1,0 +1,20 @@
+category_code,label,percent,n
+-9.0,missing,23.68,11577
+1.0,british/english/scottish/welsh/northern irish (white),59.86,29268
+2.0,irish (white),1.47,719
+3.0,gypsy or irish traveller (white),0.04,21
+4.0,any other white background (white),2.35,1147
+5.0,white and black caribbean (mixed),0.56,274
+6.0,white and black african (mixed),0.19,91
+7.0,white and asian (mixed),0.49,242
+8.0,any other mixed background (mixed),0.33,163
+9.0,indian (asian or asian british),2.98,1457
+10.0,pakistani (asian or asian british),2.65,1297
+11.0,bangladeshi (asian or asian british),1.45,711
+12.0,chinese (asian or asian british),0.33,160
+13.0,any other asian background (asian or asian british),0.63,308
+14.0,caribbean (black or black british),1.09,531
+15.0,african (black or black british),1.36,665
+16.0,any other black background (black or black british),0.09,44
+17.0,arab (other ethnic group),0.27,131
+97.0,any other ethnic group (other ethnic group),0.18,90

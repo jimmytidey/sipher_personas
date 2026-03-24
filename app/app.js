@@ -16,6 +16,21 @@ function apiPath(path) {
   return path + sep + "test=true";
 }
 
+/** Escape HTML, then render **bold** and newlines for gpt_description (markdown-lite). */
+function formatGptDescriptionHtml(raw) {
+  if (!raw) return "";
+  const esc = (s) =>
+    s
+      .replace(/&/g, "&amp;")
+      .replace(/</g, "&lt;")
+      .replace(/>/g, "&gt;")
+      .replace(/"/g, "&quot;");
+  let t = esc(String(raw));
+  t = t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
+  t = t.replace(/\n/g, "<br>");
+  return t;
+}
+
 const GROUP_COLORS = {
   "Employed":        "#3b82f6",
   "Self-employed":   "#8b5cf6",
@@ -26,7 +41,8 @@ const GROUP_COLORS = {
   "Other":           "#6b7280",
 };
 
-// Numeric stats to show on cards — cluster variables only
+// Main card stats — must match CLUSTER_VARS in data_pipeline/config_cluster.py
+// (Ethnic group + continuous: age, household size, income, children)
 const NSSEC_LABELS = {
   0: "Unknown",
   1: "Large employers & higher management",
@@ -49,18 +65,21 @@ const HIQUAL_LABELS = {
 };
 
 const STATS = [
-  { key: "Age in years",                           label: "Avg. age",          unit: " yrs",  round: 1 },
-  { key: "Total monthly personal income (gross)", label: "Monthly income",    unit: "",      fmt: "currency" },
-  { key: "Job type (NS-SEC 8)",                    label: "Employment type",  unit: "",      lookup: NSSEC_LABELS },
-  { key: "Number of own children in household",   label: "Children",          unit: "",      round: 0 },
-  { key: "Highest qualification",                 label: "Qual. level",      unit: "",      lookup: HIQUAL_LABELS },
+  { key: "Ethnic group", label: "Ethnic group", pctKey: "Ethnic group %" },
+  { key: "Age in years",                           label: "Avg. age",                    unit: " yrs",  round: 1 },
+  { key: "Total monthly personal income (gross)", label: "Monthly income",              unit: "",      fmt: "currency" },
+  { key: "Number of own children in household",   label: "Children living at home",     unit: "",      round: 0 },
+  { key: "Household size",                        label: "Household size",              round: 1 },
 ];
 
-// Extra variables revealed when a card is expanded
+// Non-cluster / contextual variables (expand card)
 const EXTRA_VARS = [
-  { key: "Household size",                                label: "Household size",           round: 1 },
-  { key: "Has children",                                  label: "Has children" },
-  { key: "Monthly net pay (take-home)",                   label: "Monthly net pay",          fmt: "currency" },
+  { key: "Gender",                                    label: "Gender" },
+  { key: "Gender %",                                  label: "Gender %",                    round: 0 },
+  { key: "Job type (NS-SEC 8)",                     label: "Employment type",             unit: "", lookup: NSSEC_LABELS },
+  { key: "Highest qualification",                   label: "Qual. level",                 unit: "", lookup: HIQUAL_LABELS },
+  { key: "Has children",                            label: "Has children" },
+  { key: "Monthly net pay (take-home)",               label: "Monthly net pay",             fmt: "currency" },
   { key: "Mental health score (SF-12 MCS)",               label: "Mental health score",      round: 1 },
   { key: "Physical health score (SF-12 PCS)",             label: "Physical health score",    round: 1 },
   { key: "Buckner Neighbourhood Cohesion Index",          label: "Neighbourhood cohesion",   round: 1 },
@@ -75,6 +94,28 @@ const EXTRA_VARS = [
   { key: "Main mode of transport to work",               label: "Transport to work" },
   { key: "Employment status",                             label: "Employment status" },
   { key: "Internet use frequency",                        label: "Internet use" },
+  // config_variables_llm_generated (digital / migration / public services) — keys must
+  // match VARIABLE_MAP labels in data_pipeline/config_variables.py (cluster CSV columns).
+  { key: "Regularly uses the internet",                  label: "Uses internet regularly" },
+  { key: "Frequency: online banking",                    label: "Online banking (freq.)" },
+  { key: "Frequency: online buying",                     label: "Online buying (freq.)" },
+  { key: "Has a smartphone",                             label: "Has smartphone" },
+  { key: "Access to a laptop (mobile technology module)", label: "Laptop access" },
+  { key: "Born in the UK (country)",                     label: "Born in UK" },
+  { key: "Immigrant generation",                         label: "Immigrant generation" },
+  { key: "Immigrant generation %",                     label: "Immigrant generation %", round: 0 },
+  { key: "Year first came to live in Britain (first-generation migrants)", label: "Year arrived in UK", round: 0 },
+  { key: "Country of birth (numeric code — high cardinality)", label: "Country of birth (code)", round: 0 },
+  { key: "Citizenship: UK citizen (mentioned)",          label: "Citizenship: UK" },
+  { key: "Citizenship: citizen of country of birth (mentioned)", label: "Citizenship: country of birth" },
+  { key: "Citizenship: citizen of another country (mentioned)", label: "Citizenship: other country" },
+  { key: "Country father born in (numeric code — second-gen / heritage)", label: "Father born (country code)", round: 0 },
+  { key: "Country mother born in (numeric code — second-gen / heritage)", label: "Mother born (country code)", round: 0 },
+  { key: "Reason for migration: for work (mentioned)",   label: "Migrated for work" },
+  { key: "Service use (12 m): local GP",                  label: "Used GP (12 m)" },
+  { key: "Service use (12 m): local hospital",           label: "Used hospital (12 m)" },
+  { key: "Service use (12 m): advice services (e.g. benefits)", label: "Benefits advice (12 m)" },
+  { key: "GP visits in last 12 months (banded count)",   label: "GP visits (12 m)" },
 ];
 
 // ----- State -----
@@ -113,6 +154,13 @@ async function init() {
 }
 
 function populateLaSelect(las) {
+  const label = document.querySelector('label[for="la-select"]');
+  if (label) {
+    label.textContent =
+      las.length > 0
+        ? `Local authority (${las.length} in this dataset)`
+        : "Local authority";
+  }
   laSelect.innerHTML = '<option value="">— Select a local authority —</option>';
   las.forEach(({ code, name }) => {
     const opt = document.createElement("option");
@@ -253,54 +301,50 @@ function buildCard(persona, totalPop) {
     : `<div class="card-title">${persona.tribe_label ?? "Persona"}</div>`;
 
   // Stats rows
-  const statsHtml = STATS.map(({ key, label, unit, fmt, round, lookup }) => {
+  const statsHtml = STATS.map(({ key, label, unit, fmt, round, lookup, pctKey }) => {
     const raw = persona[key];
     let val = "—";
-    const num = Number(raw);
-    if (raw !== null && raw !== undefined && raw !== "" && !(num < 0)) {
-      if (lookup)           val = lookup[Math.round(num)] ?? String(Math.round(num));
-      else if (fmt === "currency") val = "£" + formatNum(Math.round(num));
-      else if (fmt === "number")   val = formatNum(Math.round(num));
-      else if (round !== undefined) val = num.toFixed(round) + (unit || "");
-      else val = String(raw) + (unit || "");
+    if (pctKey !== undefined) {
+      const pRaw = persona[pctKey];
+      if (raw !== null && raw !== undefined && raw !== "") {
+        const pNum = Number(pRaw);
+        const pctStr =
+          pRaw !== null && pRaw !== undefined && pRaw !== "" && !Number.isNaN(pNum)
+            ? ` (${pNum}%)`
+            : "";
+        val = `${raw}${pctStr}`;
+      }
+    } else {
+      const num = Number(raw);
+      if (raw !== null && raw !== undefined && raw !== "" && !(num < 0)) {
+        if (lookup) val = lookup[Math.round(num)] ?? String(Math.round(num));
+        else if (fmt === "currency") val = "£" + formatNum(Math.round(num));
+        else if (fmt === "number") val = formatNum(Math.round(num));
+        else if (round !== undefined) val = num.toFixed(round) + (unit || "");
+        else val = String(raw) + (unit || "");
+      }
     }
     return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
   }).join("");
-
-  // Categorical cluster variables
-  const ethnicity = persona["Ethnic group"];
-  const ethnicityPct = persona["Ethnic group %"];
-  const ethnicityHtml = ethnicity
-    ? `<div class="emp-breakdown"><strong>Ethnic group:</strong> ${ethnicity}${ethnicityPct != null ? ` (${ethnicityPct}%)` : ""}</div>`
-    : "";
-
-  const englangRaw = persona["English is my first language"];
-  const englangPct = persona["English is my first language %"];
-  const englangHtml = englangRaw
-    ? `<div class="emp-breakdown"><strong>English is first language:</strong> ${englangRaw}${englangPct != null ? ` (${englangPct}%)` : ""}</div>`
-    : "";
-
-  const gender = persona["Gender"];
-  const genderPct = persona["Gender %"];
-  const genderHtml = gender
-    ? `<div class="emp-breakdown"><strong>Gender:</strong> ${gender}${genderPct != null ? ` (${genderPct}%)` : ""}</div>`
-    : "";
 
   const portraitHtml = persona.portrait_url
     ? `<img class="card-portrait" src="${API_BASE}${persona.portrait_url}" alt="${persona.gpt_title || persona.tribe_label}" />`
     : "";
 
   const descriptionHtml = persona.gpt_description
-    ? `<div class="card-description">${persona.gpt_description}</div>`
+    ? `<div class="card-description">${formatGptDescriptionHtml(persona.gpt_description)}</div>`
     : "";
 
-  // Extra variables for the expanded section
-  const extraHtml = EXTRA_VARS.map(({ key, label, unit, fmt, round }) => {
+  // Extra variables for the expanded section (always show a row; — if not in API payload yet)
+  const extraHtml = EXTRA_VARS.map(({ key, label, unit, fmt, round, lookup }) => {
     const raw = persona[key];
-    if (raw === null || raw === undefined || raw === "") return "";
+    if (raw === null || raw === undefined || raw === "") {
+      return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">—</span></div>`;
+    }
     const num = Number(raw);
     let val;
-    if (fmt === "currency" && !isNaN(num)) val = "£" + formatNum(Math.round(num));
+    if (lookup && !isNaN(num)) val = lookup[Math.round(num)] ?? String(Math.round(num));
+    else if (fmt === "currency" && !isNaN(num)) val = "£" + formatNum(Math.round(num));
     else if (round !== undefined && !isNaN(num)) val = num.toFixed(round) + (unit || "");
     else val = String(raw) + (unit || "");
     return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
@@ -317,9 +361,6 @@ function buildCard(persona, totalPop) {
     <div class="card-stats">
       <div class="stats-grid">${statsHtml}</div>
       ${descriptionHtml}
-      ${genderHtml}
-      ${ethnicityHtml}
-      ${englangHtml}
     </div>
     <button class="card-expand-btn" aria-expanded="false">
       <span>Show all variables</span>

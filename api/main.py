@@ -41,11 +41,47 @@ def load_clusters(path: Path) -> pd.DataFrame:
     return pd.read_csv(path)
 
 
+def _normalize_unit_id(val: Any) -> str:
+    """Stable string LA code from CSV or URL (handles int/float/str)."""
+    if val is None:
+        return ""
+    if isinstance(val, float) and pd.isna(val):
+        return ""
+    if isinstance(val, (int, float)) and not isinstance(val, bool):
+        if float(val).is_integer():
+            return str(int(val))
+        return str(val).strip()
+    return str(val).strip()
+
+
+def _rows_for_la(df: pd.DataFrame, ladcd: str) -> pd.DataFrame:
+    """Rows for one LA — compares normalized unit_id so CSV/URL types always match."""
+    want = _normalize_unit_id(ladcd)
+    u = df["unit_id"].map(_normalize_unit_id)
+    return df[u == want]
+
+
+def _pick_cluster_csv(base: Path) -> Path:
+    """
+    Prefer *_described.csv only when it exists and is not older than the base export.
+
+    After re-running step 6, LA_london_clusters.csv is refreshed but an old
+    LA_london_clusters_described.csv may still sit beside it — loading described
+    would show a stale LA list (e.g. 33 boroughs) until step 8 is re-run.
+    """
+    described = base.parent / (f"{base.stem}_described.csv")
+    if not described.exists():
+        return base
+    if not base.exists():
+        return described
+    if described.stat().st_mtime >= base.stat().st_mtime:
+        return described
+    return base
+
+
 def _clusters_path(test: bool) -> Path:
     clusters = TEST_CLUSTERS_PATH if test else PROD_CLUSTERS_PATH
-    # Prefer the GPT-described version when it exists
-    described = clusters.parent / (clusters.stem + "_described.csv")
-    return described if described.exists() else clusters
+    return _pick_cluster_csv(clusters)
 
 
 # ---------------------------------------------------------------------------
@@ -61,18 +97,45 @@ def health() -> dict[str, str]:
 def list_las(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
 ) -> list[dict[str, str]]:
-    """Return sorted list of all Local Authorities in the cluster data."""
+    """Return one entry per distinct unit_id in the cluster CSV (no separate LA master list)."""
     try:
         df = load_clusters(_clusters_path(test))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    name_map = (
-        df[["unit_id", "la_name"]].drop_duplicates("unit_id").set_index("unit_id")["la_name"].to_dict()
-        if "la_name" in df.columns else {}
+    if "unit_id" not in df.columns:
+        raise HTTPException(status_code=500, detail="Clusters CSV has no unit_id column")
+
+    codes = df["unit_id"].map(_normalize_unit_id)
+    mask = codes.str.len() > 0
+    df = df.loc[mask].copy()
+    df["_uid"] = codes[mask]
+
+    if df.empty:
+        return []
+
+    if "la_name" in df.columns:
+        # One row per LA: first non-empty name wins
+        def _first_name(s: pd.Series) -> str:
+            for v in s.dropna():
+                t = str(v).strip()
+                if t:
+                    return t
+            return ""
+
+        agg = df.groupby("_uid", sort=False)["la_name"].agg(_first_name).reset_index()
+        agg.columns = ["code", "name"]
+    else:
+        agg = df[["_uid"]].drop_duplicates("_uid").rename(columns={"_uid": "code"})
+        agg["name"] = agg["code"]
+
+    agg["name"] = agg.apply(
+        lambda r: r["name"] if str(r["name"]).strip() else r["code"],
+        axis=1,
     )
-    la_codes = sorted(df["unit_id"].dropna().unique().tolist())
-    return [{"code": code, "name": name_map.get(code, code)} for code in la_codes]
+    agg["_sort_name"] = agg["name"].str.lower()
+    agg = agg.sort_values(["_sort_name", "code"]).drop(columns=["_sort_name"])
+    return agg.to_dict(orient="records")
 
 
 @app.get("/la/{ladcd}/groups")
@@ -86,7 +149,7 @@ def get_groups(
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    la_df = df[df["unit_id"] == ladcd]
+    la_df = _rows_for_la(df, ladcd)
     if la_df.empty:
         raise HTTPException(status_code=404, detail=f"LA '{ladcd}' not found")
 
@@ -105,7 +168,7 @@ def get_personas(
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
-    la_df = df[df["unit_id"] == ladcd]
+    la_df = _rows_for_la(df, ladcd)
     if la_df.empty:
         raise HTTPException(status_code=404, detail=f"LA '{ladcd}' not found")
 

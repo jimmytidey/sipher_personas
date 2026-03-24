@@ -33,10 +33,12 @@
       <p>This work explores the hypothesis that a more robust approach could be to supply the LLM with detailed high-quality data about a user group, relying on the LLM only to summarise the most salient aspects of those users.</p>
 
       <p>
-        Use the dropdown above to see demongraphic clusters in UK local authorities (just London Boroughs for now) based on age, employement status, ethnicity, eduction and income. For each cluster the LLM is given further background information and comparative data to support writing a short description of the cluster. It also generates a profile image. 
+        Use the dropdown to choose a local authority. The list is built from the cluster data file served by the API — only authorities that appear in that export are shown (for example a four-borough test run or all London boroughs, depending on how the pipeline was built).
+      </p>
+      <p>
+        Each area shows demographic clusters based on age, employment status, ethnicity, education and income. For each cluster the LLM is given further background information and comparative data to support a short description and a profile image.
       </p>
 
-       </p>
       <p>It uses ChatGPT to write the description and title of each cluster and generate a portrait image.</p>
 
       <p>The data comes from the UK Household Longitudinal Study (UKHLS).</p>
@@ -54,6 +56,6 @@
     <div id="main-content"></div>
   </main>
 
-  <script src="app.js?v=19"></script>
+  <script src="app.js?v=20"></script>
 </body>
 </html>
