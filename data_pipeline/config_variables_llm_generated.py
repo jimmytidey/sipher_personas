@@ -7,8 +7,8 @@
 # Same schema as config_variables.py. Base `code` names match indresp columns
 # without the wave prefix (e.g. o_netpusenew → netpusenew).
 #
-# Merged into config_variables.VARIABLES after the hand-written entries; duplicate
-# keys in config_variables.py take precedence.
+# Merged into config_variables.VARIABLES after theme + pipeline-only keys; duplicate
+# keys already present take precedence.
 #
 # Import from config_variables for VARIABLE_MAP, CATEGORY_MAPS, etc.; this module
 # only supplies LLM_GENERATED_VARIABLES.
@@ -149,24 +149,20 @@ LLM_GENERATED_VARIABLES = {
     },
 
     # -------------------------------------------------------------------------
-    # Migration & citizenship (first-generation: ukborn, yr2uk, reasons;
+    # Migration & citizenship (first-generation: bornuk_dv, yr2uk, reasons;
     # second-generation proxies: parents’ country of birth)
+    # bornuk_dv is xwavedat (derived); raw ukborn remains in feature_eng for immigrant generation
     # -------------------------------------------------------------------------
-    "ukborn": {
-        "code":        "ukborn",
-        "label":       "Born in the UK (country)",
+    "bornuk_dv": {
+        "code":        "bornuk_dv",
+        "label":       "Born in UK (derived)",
         "categorical": True,
-        "backfill":    [-9, -8, -2, -1],
+        "xwave":       True,
+        "backfill":    None,
         "categories":  {
             -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-            1.0: "Yes, England",
-            2.0: "Yes, Scotland",
-            3.0: "Yes, Wales",
-            4.0: "Yes, Northern Ireland",
-            5.0: "Not born in UK",
+            1.0: "Born in UK",
+            2.0: "Not born in UK",
         },
         "fill":        "mode",
         "one_hot":     None,

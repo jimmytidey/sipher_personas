@@ -24,127 +24,49 @@
 #
 # K-Means inputs: see config_cluster.CLUSTER_VARS (re-exported below as CLUSTER_VARS).
 #
-# LLM-curated variables (digital / migration / public services) are defined in
-# config_variables_llm_generated.LLM_GENERATED_VARIABLES and merged in below
-# after the hand-written block (hand-written keys win on duplicate names).
+# Hand-written variable blocks live in theme modules (merged in order below). A small
+# set of pipeline-only definitions (e.g. racel_dv for clustering alongside ethn_dv) is
+# appended next. LLM-curated variables are in config_variables_llm_generated and are
+# merged last — keys already present are left unchanged.
+
+import copy
 
 # Notebooks often run with cwd=data_pipeline/ and use `import config_variables` (flat).
 # In that case `data_pipeline` is not a package on sys.path — use same-directory imports.
 try:
     from data_pipeline import config_cluster
+    from data_pipeline.config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
     from data_pipeline.config_variables_llm_generated import LLM_GENERATED_VARIABLES
+    from data_pipeline.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
+    from data_pipeline.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
+    from data_pipeline.config_variables_transport import VARIABLES as _VAR_TRANSPORT
 except ModuleNotFoundError:  # pragma: no cover
     import config_cluster
+    from config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
     from config_variables_llm_generated import LLM_GENERATED_VARIABLES
-
-VARIABLES = {
-
-    # -------------------------------------------------------------------------
-    # 0. Anchors & Processing  (identifiers / raw sources)
-    # -------------------------------------------------------------------------
-    "pidp": {
-        "code":        "pidp",
-        "label":       "Unique Person ID (anchor for all joins)",
-        "categorical": False,
-        "categories":  None,
-        "fill":        None,
-        "one_hot":     None,
-        "backfill":    None,
-    },
-
-    # =========================================================================
-    # Core survey variables (K-Means membership is in config_cluster.CLUSTER_VARS)
-    # =========================================================================
-
-    # -------------------------------------------------------------------------
-    # 1. Demographics
-    # -------------------------------------------------------------------------
-    "doby_dv": {
-        "code":        "doby_dv",
-        "label":       "Age in years",
-        "categorical": False,
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "backfill":    None,
-        "xwave":       True,
-        "transform":   "birth_year_to_age",
-    },
-        "sex_dv": { # very few missing values, so no need to remap
-        "code":        "sex_dv",
-        "label":       "Gender",
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {-20.0: "No data from BHPS", -9.0: "Missing", 0.0: "Inconsistent", 1.0: "Male", 2.0: "Female"},
-        "fill":        0.0,
-        "xwave":       True,
-    },
+    from config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
+    from config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
+    from config_variables_transport import VARIABLES as _VAR_TRANSPORT
 
 
-    # "ff_oprlg1": {
-    #     "code":        "ff_oprlg1",
-    #     "label":       "Religion",
-    #     "categorical": True,
-    #     "backfill":    [-9, -8, -2, -1],
-    #     "categories":  {
-    #         -9.0: "Missing",
-    #         -8.0: "Inapplicable",
-    #         -1.0: "Missing / not stated",
-    #          2.0: "Church of England/Anglican",
-    #          3.0: "Roman Catholic",
-    #          4.0: "Church of Scotland",
-    #          5.0: "Free Church / Free Presbyterian",
-    #          6.0: "Episcopalian",
-    #          7.0: "Methodist",
-    #          8.0: "Baptist",
-    #          9.0: "Congregational / URC",
-    #         10.0: "Other Christian",
-    #         11.0: "Christian (no denomination)",
-    #         12.0: "Muslim/Islam",
-    #         13.0: "Hindu",
-    #         14.0: "Jewish",
-    #         15.0: "Sikh",
-    #         16.0: "Buddhist",
-    #         17.0: "Church of Wales",
-    #         97.0: "Other",
-    #     },
-    #     "recode": {
-    #         -9.0: 1,  # not religious
-    #         -8.0: 1,  # not religious
-    #         -1.0: 1,  # not religious
-    #          3.0: 2.0,   # Roman Catholic                      → 2 (Christian)
-    #          4.0: 2.0,   # Church of Scotland                  → 2 (Christian)
-    #          5.0: 2.0,   # Free Church / Free Presbyterian     → 2 (Christian)
-    #          6.0: 2.0,   # Episcopalian                        → 2 (Christian)
-    #          7.0: 2.0,   # Methodist                           → 2 (Christian)
-    #          8.0: 2.0,   # Baptist                             → 2 (Christian)
-    #          9.0: 2.0,   # Congregational / URC                → 2 (Christian)
-    #         10.0: 2.0,   # Other Christian                     → 2 (Christian)
-    #         11.0: 2.0,   # Christian (no denomination)          → 2 (Christian)
-    #         17.0: 2.0,   # Church of Wales                     → 2 (Christian)
-    #         97.0: 17.0,  # Other                               → inapplicable
-    #     },
-    #     "group_labels": {
-    #         1.0: "Not religious",
-    #         2.0: "Christian",
-    #         12.0: "Muslim/Islam",
-    #         13.0: "Hindu",
-    #         14.0: "Jewish",
-    #         15.0: "Sikh",
-    #         16.0: "Buddhist",
-    #         17.0: "Other",
-    #     },
-    #     "fill":        1.0,
-    #     "cluster":     True,
-    #     "one_hot":     True,
-    # },
+def _merge_variable_dicts(*parts):
+    """Merge top-level variable code keys; later dicts overwrite earlier on duplicate keys."""
+    out = {}
+    for part in parts:
+        for k, v in part.items():
+            out[k] = copy.deepcopy(v)
+    return out
+
+
+# Variables still required by the pipeline but not defined in any theme module (e.g.
+# xwave racel_dv for CLUSTER_VARS while indresp uses ethn_dv; derived has_child; admin pay fields).
+_LEGACY_PIPELINE_VARIABLES = {
     "racel_dv": {
         "code":        "racel_dv",
         "label":       "Ethnic group",
         "xwave":       True,
         "categorical": True,
         "backfill":    None,
-        # ── all raw codes as they appear in the UKHLS data ───────────────
         "categories":  {
             -9.0: "Missing",
              1.0: "White: British/English/Scottish/Welsh/N. Irish",
@@ -165,37 +87,26 @@ VARIABLES = {
             17.0: "Arab",
             97.0: "Other ethnic group",
         },
-        # ── collapse into 10 canonical groups (White and Mixed separate) ─
         "recode": {
-            -9.0:  0.0,   # missing                             → 0 (Not stated)
-            # ── White (1) ─────────────────────────────────────────────────
-             1.0:  1.0,   # White British etc.                  → 1
-             2.0:  1.0,   # White Irish                         → 1
-             4.0:  1.0,   # White Other                         → 1
-            # ── Mixed (2) ─────────────────────────────────────────────────
-             5.0:  2.0,   # Mixed: White and Black Caribbean    → 2
-             6.0:  2.0,   # Mixed: White and Black African      → 2
-             7.0:  2.0,   # Mixed: White and Asian              → 2
-             8.0:  2.0,   # Mixed: Other                        → 2
-            # ── Indian (3) ────────────────────────────────────────────────
-             9.0:  3.0,   # Asian: Indian                       → 3
-            # ── Pakistani / Bangladeshi (4) ───────────────────────────────
-            10.0:  4.0,   # Asian: Pakistani                    → 4
-            11.0:  4.0,   # Asian: Bangladeshi                  → 4
-            # ── Other Asian (5) ───────────────────────────────────────────
-            12.0:  5.0,   # Asian: Chinese                      → 5
-            13.0:  5.0,   # Asian: Other Asian                  → 5
-            # ── Arab (6) ──────────────────────────────────────────────────
-            17.0:  6.0,   # Arab                                → 6
-            # ── Caribbean (7) ─────────────────────────────────────────────
-            14.0:  7.0,   # Black: Caribbean                    → 7
-            # ── African (8) ───────────────────────────────────────────────
-            15.0:  8.0,   # Black: African                      → 8
-            16.0:  8.0,   # Black: Other                        → 8
-            # ── Other (9) ─────────────────────────────────────────────────
-            97.0:  9.0,   # Other ethnic group                  → 9
+            -9.0:  0.0,
+             1.0:  1.0,
+             2.0:  1.0,
+             4.0:  1.0,
+             5.0:  2.0,
+             6.0:  2.0,
+             7.0:  2.0,
+             8.0:  2.0,
+             9.0:  3.0,
+            10.0:  4.0,
+            11.0:  4.0,
+            12.0:  5.0,
+            13.0:  5.0,
+            17.0:  6.0,
+            14.0:  7.0,
+            15.0:  8.0,
+            16.0:  8.0,
+            97.0:  9.0,
         },
-        # ── display labels for post-recode canonical codes ────────────────
         "group_labels": {
             0.0: "Not stated",
             1.0: "White",
@@ -211,103 +122,7 @@ VARIABLES = {
         "fill":    0,
         "one_hot": True,
     },
-    # -------------------------------------------------------------------------
-    # 2. Socioeconomic
-    # -------------------------------------------------------------------------
-    "hiqual_dv": {
-        "code":        "hiqual_dv",
-        "label":       "Highest qualification",
-        "categorical": False,  # ordinal scale — treated as continuous for clustering but categorical for labelling
-        "backfill":    [-9, -8, -2, -1],
-        "categories":  {
-            -9.0: "Missing",     -8.0: "Inapplicable",
-            -2.0: "Refusal",     -1.0: "Don't know",
-             1.0: "Degree",       2.0: "Other higher degree",
-             3.0: "A-level etc",  4.0: "GCSE etc",
-             5.0: "Other qualification", 9.0: "No qualification",
-        },
-        "fill":        5.0,
-        "one_hot":     None,
-        "recode":      {9.0: 6.0},  # "No qualification" (9) → 6
-        "group_labels": {
-            1.0: "Degree",              2.0: "Other higher degree",
-            3.0: "A-level etc",         4.0: "GCSE etc",
-            5.0: "Other qualification", 6.0: "No qualification",
-        },
-    },
-    "fimngrs_dv": {
-        "code":        "fimngrs_dv",
-        "label":       "Total monthly personal income (gross)",
-        "categorical": False,
-        "backfill":    None, #we want their current income  
-        "categories":  None,
-        "fill":        0.0,
-        "one_hot":     None,
-        "floor":       0,    # non-positive values (inapplicable/not in work) → 0
-        "clip":        8000, # caps extreme outliers that distort clustering
-    },
-    "jbnssec8_dv": {
-        "code":        "jbnssec8_dv",
-        "label":       "Job type (NS-SEC 8)",
-        "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    None, # we want their current job type  
-        "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy respondent",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-             1.0: "Large employers & higher management",
-             2.0: "Higher professional",
-             3.0: "Lower management & professional",
-             4.0: "Intermediate",
-             5.0: "Small employers & own account",
-             6.0: "Lower supervisory & technical",
-             7.0: "Semi-routine",
-             8.0: "Routine",
-        },
-        "recode": {
-            -9.0: 0.0,  # missing       → 0 (Unknown)
-            -8.0: 0.0,  # inapplicable  → 0 (Unknown; non-employed so no NS-SEC)
-            -7.0: 0.0,  # proxy         → 0 (Unknown)
-            -2.0: 0.0,  # refusal       → 0 (Unknown)
-            -1.0: 0.0,  # don't know    → 0 (Unknown)
-        },
-        "group_labels": {
-            0.0: "Unknown / not applicable",
-            1.0: "Large employers & higher management",
-            2.0: "Higher professional",
-            3.0: "Lower management & professional",
-            4.0: "Intermediate",
-            5.0: "Small employers & own account",
-            6.0: "Lower supervisory & technical",
-            7.0: "Semi-routine",
-            8.0: "Routine",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 3. Household
-    # -------------------------------------------------------------------------
-    "nchild_dv": {
-        "code":        "nchild_dv",
-        "label":       "Number of own children in household",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        'floor':       0,
-        'clip':        7,
-        # Optional derived binary for profiling / exports — not in config_cluster.CLUSTER_VARS (use nchild_dv in K-Means)
-        'create_binary_derrived_feature': {
-            'feature_name': 'has_child',
-            'threshold': 0,
-        }
-    },
-    "has_child": { # binary 0/1 from nchild_dv > 0; kept for CSV/API — excluded from clustering (see CLUSTER_VARS)
+    "has_child": {
         "code":        "has_child",
         "label":       "Has children",
         "categorical": False,
@@ -316,60 +131,6 @@ VARIABLES = {
         "fill":        0,
         "one_hot":     None,
     },
-    # Derived in 4_feature_eng from ukborn + pacob + macob (not a UKHLS column)
-    "immigrant_gen": {
-        "code":        "immigrant_gen",
-        "label":       "Immigrant generation",
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {
-            0.0: "Not stated",
-            1.0: "First generation (born outside UK)",
-            2.0: "Second generation (UK-born, ≥1 parent born abroad)",
-            3.0: "Third+ generation (UK-born, both parents UK-born)",
-        },
-        "group_labels": {
-            0.0: "Not stated",
-            1.0: "First generation",
-            2.0: "Second generation",
-            3.0: "Third+ generation",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-
-    # =========================================================================
-    # CONTEXT VARIABLES  (profiling / display — not in CLUSTER_VARS unless listed there)
-    # =========================================================================
-
-    # -------------------------------------------------------------------------
-    # 5. Household & Environment
-    # -------------------------------------------------------------------------
-    "hhsize": {
-        "code":        "hhsize",
-        "label":       "Household size",
-        "categorical": False,
-        "backfill":    None, # we want their current household size
-        "categories":  None,
-        "fill":        1,
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 6. Income
-    # -------------------------------------------------------------------------
-    "payn_dv": {
-        "code":        "payn_dv",
-        "label":       "Monthly net pay (take-home)",
-        "categorical": False,
-        "backfill":    None, # we want their current payn_dv (net pay) rather than fimngrs_dv (gross income) for profiling, even though gross income is used for clustering due to less missingness
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "floor":       0,    # non-positive values (inapplicable/not in work) → 0
-        "clip":        8000,  # caps extreme outliers that distort clustering
-    },
-
     "payo_dv": {
         "code":        "payo_dv",
         "label":       "Personal income — administrative / derived (UKHLS)",
@@ -389,137 +150,10 @@ VARIABLES = {
         "fill":        5.0,
         "one_hot":     None,
     },
-
-    # -------------------------------------------------------------------------
-    # 7. Health & Wellbeing
-    # -------------------------------------------------------------------------
-    "sf12mcs_dv": {
-        "code":        "sf12mcs_dv",
-        "label":       "Mental health score (SF-12 MCS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-    },
-    "sf12pcs_dv": {
-        "code":        "sf12pcs_dv",
-        "label":       "Physical health score (SF-12 PCS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 8. Community & Local Services
-    # -------------------------------------------------------------------------
-    "nbrsnci_dv": {
-        "code":        "nbrsnci_dv",
-        "label":       "Buckner Neighbourhood Cohesion Index",
-        "categorical": True,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-        "bin_width":   1,   # show as 5 count-bars: 0-1, 1-2, 2-3, 3-4, 4-5
-    },
-    "locsera": {
-        "code":        "locsera",
-        "label":       "Standard of local services: Schools",
-        "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  {
-            1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
-            4.0: "Poor",      5.0: "Very Poor/Bad",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "locserc": {
-        "code":        "locserc",
-        "label":       "Standard of local services: Public transport",
-        "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  {
-            1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
-            4.0: "Poor",      5.0: "Very Poor/Bad",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "locserd": {
-        "code":        "locserd",
-        "label":       "Standard of local services: Shopping",
-        "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  {
-            1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
-            4.0: "Poor",      5.0: "Very Poor/Bad",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "locsere": {
-        "code":        "locsere",
-        "label":       "Standard of local services: Leisure",
-        "categorical": False,  # ordinal scale — treated as continuous
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  {
-            1.0: "Excellent", 2.0: "Good", 3.0: "Fair",
-            4.0: "Poor",      5.0: "Very Poor/Bad",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 9. Digital Habits
-    # -------------------------------------------------------------------------
-    "netpusenew": {
-        "code":        "netpusenew",
-        "label":       "Internet use frequency",
-        "categorical": True,
-        "backfill":    None, # we want their current internet use rather than backfilling from other waves where they might have been offline
-        "categories":  {
-            -8.0: "Inapplicable",
-            -1.0: "Missing / not stated",
-             1.0: "Every day",
-             2.0: "Several times a week",
-             3.0: "About once a week",
-             4.0: "Several times a month",
-             5.0: "About once a month",
-             6.0: "Less often",
-             7.0: "Never",
-             8.0: "No internet access",
-             9.0: "No home internet",
-        },
-        "recode": {
-            -8.0: 7.0,   # inapplicable → Never
-            -1.0: 7.0,   # missing / not stated → Never
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 10. Transport Habits
-    # -------------------------------------------------------------------------
-    "jbttwt": {
-        "code":        "jbttwt",
-        "label":       "Minutes spent travelling to work",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "zero",
-        "one_hot":     None,
-        "clip":        120,   # caps extreme outliers that distort clustering
-    },
     "envhabit8": {
         "code":        "envhabit8",
         "label":       "Environmental habit: public transport use",
-        "categorical": False,  # ordinal scale — treated as continuous
+        "categorical": False,
         "backfill":    [-9, -7, -2, -1],
         "categories":  {
             1.0: "Always",        2.0: "Very often",
@@ -529,22 +163,11 @@ VARIABLES = {
         "fill":        "mode",
         "one_hot":     None,
     },
-    "carmiles": {
-        "code":        "carmiles",
-        "label":       "Miles driven in last 12 months",
-        "categorical": False,
-        "backfill":    None, # we want their current car miles rather than backfilling from other waves where they might have been driving more/less
-        "categories":  None,
-        "fill":        "zero",
-        "one_hot":     None,
-        "floor":       0,    # non-positive values (inapplicable/no car) → 0
-        "clip":        50_000,  # ~1,000 miles/week — clips erroneous entries
-    },
     "caruse": {
         "code":        "caruse",
         "label":       "Has use of a car or van",
         "categorical": True,
-        "backfill":    None, # we want their current car use rather than backfilling from other waves where they might have had different access to a car
+        "backfill":    None,
         "categories":  {1.0: "Yes", 2.0: "No"},
         "fill":        2.0,
         "one_hot":     None,
@@ -553,7 +176,7 @@ VARIABLES = {
         "code":        "jbpl",
         "label":       "Work location",
         "categorical": True,
-        "backfill":    None, # we want their current work location rather than backfilling from other waves where they might have been working somewhere else (e.g. at home during lockdown but not in other waves)
+        "backfill":    None,
         "categories":  {
             1.0: "At home",          2.0: "Employer premises",
             3.0: "Driving/travel",   4.0: "Various",
@@ -561,263 +184,21 @@ VARIABLES = {
         "fill":        "mode",
         "one_hot":     [1.0],
     },
-    "wktrvfar": {
-        "code":        "wktrvfar",
-        "label":       "Main mode of transport to work",
-        "categorical": True,
-        "backfill":    None,  # we want their current transport mode rather than backfilling from other waves where they might have been using different modes (e.g. not driving during lockdown but driving in other waves)
-        "categories":  {
-            -8.0: "Inapplicable",
-            -1.0: "Missing / not stated",
-             1.0: "Drive myself by car or van",
-             2.0: "Get a lift with someone from household",
-             3.0: "Get a lift with someone outside the household",
-             4.0: "Motorcycle/moped/scooter",
-             5.0: "Taxi/minicab",
-             6.0: "Bus/coach",
-             7.0: "Train",
-             8.0: "Underground/Metro/Tram/Light railway",
-             9.0: "Cycle",
-            10.0: "Walk",
-            97.0: "Other",
-        },
-        "fill":        "mode",
-        "one_hot":     [1.0],
-        "group_labels": {
-             1.0: "Drives to work",
-        }
-    },
-
-    # -------------------------------------------------------------------------
-    # 10. Employment
-    # -------------------------------------------------------------------------
-    "jbstat": {
-        "code":        "jbstat",
-        "label":       "Employment status",
-        "code":        "jbstat",
-        "label":       "Employment status",
-        "categorical": True,
-        "backfill":    None, # we want their current employment status rather than backfilling from other waves where they might have had different employment status (e.g. employed in some waves but unemployed/retired in others)
-        # ── all raw codes as they appear in the UKHLS data ───────────────
-        "categories":  {
-            -8.0: "Inapplicable",
-            -1.0: "Missing / not stated",
-             1.0: "Self-employed",
-             2.0: "Paid employment (ft/pt)",
-             3.0: "Unemployed",
-             4.0: "Retired",
-             5.0: "On maternity leave",
-             6.0: "Family care or home",
-             7.0: "Full-time student",
-             8.0: "LT sick or disabled",
-             9.0: "Govt training scheme",
-            10.0: "Unpaid family business",
-            11.0: "On apprenticeship",
-            12.0: "On furlough",
-            13.0: "Temporarily laid off",
-            14.0: "On shared parental leave",
-            15.0: "On adoption leave",
-            97.0: "Doing something else",
-        },
-        # ── collapse raw codes into 6 canonical groups for clustering ─────
-        # All 18 raw codes are mapped explicitly below.
-        # Canonical codes after recode: 1=Employed, 3=Unemployed, 4=Retired,
-        #                               5=On leave, 7=Student, 8=Inactive
-        "recode": {
-            # ── Employed (1) ─────────────────────────────────────────────
-             1.0: 1.0,   # self-employed          → 1  (Employed)
-             2.0: 1.0,   # paid employment (ft/pt)→ 1  (Employed)
-            12.0: 1.0,   # furlough               → 1  (Employed)
-            13.0: 1.0,   # temporarily laid off   → 1  (Employed)
-            # ── Unemployed (3) ───────────────────────────────────────────
-             3.0: 3.0,   # unemployed             → 3  (Unemployed)
-            # ── Retired (4) ──────────────────────────────────────────────
-             4.0: 4.0,   # retired                → 4  (Retired)
-            # ── On leave (5) ─────────────────────────────────────────────
-             5.0: 5.0,   # maternity leave        → 5  (On leave)
-             6.0: 5.0,   # family care or home    → 5  (On leave)
-            14.0: 5.0,   # shared parental leave  → 5  (On leave)
-            15.0: 5.0,   # adoption leave         → 5  (On leave)
-            # ── Student / training (7) ───────────────────────────────────
-             7.0: 7.0,   # full-time student      → 7  (Student / training)
-             9.0: 7.0,   # govt training scheme   → 7  (Student / training)
-            11.0: 7.0,   # apprenticeship         → 7  (Student / training)
-            # ── Inactive (8) ─────────────────────────────────────────────
-             8.0: 8.0,   # LT sick or disabled    → 8  (Inactive)
-            10.0: 8.0,   # unpaid family business → 8  (Inactive)
-            97.0: 8.0,   # doing something else   → 8  (Inactive)
-            -1.0: 8.0,   # missing / not stated    → 8  (Inactive)
-        },
-        # ── display labels for the 6 post-recode canonical codes ──────────
-        # Used by build_dna_row / CATEGORY_MAPS in place of raw categories.
-        "group_labels": {
-            1.0: "Employed",
-            3.0: "Unemployed",
-            4.0: "Retired",
-            5.0: "On leave",
-            7.0: "Student / training",
-            8.0: "Inactive",
-        },
-        "fill":        "mode",
-        "one_hot":     True,
-    },
-    #"jlsic07_cc": {
-    #    "code":        "jlsic07_cc",
-    #    "label":       "Last job: SIC 2007 industry (condensed)",
-    #    "categorical": True,
-    #    "categories":  None,   # too granular for direct labelling
-    #    "fill":        "mode",
-    #    "cluster":     False,
-    #    "one_hot":     None,
-    #},
-    #"socialkid": {
-    #    "code":        "socialkid",
-    #    "label":       "Frequency of leisure activities with child",
-    #    "categorical": True,
-    #    "categories":  None,
-    #    "fill":        "mode",
-    #    "cluster":     False,
-    #    "one_hot":     None,
-    #},
-
-    # -------------------------------------------------------------------------
-    # 8. Derived / Engineered Variables  (already binary 0/1 — no one-hot needed)
-    # -------------------------------------------------------------------------
-    # "disability_mobility": {
-    #     "code":        "disability_mobility",
-    #     "label":       "Disability: Mobility",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_visual": {
-    #     "code":        "disability_visual",
-    #     "label":       "Disability: Visual",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_hearing": {
-    #     "code":        "disability_hearing",
-    #     "label":       "Disability: Hearing",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_learning": {
-    #     "code":        "disability_learning",
-    #     "label":       "Disability: Learning",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_mental_health": {
-    #     "code":        "disability_mental_health",
-    #     "label":       "Disability: Mental Health",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_dexterity": {
-    #     "code":        "disability_dexterity",
-    #     "label":       "Disability: Manual Dexterity",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-    # "disability_memory": {
-    #     "code":        "disability_memory",
-    #     "label":       "Disability: Memory",
-    #     "categorical": True,
-    #     "categories":  {1.0: "Yes", 0.0: "No"},
-    #     "fill":        "zero",
-    #     "cluster":     True,
-    #     "one_hot":     None,
-    # },
-
-    # -------------------------------------------------------------------------
-    # 9. Target Binary Classification States  (outputs, not clustering inputs)
-    # One binary column per jbstat canonical group (code matches after recode).
-    # -------------------------------------------------------------------------
-    #"alljbstat1": {
-    #    "code":        "alljbstat1",
-    #    "label":       "Employed",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     False,  # group-filter column — excluded from K-Means distance
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
-    #"alljbstat3": {
-    #    "code":        "alljbstat3",
-    #    "label":       "Unemployed",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     True,
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
-    #"alljbstat4": {
-    #    "code":        "alljbstat4",
-    #    "label":       "Retired",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     True,
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
-    #"alljbstat5": {
-    #    "code":        "alljbstat5",
-    #    "label":       "On leave",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     True,
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
-    #"alljbstat7": {
-    #    "code":        "alljbstat7",
-    #    "label":       "Student",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     True,
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
-    #"alljbstat8": {
-    #    "code":        "alljbstat8",
-    #    "label":       "Inactive",
-    #    "categorical": True,
-    #    "categories":  {1.0: "Yes", 0.0: "No"},
-    #    "fill":        "zero",
-    #    "cluster":     True,
-    #    "one_hot":     None,
-    #    "summary":     True,
-    #},
 }
 
-# Append LLM-generated definitions (e.g. netuse, ukborn, servuse1). Keys already
-# defined above (e.g. pidp, netpusenew) are left unchanged.
+VARIABLES = _merge_variable_dicts(
+    _VAR_DEMOGRAPHICS,
+    _VAR_LOCAL_SERVICE,
+    _VAR_PUBLIC_SERVICE,
+    _VAR_TRANSPORT,
+    _LEGACY_PIPELINE_VARIABLES,
+)
+
+# Append LLM-generated definitions (e.g. netuse, bornuk_dv, servuse1, pidp). Keys already
+# defined above are left unchanged.
 for _code, _spec in LLM_GENERATED_VARIABLES.items():
     if _code not in VARIABLES:
-        VARIABLES[_code] = _spec
+        VARIABLES[_code] = copy.deepcopy(_spec)
 
 # -----------------------------------------------------------------------------
 # Convenience accessors derived from VARIABLES (single source of truth)

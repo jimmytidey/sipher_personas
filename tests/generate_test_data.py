@@ -41,6 +41,7 @@
 from __future__ import annotations
 
 import csv
+import pickle
 import sys
 from pathlib import Path
 
@@ -228,6 +229,14 @@ if __name__ == "__main__":
     write_csv(RAW / "admin_geography_mappings.csv", GEO_ROWS)
     write_csv(RAW / "sipher" / "sipher.csv",        SIPHER_ROWS)
     write_csv(RAW / "ukhls"  / "o_indresp.tab",     RESPONDENTS, delimiter="\t")
+
+    # Mirror step 1 output so 2_pickle_ukhls_waves can run without re-running 1_pickle_sipher.
+    pickle_dir = ROOT / "data_test" / "1_pickle_sipher"
+    pickle_dir.mkdir(parents=True, exist_ok=True)
+    pidp_path = pickle_dir / "sipher_unique_pidp.pkl"
+    with open(pidp_path, "wb") as f:
+        pickle.dump(frozenset(range(1, 101)), f, protocol=5)
+    print(f"  Written: {pidp_path.relative_to(ROOT)}  (frozenset pidp 1–100)")
 
     print(f"\nDone. {len(RESPONDENTS[0]) - 1} columns per respondent.")
     print("Set USE_TEST_DATA = True in data_pipeline/config_paths.py, then run")

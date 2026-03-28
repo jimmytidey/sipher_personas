@@ -8,6 +8,7 @@ pyarrow
 httpx
 
 # Pipeline notebooks (clustering, nbconvert --execute, LLM steps)
+matplotlib
 scikit-learn
 jupyter
 nbconvert

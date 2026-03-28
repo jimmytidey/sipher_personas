@@ -1,0 +1,189 @@
+variable,pct_nonnegative,n_nonnegative,n_numeric,n_rows,documentation_url,definition_lead
+pidp,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pidp,cross-wave person identifier (public release)
+pid,25.6935,43262,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pid,pid
+xwdat_dv,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/xwdat_dv,"Study enumerated in: UKHLS, BHPS or both"
+hhorig,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/hhorig,"Sample origin, household"
+memorig,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/memorig,sample origin: original bhps or echp
+memorig_bh,25.6995,43272,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/memorig_bh,sample origin: original bhps or echp
+quarter,84.0602,141538,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/quarter,sample quarter
+psu,98.3056,165524,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/psu,primary sampling unit
+strata,98.3056,165524,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/strata,stratra
+sampst,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/sampst,sample membership status
+psmwave,1.6926,2850,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/psmwave,Wave became PSM
+w6osmflag,84.0602,141538,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/w6osmflag,Became OSM in Wave 6
+sex,99.4299,167417,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/sex,sex from xwavedat sex_dv and sex
+sex_dv,84.0257,141480,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/sex_dv,"Sex, derived"
+birthy,98.7189,166220,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/birthy,Year of birth - HH grid
+doby_dv,83.7721,141053,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/doby_dv,"DOB: Year, derived"
+dcsedfl_dv,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/dcsedfl_dv,Respondent reported deceased?
+dcsedw_dv,4.6301,7796,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/dcsedw_dv,Wave respondent deceased
+lwenum_dv,84.0602,141538,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lwenum_dv,Last wave enumerated (UKHLS)
+fwenum_dv,84.0602,141538,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/fwenum_dv,First wave enumerated (UKHLS)
+lwintvd_dv,59.2153,99705,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lwintvd_dv,"Last wave interviewed (incl. proxy), (UKHLS)"
+fwintvd_dv,59.2153,99705,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/fwintvd_dv,"First wave interviewed (inc. proxy), (UKHLS)"
+lwenum_dv_bh,25.6573,43201,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lwenum_dv_bh,Last wave enumerated (BHPS)
+fwenum_dv_bh,25.6573,43201,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/fwenum_dv_bh,First wave enumerated (BHPS)
+lwintvd_dv_bh,19.2301,32379,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lwintvd_dv_bh,"Last wave interviewed (incl. proxy), (BHPS)"
+fwintvd_dv_bh,19.2301,32379,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/fwintvd_dv_bh,"First wave interviewed (inc. proxy), (BHPS)"
+lvag16,40.0167,67379,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lvag16,living with biological parents at 16
+agelh,8.6223,14518,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/agelh,age stopped living with both biological parents
+lvag14,8.9882,15134,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lvag14,who living with at age 14
+ynlp14,8.3693,14092,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/ynlp14,why not living with both biological parents
+scend_dv,64.5557,108697,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/scend_dv,School leaving age
+feend_dv,32.4635,54661,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/feend_dv,Further education leaving age
+school_dv,69.949,117778,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/school_dv,Never went to/still at school
+racel_dv,67.2348,113208,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/racel_dv,"Ethnic group incorp. all waves, codings, modes and bhps"
+racel_bh,10.7354,18076,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/racel_bh,Ethnic group membership (long version)   (BHPS)
+race_bh,16.1483,27190,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/race_bh,Ethnic group membership  (BHPS)
+ukborn,69.1264,116393,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/ukborn,"Whether born in England, Scotland, Wales, Northern Ireland or outside UK (derive"
+plbornc,11.6221,19569,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/plbornc,country of birth
+yr2uk4,11.3828,19166,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/yr2uk4,Year came to UK
+bornuk_dv,70.9943,119538,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bornuk_dv,Born in UK (derived)
+generation,67.0608,112915,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/generation,(migrant) generation
+maju,60.9169,102570,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maju,mother not working when resp. aged 14
+maid,28.2877,47630,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maid,mother's ethnic group
+macob,52.5749,88524,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/macob,country mother born
+mgmrob,37.8466,63725,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/mgmrob,country mother's mother born in
+mgprob,37.5307,63193,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/mgprob,country mother's father born in
+maedqf,38.1964,64314,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maedqf,mother's educational qualifications
+masoc90_cc,30.6556,51617,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/masoc90_cc,"Mother's SOC 1990, resp aged 14, condensed"
+masoc00_cc,23.9712,40362,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/masoc00_cc,"Mother's SOC 2000, resp aged 14, condensed"
+masoc10_cc,23.1902,39047,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/masoc10_cc,"Mother's SOC 2010, resp aged 14, condensed"
+maj1uksoc90_cc,0.1063,179,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maj1uksoc90_cc,"Mother's first job in UK: SOC 1990, condensed"
+maj1uksoc00_cc,0.1063,179,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maj1uksoc00_cc,"Mother's first job in UK: SOC 2000, condensed"
+maj1uksoc10_cc,0.1063,179,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maj1uksoc10_cc,"Mother's first job in UK: SOC 2010, condensed"
+majlcbsoc90_cc,0.0683,115,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/majlcbsoc90_cc,"Mother's last job in c.o.b.: SOC 1990, condensed"
+majlcbsoc00_cc,0.0683,115,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/majlcbsoc00_cc,"Mother's last job in c.o.b.: SOC 2000, condensed"
+majlcbsoc10_cc,0.0683,115,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/majlcbsoc10_cc,"Mother's last job in c.o.b.: SOC 2010, condensed"
+paju,60.0557,101120,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paju,father not working when resp. aged 14
+paid,28.1921,47469,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paid,father's ethnic group
+pacob,52.307,88073,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pacob,country father born
+pgprob,37.0039,62306,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pgprob,country father's father born in
+pgmrob,37.1737,62592,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pgmrob,country father's mother born in
+paedqf,36.7574,61891,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paedqf,father's educational qualifications
+pasoc90_cc,46.2729,77913,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pasoc90_cc,"Father's SOC 1990, resp aged 14, condensed"
+pasoc00_cc,36.0661,60727,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pasoc00_cc,"Father's SOC 2000, resp aged 14, condensed"
+pasoc10_cc,34.1929,57573,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pasoc10_cc,"Father's SOC 2010, resp aged 14, condensed"
+paj1uksoc90_cc,0.1586,267,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paj1uksoc90_cc,"Father's first job in UK: SOC 1990, condensed"
+paj1uksoc00_cc,0.1586,267,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paj1uksoc00_cc,"Father's first job in UK: SOC 2000, condensed"
+paj1uksoc10_cc,0.1586,267,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paj1uksoc10_cc,"Father's first job in UK: SOC 2010, condensed"
+pajlcbsoc90_cc,0.1093,184,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pajlcbsoc90_cc,"Father's last job in c.o.b.: SOC 1990, condensed"
+pajlcbsoc00_cc,0.1093,184,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pajlcbsoc00_cc,"Father's last job in c.o.b.: SOC 2000, condensed"
+pajlcbsoc10_cc,0.1093,184,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pajlcbsoc10_cc,"Father's last job in c.o.b.: SOC 2010, condensed"
+j1semp,38.6615,65097,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1semp,Employee or self-employed: first job
+j1boss,0.8493,1430,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1boss,Hired employees: first job
+j1mngr,37.6774,63440,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1mngr,Managerial duties: first job
+j1soc10_cc,24.0906,40563,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1soc10_cc,"First job: SOC 2010, condensed"
+j1soc00_cc,24.0858,40555,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1soc00_cc,"First job: SOC 2000, condensed"
+j1soc90_cc,35.3421,59508,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1soc90_cc,"First job: SOC 1990, condensed"
+j1uksoc90_cc,0.5511,928,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1uksoc90_cc,"Own first job in UK: SOC 1990, condensed"
+j1uksoc00_cc,0.5517,929,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1uksoc00_cc,"Own first job in UK: SOC 2000, condensed"
+j1uksoc10_cc,0.5529,931,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1uksoc10_cc,"Own first job in UK: SOC 2010, condensed"
+jlcbsoc90_cc,0.5868,988,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/jlcbsoc90_cc,"Own last job in c.o.b.: SOC 1990, condensed"
+jlcbsoc00_cc,0.5868,988,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/jlcbsoc00_cc,"Own last job in c.o.b.: SOC 2000, condensed"
+jlcbsoc10_cc,0.588,990,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/jlcbsoc10_cc,"Own last job in c.o.b.: SOC 2010, condensed"
+coh1m_dv,23.0328,38782,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/coh1m_dv,First cohabitation start month
+coh1y_dv,23.0328,38782,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/coh1y_dv,First cohabitation start year
+evercoh_dv,68.4791,115303,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/evercoh_dv,Ever cohabited without marrying?
+lmar1m_dv,44.9479,75682,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lmar1m_dv,First marriage start month
+lmar1y_dv,44.9479,75682,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lmar1y_dv,First marriage start year
+evermar_dv,68.7291,115724,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/evermar_dv,Ever married?
+ch1by_dv,46.3567,78054,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/ch1by_dv,First (biological) child birth year
+anychild_dv,71.0293,119597,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/anychild_dv,Ever had a (biological) child
+bwtxp_bh,2.0721,3489,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtxp_bh,Born when expected   (BHPS)
+bwtel_bh,0.9538,1606,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtel_bh,Born early or late   (BHPS)
+bwtwk_bh,0.9544,1607,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtwk_bh,Weeks early or late  (BHPS)
+bwtkn_bh,2.0727,3490,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtkn_bh,Birth weight known   (BHPS)
+bwtlb_bh,2.0187,3399,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtlb_bh,Birth weight: Pounds (BHPS)
+bwtoz_bh,1.9854,3343,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtoz_bh,Birth weight: Ounces (BHPS)
+bwtgm_bh,0.0208,35,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtgm_bh,Birth weight: Grammes    (BHPS)
+bwtg5_bh,0.0131,22,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtg5_bh,Birth weight: more than 5.5lbs   (BHPS)
+bwtxp,3.8331,6454,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtxp,Child born when expected
+bwtel,1.6558,2788,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtel,Child born early or late
+bwtwk,1.6534,2784,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtwk,Weeks early or late
+bwt,3.7749,6356,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwt,Birthweight
+bwtlb,3.3633,5663,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtlb,Birthweight in pounds
+bwtoz,3.3526,5645,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtoz,Birthweight in ounces
+bwtk,0.4033,679,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtk,Birthweight kilograms
+bwtg5,0.0517,87,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bwtg5,Birthweight: more than 5.5lbs (2.5kg)
+lprnt_bh,15.3269,25807,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/lprnt_bh,Natural parent of children   (BHPS)
+hhorig_bh,25.6995,43272,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/hhorig_bh,"Sample origin, household (BHPS)"
+ethn_dv,91.2975,153724,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/ethn_dv,Ethnic group (derived from multiple sources)
+ethn_dv_source,91.2975,153724,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/ethn_dv_source,Source for ethn_dv
+genetics,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/genetics,genome wide snp data available
+epigenetics,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/epigenetics,dna methylation data available
+plbornd,16.3389,27511,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/plbornd,District of birth
+masemp,8.2612,13910,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/masemp,"Mother self employed, resp. aged 14  (BHPS)"
+maboss,0.7899,1330,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maboss,"Mother had employees, resp. aged 14  (BHPS)"
+mamngr,7.2159,12150,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/mamngr,"Mother was manager, resp. aged 14    (BHPS)"
+maseg,8.1323,13693,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maseg,Socio economic group: mothers's job
+magold,7.2379,12187,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/magold,Goldthorpe Social Class: mothers's job
+margsc,8.1323,13693,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/margsc,RG Social Class: mothers's job
+maiscon,7.3092,12307,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/maiscon,International SOC (num): mother's job    (BHPS)
+pasemp,14.0298,23623,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pasemp,"Father self employed, resp. aged 14  (BHPS)"
+paboss,2.6803,4513,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paboss,"Father had employees, resp. aged 14  (BHPS)"
+pamngr,10.7901,18168,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pamngr,"Father was manager, resp. aged 14    (BHPS)"
+paseg,13.936,23465,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paseg,Socio economic group: father's job   (BHPS)
+pagold,11.9464,20115,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pagold,Goldthorpe Social Class: father's job    (BHPS)
+pargsc,13.936,23465,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pargsc,RG Social Class: father's job    (BHPS)
+paiscon,12.0206,20240,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/paiscon,International SOC (num): father's job    (BHPS)
+j1seg,13.2186,22257,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1seg,Socio economic group: first job  (BHPS)
+j1gold,11.0728,18644,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1gold,Goldthorpe Social Class: first job   (BHPS)
+j1rgsc,13.2186,22257,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1rgsc,RG Social Class: first job   (BHPS)
+j1cssm,11.0728,18644,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1cssm,Cambridge Scale males : first job    (BHPS)
+j1cssf,11.0728,18644,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1cssf,Cambridge Scale females : first job  (BHPS)
+j1hgs,11.0722,18643,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1hgs,Hope - Goldthorpe Scale : first job  (BHPS)
+j1sec,13.3664,22506,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1sec,Socio-Economic Class: first job  (BHPS)
+j1iscon,11.1292,18739,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/j1iscon,International SOC (num): first job   (BHPS)
+coh1mr,3.0004,5052,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/coh1mr,Went on to marry first cohabitee (BHPS)
+pidp_staypar,1.6469,2773,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pidp_staypar,"Cross-wave person identifier, parent staying in the household (public release)"
+pidp_leavepar,1.6469,2773,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/pidp_leavepar,"Cross-wave person identifier, parent leaving the household (public release)"
+chalwayslvbp_dv,20.8152,35048,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/chalwayslvbp_dv,child always lived with both parents while in the study
+cheverlvbp_dv,20.8152,35048,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/cheverlvbp_dv,Has child ever lived with both parents while in the study?
+wave_of_switch1,1.3648,2298,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/wave_of_switch1,wave cohabiting with parents changed from both to one
+wave_of_switch2,0.8344,1405,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/wave_of_switch2,wave cohabiting with parents changed from one to both
+everswitch1_dv,20.8152,35048,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/everswitch1_dv,Switch from both to one parent ever happened for the child
+everswitch2_dv,20.8152,35048,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/everswitch2_dv,Switch from one to both parents ever happened for the child
+prob91e,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob91e,BHPS91 England selection prob
+prob91w,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob91w,BHPS91 Wales selection prob
+prob91s,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob91s,BHPS91 Scotland selection prob
+prob99w,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob99w,BHPS99 Wales selection prob
+prob99s,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob99s,BHPS99 Scotland selection prob
+prob01ni,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob01ni,BHPS01 NI selection prob
+prob09ni,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob09ni,GPS09 NI selection prob
+prob09e,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob09e,GPS09 England selection prob
+prob09w,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob09w,GPS09 Wales selection prob
+prob09s,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob09s,GPS09 Scotland selection prob
+prob09emb,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/prob09emb,EMB09 selection prob
+bb_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bb_mortbh_tw,BHPS second mortality weight adjustment
+bc_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bc_mortbh_tw,BHPS second mortality weight adjustment
+bd_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bd_mortbh_tw,BHPS second mortality weight adjustment
+be_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/be_mortbh_tw,BHPS second mortality weight adjustment
+bf_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bf_mortbh_tw,BHPS second mortality weight adjustment
+bg_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bg_mortbh_tw,BHPS second mortality weight adjustment
+bh_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bh_mortbh_tw,BHPS second mortality weight adjustment
+bi_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bi_mortbh_tw,BHPS second mortality weight adjustment
+bj_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bj_mortbh_tw,BHPS second mortality weight adjustment
+bk_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bk_mortbh_tw,BHPS second mortality weight adjustment
+bl_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bl_mortbh_tw,BHPS second mortality weight adjustment
+bm_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bm_mortbh_tw,BHPS second mortality weight adjustment
+bn_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bn_mortbh_tw,BHPS second mortality weight adjustment
+bo_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bo_mortbh_tw,BHPS second mortality weight adjustment
+bp_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bp_mortbh_tw,BHPS second mortality weight adjustment
+bq_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/bq_mortbh_tw,BHPS second mortality weight adjustment
+br_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/br_mortbh_tw,BHPS second mortality weight adjustment
+b_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/b_mortbh_tw,BHPS second mortality weight adjustment
+c_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/c_mortbh_tw,BHPS second mortality weight adjustment
+d_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/d_mortbh_tw,BHPS second mortality weight adjustment
+e_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/e_mortbh_tw,BHPS second mortality weight adjustment
+f_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/f_mortbh_tw,BHPS second mortality weight adjustment
+g_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/g_mortbh_tw,BHPS second mortality weight adjustment
+h_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/h_mortbh_tw,BHPS second mortality weight adjustment
+i_mortbh_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/i_mortbh_tw,BHPS second mortality weight adjustment
+b_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/b_mortus_tw,UKHLS second mortality weight adjustment
+c_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/c_mortus_tw,UKHLS second mortality weight adjustment
+d_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/d_mortus_tw,UKHLS second mortality weight adjustment
+e_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/e_mortus_tw,UKHLS second mortality weight adjustment
+f_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/f_mortus_tw,UKHLS second mortality weight adjustment
+g_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/g_mortus_tw,UKHLS second mortality weight adjustment
+h_mortus_tw,100.0,168377,168377,168377,https://www.understandingsociety.ac.uk/documentation/mainstage/variables/h_mortus_tw,UKHLS second mortality weight adjustment

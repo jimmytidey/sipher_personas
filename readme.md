@@ -4,7 +4,7 @@
 
 | Step | Notebook                       | Output                                                     | Validate with                   |
 | ---- | ------------------------------ | ---------------------------------------------------------- | ------------------------------- |
-| 1    | `1_pickle_sipher.ipynb`        | `data/1_pickle_sipher/sipher_optimized.pkl`                | —                               |
+| 1    | `1_pickle_sipher.ipynb`        | `sipher_optimized.pkl`, `sipher_unique_pidp.pkl` (frozenset for step 2) | —                |
 | 2    | `2_pickle_ukhls_waves.ipynb`   | `data/2_pickle_ukhls_waves/{wave}_indresp_optimized.pkl`   | —                               |
 | 3    | `3_backfill_ukhls_waves.ipynb` | `data/3_backfill_ukhls_waves/o_indresp_backfilled.pkl`     | `3_visualise_backfill.ipynb`    |
 | 4    | `4_feature_eng_ukhls.ipynb`    | `data/4_feature_eng_ukhls/o_indresp_feature_eng.pkl`       | `4_visualise_feature_eng.ipynb` |
@@ -20,7 +20,7 @@ data/
 ├── raw/
 │   ├── sipher/                      ← source CSV (not committed — place sipher.csv here)
 │   └── ukhls/                       ← source .tab files (not committed)
-├── 1_pickle_sipher/                 ← sipher_optimized.pkl
+├── 1_pickle_sipher/                 ← sipher_optimized.pkl + sipher_unique_pidp.pkl
 ├── 2_pickle_ukhls_waves/            ← {wave}_indresp_optimized.pkl  (one per wave)
 ├── 3_backfill_ukhls_waves/          ← o_indresp_backfilled.pkl + variable_distributions.png
 ├── 4_feature_eng_ukhls/             ← o_indresp_feature_eng.pkl + feature_eng_distributions.png

@@ -1,0 +1,2433 @@
+
+UK Data Archive Data Dictionary
+
+File-level information:
+
+File Name = 		xwaveid
+Number of variables = 	94
+Number of cases = 	146054
+
+
+Variable-level information:
+
+Pos. = 1	Variable = pidp	Variable label = Cross-wave person identifier (public release)
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for pidp
+
+Pos. = 2	Variable = sex	Variable label = Sex
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for sex
+
+Pos. = 3	Variable = birthy	Variable label = Year of birth
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for birthy
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 4	Variable = hhorig	Variable label = Sample origin, household
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for hhorig
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy respondent
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = ukhls gb 2009-10
+	Value = 2.0	Label = ukhls ni 2009-10
+	Value = 3.0	Label = bhps gb 1991
+	Value = 4.0	Label = bhps sco 1999
+	Value = 5.0	Label = bhps wal 1999
+	Value = 6.0	Label = bhps ni 2001
+	Value = 7.0	Label = ukhls emboost 2009-10
+	Value = 8.0	Label = ukhls iemb 2014-15
+	Value = 11.0	Label = ip original sample 2008
+	Value = 12.0	Label = ip4 refreshment sample 2011
+	Value = 13.0	Label = ip7 refreshment sample 2014
+	Value = 14.0	Label = ECHP - SCPR
+	Value = 15.0	Label = ECHP - ONS
+	Value = 16.0	Label = ECHP - NI
+	Value = 21.0	Label = ukhls gps2 gb 2022-2023
+	Value = 22.0	Label = ukhls gps2 ni 2022-2023
+
+Pos. = 5	Variable = memorig	Variable label = Sample origin, individual
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for memorig
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy respondent
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = ukhls gb 2009-10
+	Value = 2.0	Label = ukhls ni 2009-10
+	Value = 3.0	Label = bhps gb 1991
+	Value = 4.0	Label = bhps sco 1999
+	Value = 5.0	Label = bhps wal 1999
+	Value = 6.0	Label = bhps ni 2001
+	Value = 7.0	Label = ukhls emboost 2009-10
+	Value = 8.0	Label = ukhls iemb 2014-15
+	Value = 11.0	Label = ip original sample 2008
+	Value = 12.0	Label = ip4 refreshment sample 2011
+	Value = 13.0	Label = ip7 refreshment sample 2014
+	Value = 14.0	Label = ECHP - SCPR
+	Value = 15.0	Label = ECHP - ONS
+	Value = 16.0	Label = ECHP - NI
+	Value = 21.0	Label = ukhls gps2 gb 2022-2023
+	Value = 22.0	Label = ukhls gps2 ni 2022-2023
+
+Pos. = 6	Variable = psu	Variable label = Primary sampling unit
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for psu
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy and/or phone
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 7	Variable = strata	Variable label = Strata
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for strata
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy and/or phone
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 8	Variable = sampst	Variable label = Final sample status
+This variable is  numeric, the SPSS measurement level is NOMINAL
+	Value label information for sampst
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = OSM
+	Value = 2.0	Label = PSM
+	Value = 3.0	Label = TSM
+
+Pos. = 9	Variable = psmwave	Variable label = Wave became PSM
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for psmwave
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = BHPS Waves 1-18
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 10	Variable = w6osmflag	Variable label = Became OSM in Wave 6
+This variable is  numeric, the SPSS measurement level is NOMINAL
+	Value label information for w6osmflag
+
+Pos. = 11	Variable = quarter	Variable label = Quarter of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for quarter
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan-mar year 1
+	Value = 2.0	Label = apr-jun year 1
+	Value = 3.0	Label = jul-sep year 1
+	Value = 4.0	Label = oct-dec year 1
+	Value = 5.0	Label = jan-mar year 2
+	Value = 6.0	Label = apr-jun year 2
+	Value = 7.0	Label = jul-sep year 2
+	Value = 8.0	Label = oct-dec year 2
+
+Pos. = 12	Variable = dcsedfl_dv	Variable label = Respondent reported as deceased?
+This variable is  numeric, the SPSS measurement level is NOMINAL
+	Value label information for dcsedfl_dv
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = Yes
+	Value = 2.0	Label = No
+
+Pos. = 13	Variable = dcsedw_dv	Variable label = UKHLS wave by which R was reported deceased
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for dcsedw_dv
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 14	Variable = lwenum_dv	Variable label = Last wave enumerated (UKHLS)
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for lwenum_dv
+	Value = -20.0	Label = no data from bhps
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 15	Variable = fwenum_dv	Variable label = First wave enumerated (UKHLS)
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for fwenum_dv
+	Value = -20.0	Label = no data from bhps
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 16	Variable = lwintvd_dv	Variable label = Last wave interviewed (incl. proxy), (UKHLS)
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for lwintvd_dv
+	Value = -20.0	Label = no data from bhps
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 17	Variable = fwintvd_dv	Variable label = First wave interviewed (inc. proxy), (UKHLS)
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for fwintvd_dv
+	Value = -20.0	Label = no data from bhps
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = UKHLS Wave 1
+	Value = 2.0	Label = UKHLS Wave 2
+	Value = 3.0	Label = UKHLS Wave 3
+	Value = 4.0	Label = UKHLS Wave 4
+	Value = 5.0	Label = UKHLS Wave 5
+	Value = 6.0	Label = UKHLS Wave 6
+	Value = 7.0	Label = UKHLS Wave 7
+	Value = 8.0	Label = UKHLS Wave 8
+	Value = 9.0	Label = UKHLS Wave 9
+	Value = 10.0	Label = UKHLS Wave 10
+	Value = 11.0	Label = UKHLS Wave 11
+	Value = 12.0	Label = UKHLS Wave 12
+	Value = 13.0	Label = UKHLS Wave 13
+	Value = 14.0	Label = UKHLS Wave 14
+	Value = 15.0	Label = UKHLS Wave 15
+
+Pos. = 18	Variable = a_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for a_hidp
+
+Pos. = 19	Variable = a_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for a_pno
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 20	Variable = a_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for a_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = telephone intvw
+	Value = 9.0	Label = lost capi intvw
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-intvw
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutnsd/non-int hh
+	Value = 60.0	Label = child <15 ref/non-int hh
+	Value = 61.0	Label = chd <15 lang prob/non-int hh
+	Value = 62.0	Label = chd <15 infirm/non-int hh
+	Value = 63.0	Label = chd <15 non-cont/non-int hh
+	Value = 64.0	Label = chd <15 o-o-scope/non-int hh
+	Value = 65.0	Label = chd <15 instit/non-int hh
+	Value = 80.0	Label = tsm - no osm/psm
+	Value = 81.0	Label = prev wave adamant refusl
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = other ineligible
+	Value = 98.0	Label = other retiring
+	Value = 99.0	Label = dead
+
+Pos. = 21	Variable = a_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for a_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = f2f - all eligible hh intv
+	Value = 11.0	Label = f2f - interviews + proxies
+	Value = 12.0	Label = f2f - interviews + refusal
+	Value = 13.0	Label = hh comp + ques only
+	Value = 15.0	Label = pxy at original addr
+	Value = 17.0	Label = youth interview only
+	Value = 20.0	Label = phone - all eligible hh intv
+	Value = 21.0	Label = phone - interviews + proxies
+	Value = 22.0	Label = phone - interviews + refusal
+	Value = 39.0	Label = lost capi interview
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = business use only
+	Value = 42.0	Label = temp accomm only
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct people
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 57.0	Label = address ineligible
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refus to rsrch cntre
+	Value = 61.0	Label = refusal to intviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no intv.: age/health
+	Value = 64.0	Label = missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 70.0	Label = moved prev wave add
+	Value = 80.0	Label = out scope-institut'n'
+	Value = 81.0	Label = moved out of scope
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no psm's resident'
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = new sample-withdrawn
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other ineligible
+
+Pos. = 22	Variable = a_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for a_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy respondent
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 23	Variable = b_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for b_hidp
+
+Pos. = 24	Variable = b_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for b_pno
+
+Pos. = 25	Variable = b_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for b_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = not set due to underlying data inconsistencies
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = telephone intvw
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 65.0	Label = chd <16 instit/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 26	Variable = b_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for b_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = youth interview only
+	Value = 20.0	Label = phone - all eligible hh intv
+	Value = 21.0	Label = phone - interviews + proxies
+	Value = 22.0	Label = phone - interviews + refusal
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 64.0	Label = missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+	Value = 101.0	Label = unproductive outcome at w1
+	Value = 102.0	Label = emb hhold originally tsm only
+	Value = 103.0	Label = other reason for not in sample
+	Value = 104.0	Label = unknown address - not traced
+	Value = 105.0	Label = whole hh permanently incapacitated
+
+Pos. = 27	Variable = b_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for b_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 28	Variable = c_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for c_hidp
+
+Pos. = 29	Variable = c_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for c_pno
+
+Pos. = 30	Variable = c_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for c_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = not set due to underlying data inconsistencies
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = telephone intvw
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 65.0	Label = chd <16 instit/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 31	Variable = c_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for c_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = youth interview only
+	Value = 20.0	Label = phone - all eligible hh intv
+	Value = 21.0	Label = phone - interviews + proxies
+	Value = 22.0	Label = phone - interviews + refusal
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 64.0	Label = missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 32	Variable = c_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for c_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 33	Variable = d_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for d_hidp
+
+Pos. = 34	Variable = d_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for d_pno
+
+Pos. = 35	Variable = d_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for d_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = not set due to underlying data inconsistencies
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = telephone intvw
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 65.0	Label = chd <16 instit/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 36	Variable = d_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for d_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = youth interview only
+	Value = 20.0	Label = phone - all eligible hh intv
+	Value = 21.0	Label = phone - interviews + proxies
+	Value = 22.0	Label = phone - interviews + refusal
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 64.0	Label = missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 37	Variable = d_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for d_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 38	Variable = e_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for e_hidp
+
+Pos. = 39	Variable = e_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for e_pno
+
+Pos. = 40	Variable = e_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for e_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = not set due to underlying data inconsistencies
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = telephone intvw
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 65.0	Label = chd <16 instit/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 41	Variable = e_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for e_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = youth interview only
+	Value = 20.0	Label = phone - all eligible hh intv
+	Value = 21.0	Label = phone - interviews + proxies
+	Value = 22.0	Label = phone - interviews + refusal
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 64.0	Label = missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 42	Variable = e_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for e_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 43	Variable = f_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for f_hidp
+
+Pos. = 44	Variable = f_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for f_pno
+	Value = -11.0	Label = Only available for IEMB
+	Value = -10.0	Label = Not available for IEMB
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 45	Variable = f_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for f_ivfio
+	Value = -11.0	Label = Only available for IEMB
+	Value = -10.0	Label = Not available for IEMB
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 46	Variable = f_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for f_ivfho
+	Value = -11.0	Label = Only available for IEMB
+	Value = -10.0	Label = Not available for IEMB
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 57.0	Label = ineligible address
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+	Value = 98.0	Label = ethnic boost ineligible
+
+Pos. = 47	Variable = f_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for f_month
+	Value = -11.0	Label = Only available for IEMB
+	Value = -10.0	Label = Not available for IEMB
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy respondent
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 48	Variable = g_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for g_hidp
+
+Pos. = 49	Variable = g_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for g_pno
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 50	Variable = g_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for g_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 0.0	Label = Not set due to underlying data inconsistencies
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 3.0	Label = Telephone intvw
+	Value = 4.0	Label = Web interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 65.0	Label = Chd <16 instit/non-int HH
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 85.0	Label = Not in data at time of ff
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 51	Variable = g_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for g_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 42.0	Label = Temp accomm only
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 57.0	Label = ineligible address
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 64.0	Label = Missing person ref.
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 80.0	Label = out scope-institut'n
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+	Value = 98.0	Label = ethnic boost ineligible
+	Value = 99.0	Label = Other no contact
+
+Pos. = 52	Variable = g_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for g_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -7.0	Label = proxy respondent
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 53	Variable = h_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for h_hidp
+
+Pos. = 54	Variable = h_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for h_pno
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 55	Variable = h_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for h_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 13.0	Label = Full proxy interview
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 31.0	Label = No contact with adult sample member
+	Value = 32.0	Label = moved/non-int hh
+	Value = 33.0	Label = Contact but no subsequent contact
+	Value = 41.0	Label = Office refusal
+	Value = 42.0	Label = Proxy refusal
+	Value = 43.0	Label = Refusal before interview
+	Value = 44.0	Label = Refusal during interview
+	Value = 45.0	Label = Youth refusal
+	Value = 46.0	Label = Broken appointment - No recontact
+	Value = 47.0	Label = Individual in household not attempted
+	Value = 48.0	Label = Said would complete online but didn't
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 56.0	Label = Lost interview
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 75.0	Label = Issued adamant refuser (ff_exclude=1)
+	Value = 76.0	Label = Ineligible for interview - aged under 10
+	Value = 77.0	Label = Deceased
+	Value = 78.0	Label = Moved outside of UK
+	Value = 79.0	Label = Moved to NI (Innovation Panel only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 85.0	Label = Youth in other non-responding household
+	Value = 86.0	Label = Child (<10) in non-contacted household
+	Value = 87.0	Label = Child (<10) in refusal household
+	Value = 88.0	Label = Child (<10) in other non-responding household
+	Value = 89.0	Label = IV TSM - all OSM/PSM moved out from HH (TSM not eligible for interview)
+	Value = 90.0	Label = Ineligible - TSM in TSM-only household
+	Value = 91.0	Label = Ineligible - merged with previous-wave household
+	Value = 92.0	Label = Ineligible - individual in household not issued to interview
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 56	Variable = h_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for h_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+	Value = 110.0	Label = Completed hhold & all eligible hhold members
+	Value = 210.0	Label = Completed hhold & at least 1 individual interview
+	Value = 211.0	Label = Completed hhold but no individual interviews
+	Value = 214.0	Label = Completed enumeration and at least 1 individual interview but no hhold
+	Value = 215.0	Label = Completed enumeration grid only
+	Value = 310.0	Label = No contact with hhold after minimum number of calls
+	Value = 320.0	Label = Contact made at address, not with adult household member
+	Value = 321.0	Label = Contact made but no subsequent contact
+	Value = 340.0	Label = Always answer phone/voicemail
+	Value = 350.0	Label = No phone number provided for respondent
+	Value = 351.0	Label = Always ringing not answered (no answering machine/voicemail)
+	Value = 354.0	Label = Always busy/engaged line
+	Value = 355.0	Label = Always fax/modem/data line/pager
+	Value = 356.0	Label = Technical phone problems
+	Value = 357.0	Label = Out of service or disconnected
+	Value = 360.0	Label = Non responding web only HH
+	Value = 410.0	Label = Office Refusal
+	Value = 422.0	Label = Contact made but all information refused about household
+	Value = 430.0	Label = Refusal before interview
+	Value = 450.0	Label = Broken appointment - no recontact
+	Value = 460.0	Label = Said would complete online but didn't
+	Value = 510.0	Label = Whole household - Ill at home during survey period
+	Value = 520.0	Label = Whole household - Away or in hospital during survey period
+	Value = 530.0	Label = Whole household - Physically or mentally unable/incompetent
+	Value = 541.0	Label = Language difficulties with hhold as a whole
+	Value = 543.0	Label = Hhld requires translation into one of 9 languages
+	Value = 550.0	Label = Office use only: Lost on laptop
+	Value = 599.0	Label = Split created in error - office deletion
+	Value = 611.0	Label = Office use only: Not issued to interviewer
+	Value = 612.0	Label = OFFICE APPROVAL ONLY: Issued but not attempted
+	Value = 630.0	Label = Unable to locate address
+	Value = 652.0	Label = Address inaccessible
+	Value = 671.0	Label = Certain hhold moved, no follow up address obtained
+	Value = 672.0	Label = Address found but unable to attempt address
+	Value = 673.0	Label = Follow up address is in GB but is outside my area
+	Value = 674.0	Label = Follow up address is in NI
+	Value = 710.0	Label = Not yet built/under construction
+	Value = 720.0	Label = Demolished/derelict
+	Value = 730.0	Label = Vacant/empty housing unit / Out of service or disconnected
+	Value = 740.0	Label = Non-residential address
+	Value = 750.0	Label = Address occupied, no resident household
+	Value = 760.0	Label = Communal establishment/institution
+	Value = 770.0	Label = Ineligible (Ethnic Minority/new immigrant Boost)
+	Value = 782.0	Label = All respondents no longer eligible - died
+	Value = 783.0	Label = All respondents no longer eligible - live outside UK
+	Value = 784.0	Label = Hhold no longer eligible - TSMs only
+	Value = 785.0	Label = Hhld no longer eligible - merged with another hhld
+	Value = 787.0	Label = Household has already completed the survey via CAWI (web)
+	Value = 850.0	Label = Uncertain eligibility: language barrier
+	Value = 860.0	Label = Refusal to answer screening questions
+	Value = 870.0	Label = Screener not completed: lack of knowledge
+	Value = 890.0	Label = Other unknown eligibility (give details)
+
+Pos. = 57	Variable = h_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for h_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 58	Variable = i_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for i_hidp
+
+Pos. = 59	Variable = i_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for i_pno
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 60	Variable = i_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for i_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 61	Variable = i_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for i_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 62	Variable = i_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for i_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 63	Variable = j_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for j_hidp
+
+Pos. = 64	Variable = j_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for j_pno
+
+Pos. = 65	Variable = j_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for j_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 66	Variable = j_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for j_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 67	Variable = j_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for j_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 68	Variable = k_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for k_hidp
+
+Pos. = 69	Variable = k_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for k_pno
+
+Pos. = 70	Variable = k_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for k_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 71	Variable = k_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for k_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 72	Variable = k_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for k_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 73	Variable = l_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for l_hidp
+
+Pos. = 74	Variable = l_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for l_pno
+
+Pos. = 75	Variable = l_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for l_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 76	Variable = l_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for l_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 77	Variable = l_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for l_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 78	Variable = m_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for m_hidp
+
+Pos. = 79	Variable = m_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for m_pno
+
+Pos. = 80	Variable = m_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for m_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 81	Variable = m_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for m_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 82	Variable = m_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for m_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 83	Variable = n_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for n_hidp
+
+Pos. = 84	Variable = n_pno	Variable label = person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for n_pno
+
+Pos. = 85	Variable = n_ivfio	Variable label = individual interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for n_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 86	Variable = n_ivfho	Variable label = Final household interview outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for n_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 87	Variable = n_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for n_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 88	Variable = o_hidp	Variable label = household identifier
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for o_hidp
+
+Pos. = 89	Variable = o_pno	Variable label = Person number
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for o_pno
+
+Pos. = 90	Variable = o_ivfio	Variable label = Individual level outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for o_ivfio
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = full interview
+	Value = 2.0	Label = proxy interview
+	Value = 9.0	Label = lost capi interview
+	Value = 10.0	Label = refusal
+	Value = 11.0	Label = other non-interview
+	Value = 12.0	Label = moved
+	Value = 14.0	Label = ill/away during survey period
+	Value = 15.0	Label = too infirm/elderly
+	Value = 16.0	Label = language difficulties
+	Value = 18.0	Label = unknown eligibility
+	Value = 21.0	Label = youth interview
+	Value = 22.0	Label = youth: refusal
+	Value = 23.0	Label = youth: oth non-int
+	Value = 24.0	Label = child under 10
+	Value = 25.0	Label = youth non-interview
+	Value = 32.0	Label = moved/non-int hh
+	Value = 50.0	Label = refusal/non-int hh
+	Value = 51.0	Label = lang prob/non-int hh
+	Value = 52.0	Label = age, infirm/non-int hh
+	Value = 53.0	Label = non-cont/non-int hh
+	Value = 54.0	Label = out of scope/non-int hh
+	Value = 55.0	Label = institutionalised/non-int hh
+	Value = 57.0	Label = ill/away - non-int hhold
+	Value = 60.0	Label = child <16 ref/non-int hh
+	Value = 61.0	Label = chd <16 lang prob/non-int hh
+	Value = 62.0	Label = chd <16 infirm/non-int hh
+	Value = 63.0	Label = chd <16 non-cont/non-int hh
+	Value = 64.0	Label = chd <16 o-o-scope/non-int hh
+	Value = 67.0	Label = chd <16 ill/away - non-int hhold
+	Value = 74.0	Label = ineligible - aged 10-15 (iemb only)
+	Value = 80.0	Label = TSM - no OSM/PSM
+	Value = 81.0	Label = prev wave adamant refusal
+	Value = 82.0	Label = l-t untrace, w-drawn
+	Value = 83.0	Label = withdrawn before field
+	Value = 84.0	Label = Ineligible for individual interview as nr in last 3 waves
+	Value = 98.0	Label = other retiring (due to health)
+	Value = 99.0	Label = dead
+
+Pos. = 91	Variable = o_ivfho	Variable label = Household level outcome
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for o_ivfho
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 10.0	Label = all eligible hh interview
+	Value = 11.0	Label = interviews + proxies
+	Value = 12.0	Label = interviews + refusal
+	Value = 13.0	Label = hh grid + hh ques only
+	Value = 14.0	Label = hh grid + indiv only (no hh ques)
+	Value = 15.0	Label = hh grid + proxies only
+	Value = 16.0	Label = hh grid only
+	Value = 17.0	Label = individual interviews only (no grid)
+	Value = 39.0	Label = lost on laptop
+	Value = 40.0	Label = demolished/derelict
+	Value = 41.0	Label = non-residential
+	Value = 43.0	Label = empty at first call
+	Value = 44.0	Label = building not complete
+	Value = 45.0	Label = institution, not private hh
+	Value = 50.0	Label = address not found
+	Value = 51.0	Label = no hh member contact
+	Value = 52.0	Label = unable to locate address
+	Value = 53.0	Label = contact made but not with correct
+	Value = 54.0	Label = address inaccessible
+	Value = 55.0	Label = no phone contact with cati hhold
+	Value = 56.0	Label = unknown eligibility
+	Value = 59.0	Label = other non-contact
+	Value = 60.0	Label = refusal to research centre
+	Value = 61.0	Label = refusal to interviewer
+	Value = 62.0	Label = language problems
+	Value = 63.0	Label = no interview: age/health
+	Value = 65.0	Label = ill during survey period
+	Value = 66.0	Label = no web response/web-only hh
+	Value = 70.0	Label = moved back to a previous address
+	Value = 81.0	Label = moved out of scope
+	Value = 85.0	Label = not issued in data error
+	Value = 90.0	Label = whole hh deceased
+	Value = 91.0	Label = no osms or psms resident
+	Value = 92.0	Label = adamant refusal
+	Value = 93.0	Label = l-t untrace, w-drawn
+	Value = 94.0	Label = New sample-withdrawn
+	Value = 95.0	Label = not issued in script error
+	Value = 96.0	Label = withdrawn before field
+	Value = 97.0	Label = other non interview
+
+Pos. = 92	Variable = o_month	Variable label = Month of sample issue
+This variable is  numeric, the SPSS measurement level is SCALE
+	Value label information for o_month
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+	Value = 1.0	Label = jan year 1
+	Value = 2.0	Label = feb year 1
+	Value = 3.0	Label = mar year 1
+	Value = 4.0	Label = apr year 1
+	Value = 5.0	Label = may year 1
+	Value = 6.0	Label = jun year 1
+	Value = 7.0	Label = jul year 1
+	Value = 8.0	Label = aug year 1
+	Value = 9.0	Label = sep year 1
+	Value = 10.0	Label = oct year 1
+	Value = 11.0	Label = nov year 1
+	Value = 12.0	Label = dec year 1
+	Value = 13.0	Label = jan year 2
+	Value = 14.0	Label = feb year 2
+	Value = 15.0	Label = mar year 2
+	Value = 16.0	Label = apr year 2
+	Value = 17.0	Label = may year 2
+	Value = 18.0	Label = jun year 2
+	Value = 19.0	Label = jul year 2
+	Value = 20.0	Label = aug year 2
+	Value = 21.0	Label = sep year 2
+	Value = 22.0	Label = oct year 2
+	Value = 23.0	Label = nov year 2
+	Value = 24.0	Label = dec year 2
+
+Pos. = 93	Variable = genetics	Variable label = genome wide snp data available
+This variable is  numeric, the SPSS measurement level is NOMINAL
+	Value label information for genetics
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
+
+Pos. = 94	Variable = epigenetics	Variable label = dna methylation data available
+This variable is  numeric, the SPSS measurement level is NOMINAL
+	Value label information for epigenetics
+	Value = -9.0	Label = missing
+	Value = -8.0	Label = inapplicable
+	Value = -2.0	Label = refusal
+	Value = -1.0	Label = don't know
