@@ -33,6 +33,23 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     # 1. Service use (health & advice)
     # -------------------------------------------------------------------------
+    "servuse1": {
+        "code":        "servuse1",
+        "label":       "Service use (12 m): local GP",
+        "categorical": True,
+        "backfill":    [-9, -8, -7, -2, -1],
+        "categories":  {
+            -9.0: "Missing",
+            -8.0: "Inapplicable",
+            -7.0: "Proxy",
+            -2.0: "Refusal",
+            -1.0: "Don't know",
+            0.0: "Not mentioned",
+            1.0: "Mentioned",
+        },
+        "fill":        "mode",
+        "one_hot":     None,
+    },
     "hl2gp": {
         "code":        "hl2gp",
         "label":       "Visited GP in last 12 months",

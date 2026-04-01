@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Any
+from typing import Any, Literal
 
 import pandas as pd
 from fastapi import FastAPI, HTTPException, Query
@@ -16,11 +16,19 @@ BASE_DIR = _API_DIR if (_API_DIR / "data").exists() else _ROOT_DIR
 
 PORTRAIT_DIR = _API_DIR / "data" / "portraits"
 
-# Production paths
-PROD_CLUSTERS_PATH = BASE_DIR / "data" / "clusters" / "LA_london_clusters.csv"
+# ── Cluster CSV paths ─────────────────────────────────────────────────────────
+# local  — clusters defined per-LA  (7_cluster_local_level)
+# national — clusters defined nationally, then profiled per-LA  (8_cluster_national_level)
 
-# Test paths  (data_test/ folder, built from test_config_variables)
-TEST_CLUSTERS_PATH = BASE_DIR / "data_test" / "6_cluster" / "LA_clusters.csv"
+PROD_LOCAL_CLUSTERS_PATH    = BASE_DIR / "data" / "clusters" / "LA_london_clusters.csv"
+PROD_NATIONAL_CLUSTERS_PATH = BASE_DIR / "data" / "clusters" / "LA_london_national_clusters.csv"
+
+TEST_LOCAL_CLUSTERS_PATH    = BASE_DIR / "data_test" / "7_cluster_local_level" / "LA_clusters.csv"
+TEST_NATIONAL_CLUSTERS_PATH = BASE_DIR / "data_test" / "8_cluster_national_level" / "LA_national_clusters.csv"
+
+# Back-compat alias used in older call sites
+PROD_CLUSTERS_PATH = PROD_LOCAL_CLUSTERS_PATH
+TEST_CLUSTERS_PATH = TEST_LOCAL_CLUSTERS_PATH
 
 app = FastAPI(title="Archetypes API", version="2.0.0")
 
@@ -79,9 +87,12 @@ def _pick_cluster_csv(base: Path) -> Path:
     return base
 
 
-def _clusters_path(test: bool) -> Path:
-    clusters = TEST_CLUSTERS_PATH if test else PROD_CLUSTERS_PATH
-    return _pick_cluster_csv(clusters)
+def _clusters_path(test: bool, mode: str = "local") -> Path:
+    if mode == "national":
+        base = TEST_NATIONAL_CLUSTERS_PATH if test else PROD_NATIONAL_CLUSTERS_PATH
+    else:
+        base = TEST_LOCAL_CLUSTERS_PATH if test else PROD_LOCAL_CLUSTERS_PATH
+    return _pick_cluster_csv(base)
 
 
 # ---------------------------------------------------------------------------
@@ -96,10 +107,11 @@ def health() -> dict[str, str]:
 @app.get("/las")
 def list_las(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
+    mode: str  = Query(default="local", description="Clustering mode: 'local' or 'national'"),
 ) -> list[dict[str, str]]:
     """Return one entry per distinct unit_id in the cluster CSV (no separate LA master list)."""
     try:
-        df = load_clusters(_clusters_path(test))
+        df = load_clusters(_clusters_path(test, mode))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -142,10 +154,11 @@ def list_las(
 def get_groups(
     ladcd: str,
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
+    mode: str  = Query(default="local", description="Clustering mode: 'local' or 'national'"),
 ) -> list[str]:
     """Return the list of employment groups present for a given LA."""
     try:
-        df = load_clusters(_clusters_path(test))
+        df = load_clusters(_clusters_path(test, mode))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 
@@ -161,10 +174,11 @@ def get_personas(
     ladcd: str,
     group: str | None = Query(default=None, description="Filter by employment group"),
     test: bool = Query(default=False, description="Serve from data_test/ when true"),
+    mode: str  = Query(default="local", description="Clustering mode: 'local' or 'national'"),
 ) -> list[dict[str, Any]]:
     """Return persona (tribe) rows for a given LA, optionally filtered by group."""
     try:
-        df = load_clusters(_clusters_path(test))
+        df = load_clusters(_clusters_path(test, mode))
     except FileNotFoundError as exc:
         raise HTTPException(status_code=500, detail=str(exc)) from exc
 

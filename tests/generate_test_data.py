@@ -28,13 +28,13 @@
 #     age_dv=25  hiqual_dv=1  payn_dv=3000  jbnssec8_dv=1  fimngrs_dv=3500
 #     hhsize=4   nchild_dv=2  sf12mcs_dv=55  sf12pcs_dv=55
 #     nbrsnci_dv=4  locsera/c/d/e=1  jbttwt=30  envhabit8=1
-#     carmiles=5000  jbpl=1 (at home)  wktrvfar=1 (walk)
+#     carmiles=5000  jbpl=1 (at home)
 #
 #   Cluster B  → older, low earner, no quals, poor health
 #     age_dv=65  hiqual_dv=5  payn_dv=0  jbnssec8_dv=8  fimngrs_dv=500
 #     hhsize=1   nchild_dv=0  sf12mcs_dv=30  sf12pcs_dv=30
 #     nbrsnci_dv=1  locsera/c/d/e=5  jbttwt=0  envhabit8=5
-#     carmiles=0  jbpl=2 (employer premises)  wktrvfar=2 (car driver)
+#     carmiles=0  jbpl=2 (employer premises)
 #
 # The clusters differ on many dimensions — k=2 KMeans separates them cleanly.
 
@@ -105,9 +105,8 @@ _A = {
     "carmiles":     5000.0,
     "caruse":       1.0,      # Has car
     "jbpl":         1.0,      # At home
-    "wktrvfar":     1.0,      # Not drive (public transport)
     # Job
-    "jbstat":       2.0,      # Paid employment (recoded to 1=Employed in notebook 4)
+    "jbstat":       2.0,      # Paid employment (recoded to 1=Employed in notebook 4a)
     "jlsic07_cc":   1.0,
     "socialkid":    1.0,
     # Disability (all absent)
@@ -141,8 +140,7 @@ _B = {
     "carmiles":     0.0,
     "caruse":       2.0,      # No car
     "jbpl":         2.0,      # Employer premises
-    "wktrvfar":     2.0,      # Drives
-    "jbstat":       2.0,      # Paid employment (recoded to 1=Employed in notebook 4)
+    "jbstat":       2.0,      # Paid employment (recoded to 1=Employed in notebook 4a)
     "jlsic07_cc":   2.0,
     "socialkid":    2.0,
     "alljbstat1":   1.0,
@@ -240,4 +238,4 @@ if __name__ == "__main__":
 
     print(f"\nDone. {len(RESPONDENTS[0]) - 1} columns per respondent.")
     print("Set USE_TEST_DATA = True in data_pipeline/config_paths.py, then run")
-    print("notebooks 1 → 2 → 3 → 4 → 5 → 6 to generate data_test/6_cluster/LA_clusters.csv")
+    print("notebooks 1 → 2 → 3a → 4a → 5a → 6a → 7 to generate data_test/7_cluster_local_level/LA_clusters.csv")

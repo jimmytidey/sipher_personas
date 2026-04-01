@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Archetypes</title>
-  <link rel="stylesheet" href="style.css?v=18" />
+  <link rel="stylesheet" href="style.css?v=19" />
 </head>
 <body>
 
@@ -14,6 +14,11 @@
   </header>
 
   <div class="controls">
+    <div class="mode-toggle" id="mode-toggle" role="group" aria-label="Clustering level">
+      <button class="mode-btn active" data-mode="local">Local clusters</button>
+      <button class="mode-btn" data-mode="national">National clusters</button>
+    </div>
+
     <label for="la-select">Local authority</label>
     <select id="la-select" disabled>
       <option value="">Loading…</option>
@@ -56,6 +61,6 @@
     <div id="main-content"></div>
   </main>
 
-  <script src="app.js?v=20"></script>
+  <script src="app.js?v=21"></script>
 </body>
 </html>

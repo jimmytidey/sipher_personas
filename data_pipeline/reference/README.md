@@ -27,6 +27,6 @@ That overwrites CSVs — copy your pasted `percent` / `n` values first, or commi
 
 Variables with `categorical: True` but no `categories` / `group_labels` in config (e.g. `nbrsnci_dv`) do not get a file; add a custom CSV by hand if needed.
 
-- **`racel_dv.csv`** — UKHLS figures **after** applying the same collapse as `recode` in `config_variables.py` (`racel_dv`). Raw UKHLS frequency tables (all ethnic codes) are kept in **`racel_raw_ukhl.csv`**. Raw code **3** (Gypsy / Irish Traveller) is rolled into **White / Mixed** (group 1), matching how we treat other White/Mixed codes; if your pipeline adds an explicit recode for 3, adjust the aggregation to match.
+- **`racel_dv.csv`** — UKHLS figures **after** applying the same collapse as `recode` in `config_variables.py` (`racel_dv`). You can paste collapsed totals here, or leave **White** / **Mixed** empty: step **6b** fills missing `percent` cells by **aggregating `racel_raw_ukhl.csv`** with `RECODE_MAPS["racel_dv"]` (same remapping as feature engineering). Raw UKHLS frequency tables (all ethnic codes) are in **`racel_raw_ukhl.csv`**. Raw code **3** (Gypsy / Irish Traveller) maps to collapsed **White** (`recode` → `1.0`).
 
 - **`hiqual_dv.csv`** — Qualification scale aligned with **`group_labels`** in `config_variables.py`: raw code **9** (No qualification) is stored as **`6.0`** to match `recode` {9 → 6}. **`hiqual_raw_ukhl.csv`** keeps UKHLS code **9** for the same row. **N = 32,849** (includes missing / inapplicable).

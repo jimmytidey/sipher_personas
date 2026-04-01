@@ -2,38 +2,48 @@
 
 ## Pipeline
 
+Sub-steps use letter suffixes (`3a`, `3b`, …): **`a`** = main transform, **`b`** (and later letters) = optional validation / reports on the same stage output.
+
 | Step | Notebook                       | Output                                                     | Validate with                   |
 | ---- | ------------------------------ | ---------------------------------------------------------- | ------------------------------- |
-| 1    | `1_pickle_sipher.ipynb`        | `sipher_optimized.pkl`, `sipher_unique_pidp.pkl` (frozenset for step 2) | —                |
+| 1    | `1_pickle_sipher.ipynb`        | `sipher_optimized.pkl`, `sipher_unique_pidp.pkl`           | —                               |
 | 2    | `2_pickle_ukhls_waves.ipynb`   | `data/2_pickle_ukhls_waves/{wave}_indresp_optimized.pkl`   | —                               |
-| 3    | `3_backfill_ukhls_waves.ipynb` | `data/3_backfill_ukhls_waves/o_indresp_backfilled.pkl`     | `3_visualise_backfill.ipynb`    |
-| 4    | `4_feature_eng_ukhls.ipynb`    | `data/4_feature_eng_ukhls/o_indresp_feature_eng.pkl`       | `4_visualise_feature_eng.ipynb` |
-| 5    | `5_normalise_ukhls.ipynb`      | `data/5_normalise_ukhls/normalized.pkl`                    | `5_visualise_normalise.ipynb`   |
-| 5b   | `5b_synthetic_vs_ukhls.ipynb`  | `data/5b_synthetic_vs_ukhls/` (plots + CSV)                 | UKHLS website stats (paste in notebook) |
-| 6    | `6_cluster.ipynb`              | `data/6_cluster/tribe_dna.csv`                             | —                               |
-| 7    | `7_synthetic_population.ipynb` | `data/7_synthetic_population/synthetic_population.parquet` | —                               |
+| 3a   | `3a_backfill_ukhls_waves.ipynb` | `data/3_backfill_ukhls_waves/o_indresp_backfilled.pkl`     | `3b_visualise_backfill.ipynb`    |
+| 3b   | `3b_visualise_backfill.ipynb`  | `data/3_backfill_ukhls_waves/backfill_visualisation.png`  | —                               |
+| 4a   | `4a_feature_eng_ukhls.ipynb`    | `data/4_feature_eng_ukhls/o_indresp_feature_eng.pkl`       | `4b_visualise_feature_eng.ipynb` |
+| 4b   | `4b_visualise_feature_eng.ipynb` | `data/4_feature_eng_ukhls/feature_eng_visualisation.png` | —                               |
+| 5a   | `5a_derive_variables.ipynb`     | `data/5_derive_variables/o_indresp_derived.pkl`          | `5b_visualise_derived_variables.ipynb` |
+| 5b   | `5b_visualise_derived_variables.ipynb` | `data/5_derive_variables/derived_visualisation.png` | —                               |
+| 6a   | `6a_synthetic_population.ipynb` | `data/6_synthetic_population/synthetic_population.parquet` | —                               |
+| 6b   | `6b_synthetic_vs_ukhls.ipynb`  | `data/6b_synthetic_vs_ukhls/` (plots + CSV)                | UKHLS website stats (paste in notebook) |
+| 7    | `7_cluster_local_level.ipynb`  | `data/7_cluster_local_level/LA_*_clusters.csv`               | —                               |
+| 8    | `8_cluster_national_level.ipynb` | `data/8_cluster_national_level/LA_*_national_clusters.csv` | —                               |
+| 9    | `9_group_averages.ipynb`       | `data/9_group_averages/group_baselines.csv`, `group_distributions.csv` | —                    |
+| 10   | `10_label_clusters.ipynb`      | `data/7_cluster_local_level/*_described.csv` (LLM labels)   | —                               |
+| 11   | `11_generate_portraits.ipynb`  | `api/data/portraits/`                                      | —                               |
 
-## Data folder structure
+## Data folder structure (main artefacts)
 
 ```
 data/
 ├── raw/
-│   ├── sipher/                      ← source CSV (not committed — place sipher.csv here)
-│   └── ukhls/                       ← source .tab files (not committed)
-├── 1_pickle_sipher/                 ← sipher_optimized.pkl + sipher_unique_pidp.pkl
-├── 2_pickle_ukhls_waves/            ← {wave}_indresp_optimized.pkl  (one per wave)
-├── 3_backfill_ukhls_waves/          ← o_indresp_backfilled.pkl + variable_distributions.png
-├── 4_feature_eng_ukhls/             ← o_indresp_feature_eng.pkl + feature_eng_distributions.png
-├── 5_normalise_ukhls/               ← normalized.pkl + normalised_distributions.png
-├── 6_cluster/                       ← tribe_dna.csv + pidp_tribe.pkl
-├── 7_synthetic_population/          ← synthetic_population.parquet (52M rows, snappy-compressed)
-└── 5b_synthetic_vs_ukhls/           ← optional: cluster-variable benchmark vs UKHLS reference
+│   ├── sipher/
+│   └── ukhls/
+├── 1_pickle_sipher/
+├── 2_pickle_ukhls_waves/
+├── 3_backfill_ukhls_waves/
+├── 4_feature_eng_ukhls/
+├── 5_derive_variables/              ← o_indresp_derived.pkl, derived_visualisation.png
+├── 6_synthetic_population/
+├── 6b_synthetic_vs_ukhls/
+├── 7_cluster_local_level/
+├── 8_cluster_national_level/
+└── 9_group_averages/
 ```
 
 ## Notes
 
-- All variable definitions, clip/floor/recode rules are in `data_pipeline/config_variables.py`
-- Step 4 applies all `recode`, `floor`, and `clip` values from `config_variables.py`; K-Means inputs are listed in `config_cluster.py` (`CLUSTER_VARS`)
-- Step 5 is purely Z-score (StandardScaler) — no manual mappings
-- Step 6 reads both the normalised matrix (for clustering) and the feature-eng real values (for the DNA report)
-- Step 7 joins the normalised feature vectors onto the full SIPHER synthetic population (52M rows) ready for regional clustering
+- Variable definitions are merged in `data_pipeline/config_variables.py` (theme modules + `config_variables_derived.py` for composites).
+- Step 5a maps digital and service inputs to 0–1 component scores and averages them — see `data_pipeline/helpers/derive_variables.py`.
+- K-Means inputs are `config_cluster.CLUSTER_VARS`; tribe DNA / summaries use all `VARIABLES` including `digital_use` and `service_use`.
+- Step 7 clusters each geography unit independently (local). Step 8 fits one set of clusters on all UKHLS respondents nationally, then assigns each synthetic person to a national cluster; the UI `mode=national` switch loads step 8's output.

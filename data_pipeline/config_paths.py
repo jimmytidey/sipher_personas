@@ -49,8 +49,8 @@ def list_indresp_waves_in_pickle_dir(pickle_dir: str) -> list[str]:
 # When True, restrict geography-heavy steps to four London boroughs only (fast dry run):
 #   Newham, Tower Hamlets, Islington, Hounslow.
 # Uses real data/ (not data_test/) unless USE_TEST_DATA is also True.
-# Affects: 5_synthetic_population (filters rows); 6_cluster; 7_group_averages;
-#          8_label_clusters; 9_generate_portraits (same UNIT_FILTER as step 6).
+# Affects: 6_synthetic_population (filters rows); 7_cluster_local_level; 9_group_averages;
+#          10_label_clusters; 11_generate_portraits (same UNIT_FILTER as step 7).
 USE_FOUR_LA_SUBSET = True
 
 # ONS LA codes (2021 LAD) — must match ladcd in admin_geography_mappings.csv

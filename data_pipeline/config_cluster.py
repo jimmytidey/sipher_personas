@@ -19,7 +19,6 @@ CLUSTER_VARS = [
     "doby_dv",  # age in years (after birth_year_to_age in feature engineering)
     "fimngrs_dv",  # gross monthly personal income (clipped in feature eng)
     "nchild_dv",
-    # "has_child",  # binary 0/1 — redundant with nchild_dv for K-Means; keep column in data, exclude from distance
     "hhsize",
 ]
 

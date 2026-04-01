@@ -78,7 +78,6 @@ const EXTRA_VARS = [
   { key: "Gender %",                                  label: "Gender %",                    round: 0 },
   { key: "Job type (NS-SEC 8)",                     label: "Employment type",             unit: "", lookup: NSSEC_LABELS },
   { key: "Highest qualification",                   label: "Qual. level",                 unit: "", lookup: HIQUAL_LABELS },
-  { key: "Has children",                            label: "Has children" },
   { key: "Monthly net pay (take-home)",               label: "Monthly net pay",             fmt: "currency" },
   { key: "Mental health score (SF-12 MCS)",               label: "Mental health score",      round: 1 },
   { key: "Physical health score (SF-12 PCS)",             label: "Physical health score",    round: 1 },
@@ -91,27 +90,21 @@ const EXTRA_VARS = [
   { key: "Miles driven in last 12 months",                label: "Miles driven/yr",          round: 0 },
   { key: "Has use of a car or van",                       label: "Has car/van" },
   { key: "Work location",                                 label: "Work location" },
-  { key: "Main mode of transport to work",               label: "Transport to work" },
   { key: "Employment status",                             label: "Employment status" },
   { key: "Internet use frequency",                        label: "Internet use" },
-  // config_variables_llm_generated (digital / migration / public services) — keys must
-  // match VARIABLE_MAP labels in data_pipeline/config_variables.py (cluster CSV columns).
-  { key: "Regularly uses the internet",                  label: "Uses internet regularly" },
-  { key: "Frequency: online banking",                    label: "Online banking (freq.)" },
-  { key: "Frequency: online buying",                     label: "Online buying (freq.)" },
-  { key: "Has a smartphone",                             label: "Has smartphone" },
-  { key: "Access to a laptop (mobile technology module)", label: "Laptop access" },
+  { key: "Access to a laptop",                           label: "Laptop access" },
+  { key: "Has / Access to a smartphone",                 label: "Smartphone" },
+  { key: "Frequency: Browsing websites",                 label: "Browse (freq.)" },
+  { key: "Frequency: Email",                             label: "Email (freq.)" },
+  { key: "Frequency: Looking at Social Media",           label: "Social view (freq.)" },
+  { key: "Frequency: Posting on Social Media",           label: "Social post (freq.)" },
+  { key: "Frequency: Online buying",                     label: "Online buying (freq.)" },
+  { key: "Frequency: Online banking",                  label: "Online banking (freq.)" },
+  { key: "Frequency: Streaming videos",                  label: "Streaming (freq.)" },
+  // config_variables_llm_generated (migration / public services) — keys must match
+  // VARIABLE_MAP labels in data_pipeline/config_variables.py (cluster CSV columns).
   { key: "Born in the UK (country)",                     label: "Born in UK" },
-  { key: "Immigrant generation",                         label: "Immigrant generation" },
-  { key: "Immigrant generation %",                     label: "Immigrant generation %", round: 0 },
   { key: "Year first came to live in Britain (first-generation migrants)", label: "Year arrived in UK", round: 0 },
-  { key: "Country of birth (numeric code — high cardinality)", label: "Country of birth (code)", round: 0 },
-  { key: "Citizenship: UK citizen (mentioned)",          label: "Citizenship: UK" },
-  { key: "Citizenship: citizen of country of birth (mentioned)", label: "Citizenship: country of birth" },
-  { key: "Citizenship: citizen of another country (mentioned)", label: "Citizenship: other country" },
-  { key: "Country father born in (numeric code — second-gen / heritage)", label: "Father born (country code)", round: 0 },
-  { key: "Country mother born in (numeric code — second-gen / heritage)", label: "Mother born (country code)", round: 0 },
-  { key: "Reason for migration: for work (mentioned)",   label: "Migrated for work" },
   { key: "Service use (12 m): local GP",                  label: "Used GP (12 m)" },
   { key: "Service use (12 m): local hospital",           label: "Used hospital (12 m)" },
   { key: "Service use (12 m): advice services (e.g. benefits)", label: "Benefits advice (12 m)" },
@@ -119,19 +112,61 @@ const EXTRA_VARS = [
 ];
 
 // ----- State -----
-let currentLa   = null;
+let currentLa    = null;
 let currentGroup = "All";
+let currentMode  = "local";    // "local" | "national"
 let allPersonas  = [];
 
 // ----- DOM refs -----
-const laSelect    = document.getElementById("la-select");
+const laSelect     = document.getElementById("la-select");
 const tabContainer = document.getElementById("group-tabs");
-const mainEl      = document.getElementById("main-content");
-const summaryEl   = document.getElementById("summary-bar");
-const siteIntro   = document.getElementById("site-intro");
+const mainEl       = document.getElementById("main-content");
+const summaryEl    = document.getElementById("summary-bar");
+const siteIntro    = document.getElementById("site-intro");
+const modeToggle   = document.getElementById("mode-toggle");
 
 function setSiteIntroVisible(show) {
   if (siteIntro) siteIntro.hidden = !show;
+}
+
+function modeApiPath(path) {
+  const sep = path.includes("?") ? "&" : "?";
+  return path + sep + `mode=${currentMode}`;
+}
+
+function fullApiPath(path) {
+  return modeApiPath(apiPath(path));
+}
+
+// ----- Mode toggle -----
+if (modeToggle) {
+  modeToggle.addEventListener("click", async (e) => {
+    const btn = e.target.closest(".mode-btn");
+    if (!btn || btn.dataset.mode === currentMode) return;
+
+    currentMode = btn.dataset.mode;
+    modeToggle.querySelectorAll(".mode-btn").forEach(b =>
+      b.classList.toggle("active", b.dataset.mode === currentMode)
+    );
+
+    // Reload LA list for new mode (available LAs may differ)
+    currentLa    = null;
+    currentGroup = "All";
+    allPersonas  = [];
+    laSelect.value = "";
+    tabContainer.innerHTML = "";
+    mainEl.innerHTML = "";
+    summaryEl.textContent = "";
+    setSiteIntroVisible(false);
+
+    renderState("loading", "Loading local authorities…");
+    try {
+      const las = await apiFetch(fullApiPath("/las"));
+      populateLaSelect(las);
+    } catch (e) {
+      renderState("error", `Could not load LAs for ${currentMode} mode: ${e.message}`);
+    }
+  });
 }
 
 // ----- Boot -----
@@ -146,7 +181,7 @@ async function init() {
 
   renderState("loading", "Loading local authorities…");
   try {
-    const las = await apiFetch(apiPath("/las"));
+    const las = await apiFetch(fullApiPath("/las"));
     populateLaSelect(las);
   } catch (e) {
     renderState("error", `Could not reach API at ${API_BASE}. Is it running?<br><code>uvicorn api.main:app --reload</code>`);
@@ -185,7 +220,7 @@ laSelect.addEventListener("change", async () => {
   setSiteIntroVisible(false);
   renderState("loading", "Loading personas…");
   try {
-    allPersonas = await apiFetch(apiPath(`/la/${code}/personas`));
+    allPersonas = await apiFetch(fullApiPath(`/la/${code}/personas`));
     buildGroupTabs();
     renderPersonas();
   } catch (e) {
@@ -233,7 +268,8 @@ function renderPersonas() {
   );
 
   const laName = laSelect.options[laSelect.selectedIndex]?.text ?? currentLa;
-  summaryEl.innerHTML = `Showing <strong>${filtered.length}</strong> persona${filtered.length !== 1 ? "s" : ""} for <strong>${laName}</strong>`;
+  const modeLabel = currentMode === "national" ? " · national clusters" : " · local clusters";
+  summaryEl.innerHTML = `Showing <strong>${filtered.length}</strong> persona${filtered.length !== 1 ? "s" : ""} for <strong>${laName}</strong><span class="mode-label">${modeLabel}</span>`;
 
   const totalPop = allPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
 

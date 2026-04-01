@@ -1,7 +1,7 @@
 # data_pipeline/helpers/cluster.py
 #
 # Shared clustering and DNA-profile helpers used by:
-#   6_cluster.ipynb               — global UKHLS tribe assignment
+#   7_cluster_local_level.ipynb   — global UKHLS tribe assignment
 #   9_local_authority_cluster.ipynb — per-LA cluster profiles
 #
 # All functions are pure (no global state) and receive their config via arguments.

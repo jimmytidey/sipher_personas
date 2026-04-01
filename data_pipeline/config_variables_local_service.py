@@ -1,8 +1,7 @@
 # data_pipeline/config_variables_local_service.py
 #
-# Housing tenure, neighbourhood cohesion, and ratings of local services (same schema
-# as config_variables.py). See:
-#   https://www.understandingsociety.ac.uk/documentation/mainstage/variables/tenure_dv/
+# Neighbourhood cohesion and ratings of local services (same schema as config_variables.py).
+# Housing tenure (`tenure_dv`) lives in config_variables_demographics.py.
 #
 # Each entry is a dict with:
 #   code        - base variable name (wave prefix e.g. o_ handled by ingestion)
@@ -33,51 +32,7 @@ from typing import Any
 VARIABLES: dict[str, dict[str, Any]] = {
 
     # -------------------------------------------------------------------------
-    # 1. Housing
-    # -------------------------------------------------------------------------
-    # UKHLS derived tenure (main survey); codes from variable documentation.
-    "tenure_dv": {
-        "code":        "tenure_dv",
-        "label":       "Housing tenure (Own/Rent)",
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            1.0: "Owned outright",
-            2.0: "Owned with mortgage",
-            3.0: "Local authority rent",
-            4.0: "Housing association rented",
-            5.0: "Rented from employer",
-            6.0: "Rented private unfurnished",
-            7.0: "Rented private furnished",
-            8.0: "Other",
-        },
-        # Broad groups for display (optional downstream use)
-        "recode": {
-            -9.0: 0.0,
-            -8.0: 0.0,
-            1.0: 1.0,
-            2.0: 1.0,
-            3.0: 2.0,
-            4.0: 2.0,
-            5.0: 2.0,
-            6.0: 2.0,
-            7.0: 2.0,
-            8.0: 3.0,
-        },
-        "group_labels": {
-            0.0: "Not stated / inapplicable",
-            1.0: "Owner-occupied",
-            2.0: "Rented",
-            3.0: "Other",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-
-    # -------------------------------------------------------------------------
-    # 2. Neighbourhood
+    # 1. Neighbourhood
     # -------------------------------------------------------------------------
     "nbrsnci_dv": {
         "code":        "nbrsnci_dv",
@@ -91,7 +46,7 @@ VARIABLES: dict[str, dict[str, Any]] = {
     },
 
     # -------------------------------------------------------------------------
-    # 3. Local services (ordinal 1=Excellent … 5=Very poor)
+    # 2. Local services (ordinal 1=Excellent … 5=Very poor)
     # -------------------------------------------------------------------------
     "locsera": {
         "code":        "locsera",

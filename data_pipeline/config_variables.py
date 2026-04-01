@@ -24,10 +24,7 @@
 #
 # K-Means inputs: see config_cluster.CLUSTER_VARS (re-exported below as CLUSTER_VARS).
 #
-# Hand-written variable blocks live in theme modules (merged in order below). A small
-# set of pipeline-only definitions (e.g. racel_dv for clustering alongside ethn_dv) is
-# appended next. LLM-curated variables are in config_variables_llm_generated and are
-# merged last — keys already present are left unchanged.
+# Variable blocks live in theme modules (merged in order below).
 
 import copy
 
@@ -36,14 +33,16 @@ import copy
 try:
     from data_pipeline import config_cluster
     from data_pipeline.config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
-    from data_pipeline.config_variables_llm_generated import LLM_GENERATED_VARIABLES
+    from data_pipeline.config_variables_digital import VARIABLES as _VAR_DIGITAL
+    from data_pipeline.config_variables_derived import VARIABLES as _VAR_DERIVED
     from data_pipeline.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
     from data_pipeline.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
     from data_pipeline.config_variables_transport import VARIABLES as _VAR_TRANSPORT
 except ModuleNotFoundError:  # pragma: no cover
     import config_cluster
     from config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
-    from config_variables_llm_generated import LLM_GENERATED_VARIABLES
+    from config_variables_digital import VARIABLES as _VAR_DIGITAL
+    from config_variables_derived import VARIABLES as _VAR_DERIVED
     from config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
     from config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
     from config_variables_transport import VARIABLES as _VAR_TRANSPORT
@@ -58,147 +57,14 @@ def _merge_variable_dicts(*parts):
     return out
 
 
-# Variables still required by the pipeline but not defined in any theme module (e.g.
-# xwave racel_dv for CLUSTER_VARS while indresp uses ethn_dv; derived has_child; admin pay fields).
-_LEGACY_PIPELINE_VARIABLES = {
-    "racel_dv": {
-        "code":        "racel_dv",
-        "label":       "Ethnic group",
-        "xwave":       True,
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {
-            -9.0: "Missing",
-             1.0: "White: British/English/Scottish/Welsh/N. Irish",
-             2.0: "White: Irish",
-             4.0: "White: Other",
-             5.0: "Mixed: White and Black Caribbean",
-             6.0: "Mixed: White and Black African",
-             7.0: "Mixed: White and Asian",
-             8.0: "Mixed: Other",
-             9.0: "Asian: Indian",
-            10.0: "Asian: Pakistani",
-            11.0: "Asian: Bangladeshi",
-            12.0: "Asian: Chinese",
-            13.0: "Asian: Other",
-            14.0: "Black: Caribbean",
-            15.0: "Black: African",
-            16.0: "Black: Other",
-            17.0: "Arab",
-            97.0: "Other ethnic group",
-        },
-        "recode": {
-            -9.0:  0.0,
-             1.0:  1.0,
-             2.0:  1.0,
-             4.0:  1.0,
-             5.0:  2.0,
-             6.0:  2.0,
-             7.0:  2.0,
-             8.0:  2.0,
-             9.0:  3.0,
-            10.0:  4.0,
-            11.0:  4.0,
-            12.0:  5.0,
-            13.0:  5.0,
-            17.0:  6.0,
-            14.0:  7.0,
-            15.0:  8.0,
-            16.0:  8.0,
-            97.0:  9.0,
-        },
-        "group_labels": {
-            0.0: "Not stated",
-            1.0: "White",
-            2.0: "Mixed",
-            3.0: "Indian",
-            4.0: "Pakistani / Bangladeshi",
-            5.0: "Other Asian",
-            6.0: "Arab",
-            7.0: "Caribbean",
-            8.0: "African",
-            9.0: "Other",
-        },
-        "fill":    0,
-        "one_hot": True,
-    },
-    "has_child": {
-        "code":        "has_child",
-        "label":       "Has children",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-    },
-    "payo_dv": {
-        "code":        "payo_dv",
-        "label":       "Personal income — administrative / derived (UKHLS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "floor":       0,
-    },
-    "hiquao_dv": {
-        "code":        "hiquao_dv",
-        "label":       "Highest qualification — administrative / derived (UKHLS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        5.0,
-        "one_hot":     None,
-    },
-    "envhabit8": {
-        "code":        "envhabit8",
-        "label":       "Environmental habit: public transport use",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  {
-            1.0: "Always",        2.0: "Very often",
-            3.0: "Quite often",   4.0: "Not very often",
-            5.0: "Never",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "caruse": {
-        "code":        "caruse",
-        "label":       "Has use of a car or van",
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {1.0: "Yes", 2.0: "No"},
-        "fill":        2.0,
-        "one_hot":     None,
-    },
-    "jbpl": {
-        "code":        "jbpl",
-        "label":       "Work location",
-        "categorical": True,
-        "backfill":    None,
-        "categories":  {
-            1.0: "At home",          2.0: "Employer premises",
-            3.0: "Driving/travel",   4.0: "Various",
-        },
-        "fill":        "mode",
-        "one_hot":     [1.0],
-    },
-}
-
 VARIABLES = _merge_variable_dicts(
     _VAR_DEMOGRAPHICS,
     _VAR_LOCAL_SERVICE,
     _VAR_PUBLIC_SERVICE,
     _VAR_TRANSPORT,
-    _LEGACY_PIPELINE_VARIABLES,
+    _VAR_DIGITAL,
+    _VAR_DERIVED,
 )
-
-# Append LLM-generated definitions (e.g. netuse, bornuk_dv, servuse1, pidp). Keys already
-# defined above are left unchanged.
-for _code, _spec in LLM_GENERATED_VARIABLES.items():
-    if _code not in VARIABLES:
-        VARIABLES[_code] = copy.deepcopy(_spec)
 
 # -----------------------------------------------------------------------------
 # Convenience accessors derived from VARIABLES (single source of truth)
@@ -266,3 +132,36 @@ XWAVE_VARS = {k for k, v in VARIABLES.items() if v.get("xwave")}
 
 # Transforms to apply during feature engineering: base_code -> transform name
 TRANSFORMS = {k: v["transform"] for k, v in VARIABLES.items() if v.get("transform")}
+
+
+def reload_config_variables() -> None:
+    """Reload theme modules, ``config_cluster``, LLM vars, and this module.
+
+    Call from Jupyter after editing ``config_variables_*.py`` so changes apply
+    without restarting the kernel. Then re-import names from ``config_variables``::
+
+        import config_variables
+        config_variables.reload_config_variables()
+        from config_variables import VARIABLES, VARIABLE_MAP
+    """
+    import importlib
+    import sys
+
+    _themes = (
+        "config_variables_demographics",
+        "config_variables_local_service",
+        "config_variables_public_service",
+        "config_variables_transport",
+        "config_variables_digital",
+        "config_variables_derived",
+    )
+    for base in _themes:
+        for key in (base, f"data_pipeline.{base}"):
+            if key in sys.modules:
+                importlib.reload(sys.modules[key])
+    for key in ("config_cluster", "data_pipeline.config_cluster"):
+        if key in sys.modules:
+            importlib.reload(sys.modules[key])
+    for key in ("config_variables", "data_pipeline.config_variables"):
+        if key in sys.modules:
+            importlib.reload(sys.modules[key])
