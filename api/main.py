@@ -104,6 +104,27 @@ def health() -> dict[str, str]:
     return {"status": "ok"}
 
 
+@app.get("/variable-defs")
+def variable_defs() -> list[dict[str, str]]:
+    """
+    Ordered variable definitions from current config_variables.py.
+
+    Returns [{"code": <base_code>, "label": <VARIABLE_MAP label>}, ...]
+    in the same order as VARIABLES.
+    """
+    try:
+        import data_pipeline.config_variables as cv
+        cv.reload_config_variables()
+        variables = cv.VARIABLES
+    except Exception as exc:
+        raise HTTPException(status_code=500, detail=f"Could not load variable definitions: {exc}") from exc
+
+    return [
+        {"code": code, "label": str(v.get("label", code))}
+        for code, v in variables.items()
+    ]
+
+
 @app.get("/las")
 def list_las(
     test: bool = Query(default=False, description="Serve from data_test/ when true"),

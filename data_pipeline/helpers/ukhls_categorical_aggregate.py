@@ -19,7 +19,7 @@ def racel_collapsed_percent_from_raw(raw_path: Path, recode: dict) -> dict[float
     """Sum ``percent`` in ``racel_raw_ukhl.csv`` by collapsed group.
 
     Uses the same mapping as feature engineering: ``RECODE_MAPS[\"racel_dv\"]`` from
-    ``config_variables`` (defined in ``config_variables_demographics.racel_dv`` → ``recode``).
+    ``config_variables`` (defined in ``config_variables_sipher_weighted.racel_dv`` → ``recode``).
 
     Keys are normalised to float so lookups match CSV values and config literals.
     """
@@ -36,7 +36,11 @@ def racel_collapsed_percent_from_raw(raw_path: Path, recode: dict) -> dict[float
             continue
         collapsed = recode_f.get(raw_code)
         if collapsed is None:
-            continue
+            # Raw reference tables still list negative UKHLS codes; pipeline maps those to -1 at 3a.
+            if raw_code < 0:
+                collapsed = -1.0
+            else:
+                continue
         collapsed = float(collapsed)
         out[collapsed] = out.get(collapsed, 0.0) + float(p)
     return out

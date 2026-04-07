@@ -19,8 +19,10 @@ Sub-steps use letter suffixes (`3a`, `3b`, …): **`a`** = main transform, **`b`
 | 7    | `7_cluster_local_level.ipynb`  | `data/7_cluster_local_level/LA_*_clusters.csv`               | —                               |
 | 8    | `8_cluster_national_level.ipynb` | `data/8_cluster_national_level/LA_*_national_clusters.csv` | —                               |
 | 9    | `9_group_averages.ipynb`       | `data/9_group_averages/group_baselines.csv`, `group_distributions.csv` | —                    |
-| 10   | `10_label_clusters.ipynb`      | `data/7_cluster_local_level/*_described.csv` (LLM labels)   | —                               |
-| 11   | `11_generate_portraits.ipynb`  | `api/data/portraits/`                                      | —                               |
+| 10   | `10_label_local_level_clusters.ipynb`  | `data/7_cluster_local_level/*_described.csv` (LLM labels)   | —                       |
+| 11   | `11_label_national_level_clusters.ipynb` | `data/8_cluster_national_level/*_described.csv` (LLM labels) | —                     |
+| 12   | `12_generate_portraits.ipynb`  | `api/data/portraits/`                                      | —                               |
+| 13   | `13_nl_profiles.ipynb`         | `data/13_nl_profiles/nl_profiles.csv`                      | —                               |
 
 ## Data folder structure (main artefacts)
 

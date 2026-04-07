@@ -29,7 +29,8 @@ def fit(df: pd.DataFrame, cols: list[str]) -> Coefficients:
     Parameters
     ----------
     df   : DataFrame containing the columns to fit.
-    cols : Column names to fit (typically CLUSTER_VARS with wave prefix).
+    cols : Column names to fit (typically ``expected_cluster_feature_columns(wave)``
+           from config_variables — raw or OHE-expanded — matching the K-Means design matrix).
 
     Returns
     -------

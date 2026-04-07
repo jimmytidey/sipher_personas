@@ -5,24 +5,26 @@
 #   code        - base variable name (wave prefix e.g. o_ handled by ingestion)
 #   label       - human-readable description
 #   categorical - True if the variable is categorical, False if continuous
-#   categories  - dict mapping raw numeric code (float) -> English label, or None
+#   categories  - dict mapping code (float) -> label; use -1.0: "Not provided" for the 3a sentinel
+#                 (other negative keys omitted). Real survey code 0 may appear separately. None if N/A.
 #   group_labels- (optional) post-recode display labels {canonical_code -> label};
 #                 overrides categories in CATEGORY_MAPS when present
-#   fill        - imputation strategy: "mode" | "median" | "zero" | None
 #   one_hot     - list of category codes (float) to one-hot encode, or None
 #   clip        - (optional) upper bound to clip outliers before clustering/viz
 #   floor       - (optional) lower bound to clip (e.g. 0 to zero-out negative pay)
-#   recode      - (optional) dict of {raw_value -> new_value} applied before use
+#   recode      - (optional) dict of {raw_value -> new_value} applied before use.
+#                 Do not map UKHLS negative codes here — 3a backfill remaps them to -1.
 #   bin_width   - (optional) fixed histogram bin width for visualisation (overrides auto-binning)
 #   backfill    - list of values that trigger a look-back through older waves (e.g.
 #                 [-9, -7, -2, -1]); NaN always triggers if a list is provided.
 #                 Use None or [] to disable backfill for this variable.
-#   xwave       - (optional) True if this variable should be sourced from xwavedat.pkl
-#                 (looked up by code); xwave vars are never backfilled
+#   file        - (optional) source file: "xwave" for xwavedat.pkl, "hhresp" for
+#                 household response; omit (or "indresp") for individual response.
+#                 xwave vars are never backfilled.
 #   transform   - (optional) transformation applied during feature engineering, e.g.
 #                 "birth_year_to_age"
 #
-# K-Means inputs: see config_cluster.CLUSTER_VARS (re-exported below as CLUSTER_VARS).
+# K-Means inputs: variables with cluster=True in their definition (re-exported below as CLUSTER_VARS).
 #
 # Variable blocks live in theme modules (merged in order below).
 
@@ -31,16 +33,16 @@ import copy
 # Notebooks often run with cwd=data_pipeline/ and use `import config_variables` (flat).
 # In that case `data_pipeline` is not a package on sys.path — use same-directory imports.
 try:
-    from data_pipeline import config_cluster
-    from data_pipeline.config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
+    from data_pipeline.config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
+    from data_pipeline.config_variables_economic import VARIABLES as _VAR_ECONOMIC
     from data_pipeline.config_variables_digital import VARIABLES as _VAR_DIGITAL
     from data_pipeline.config_variables_derived import VARIABLES as _VAR_DERIVED
     from data_pipeline.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
     from data_pipeline.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
     from data_pipeline.config_variables_transport import VARIABLES as _VAR_TRANSPORT
 except ModuleNotFoundError:  # pragma: no cover
-    import config_cluster
-    from config_variables_demographics import VARIABLES as _VAR_DEMOGRAPHICS
+    from config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
+    from config_variables_economic import VARIABLES as _VAR_ECONOMIC
     from config_variables_digital import VARIABLES as _VAR_DIGITAL
     from config_variables_derived import VARIABLES as _VAR_DERIVED
     from config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
@@ -59,11 +61,12 @@ def _merge_variable_dicts(*parts):
 
 VARIABLES = _merge_variable_dicts(
     _VAR_DEMOGRAPHICS,
-    _VAR_LOCAL_SERVICE,
-    _VAR_PUBLIC_SERVICE,
-    _VAR_TRANSPORT,
-    _VAR_DIGITAL,
-    _VAR_DERIVED,
+    #_VAR_ECONOMIC,
+    #_VAR_LOCAL_SERVICE,
+    #_VAR_PUBLIC_SERVICE,
+    #_VAR_TRANSPORT,
+    #_VAR_DIGITAL,
+    #_VAR_DERIVED,
 )
 
 # -----------------------------------------------------------------------------
@@ -86,26 +89,62 @@ CATEGORY_MAPS = {
 CATEGORICAL_VARS = {k for k, v in VARIABLES.items() if v["categorical"]}
 CONTINUOUS_VARS  = {k for k, v in VARIABLES.items() if not v["categorical"]}
 
-CLUSTER_VARS = list(config_cluster.CLUSTER_VARS)
-_unknown = [c for c in CLUSTER_VARS if c not in VARIABLES]
-if _unknown:
-    raise ValueError(
-        f"config_cluster.CLUSTER_VARS has unknown variable codes (not in VARIABLES): {_unknown}"
-    )
+CLUSTER_VARS = [k for k, v in VARIABLES.items() if v.get("cluster")]
 
 # Variables shown in the regional cluster summary table (all variables now included)
 SUMMARY_VARS = list(VARIABLES.keys())
 
-# Variables to one-hot encode: code -> list of float category codes
-# Use pd.get_dummies or equivalent with these column subsets
-ONE_HOT_VARS = {
-    k: v.get("one_hot")
-    for k, v in VARIABLES.items()
-    if v.get("one_hot") is not None
-}
+# Variables to one-hot encode: code -> True (all category codes) or list of codes.
+# Omitted when ``one_hot`` is missing, ``False``, or empty — those variables skip OHE.
+ONE_HOT_VARS = {k: v["one_hot"] for k, v in VARIABLES.items() if v.get("one_hot")}
 
-# Fill strategy lookup: code -> "mode" | "median" | "zero" | None
-FILL_STRATEGIES = {k: v["fill"] for k, v in VARIABLES.items()}
+
+def expected_ohe_column_names(wave: str, base: str) -> list[str]:
+    """
+    Names of binary columns created in 4a for one OHE variable (category dummies + not_answered).
+
+    Columns use the _eng infix — e.g. o_racel_dv_eng_1, o_racel_dv_eng_not_answered —
+    reflecting that OHE is always derived from the feature-engineered (recoded) values.
+
+    Must stay aligned with 4a_feature_eng_ukhls.ipynb step 5.
+    """
+    one_hot_spec = ONE_HOT_VARS[base]
+    var_def = VARIABLES[base]
+    if one_hot_spec is True:
+        keys_src = var_def.get("group_labels") or var_def["categories"]
+        codes = list(keys_src.keys())
+    else:
+        codes = list(one_hot_spec)
+
+    cols = [f"{wave}_{base}_eng_{int(code)}" for code in codes]
+    cols.append(f"{wave}_{base}_eng_not_answered")
+    return cols
+
+
+# Variables that receive any scalar feature engineering in step 4a (transform /
+# recode / floor / clip).  Downstream steps use {wave}_{base}_eng for these.
+# Populated after RECODE_MAPS etc. are defined (see bottom of file).
+_ENG_VARS: set[str] = set()  # filled in below
+
+
+def expected_cluster_feature_columns(wave: str) -> list[str]:
+    """
+    Ordered column names passed to K-Means (and normalise.fit).
+
+    For OHE variables, uses the _eng dummy columns (e.g. o_racel_dv_eng_1).
+    For scalar variables that were recoded / transformed / clipped in 4a,
+    uses the _eng column (e.g. o_doby_dv_eng, o_hiqual_dv_eng).
+    For unmodified scalar variables, uses the raw column (e.g. o_scsf1).
+    """
+    out: list[str] = []
+    for base in CLUSTER_VARS:
+        if base in ONE_HOT_VARS:
+            out.extend(expected_ohe_column_names(wave, base))
+        elif base in _ENG_VARS:
+            out.append(f"{wave}_{base}_eng")
+        else:
+            out.append(f"{wave}_{base}")
+    return out
 
 # Upper-clip values for outlier-prone continuous variables: code -> numeric upper bound
 CLIP_VALUES = {k: v["clip"] for k, v in VARIABLES.items() if v.get("clip") is not None}
@@ -127,11 +166,21 @@ DISABILITY_LABELS = {
     "10": "progressive",    "11": "other",          "96": "other",
 }
 
-# Variables sourced from xwavedat (looked up by code)
-XWAVE_VARS = {k for k, v in VARIABLES.items() if v.get("xwave")}
+# Variables grouped by source file
+XWAVE_VARS  = {k for k, v in VARIABLES.items() if v.get("file") == "xwave"}
+HHRESP_VARS = {k for k, v in VARIABLES.items() if v.get("file") == "hhresp"}
 
 # Transforms to apply during feature engineering: base_code -> transform name
 TRANSFORMS = {k: v["transform"] for k, v in VARIABLES.items() if v.get("transform")}
+
+# Populate _ENG_VARS now that RECODE_MAPS / TRANSFORMS / FLOOR_VALUES / CLIP_VALUES exist.
+# Any variable whose scalar value is modified in step 4a gets a {wave}_{base}_eng column.
+_ENG_VARS = (
+    set(RECODE_MAPS.keys())
+    | set(TRANSFORMS.keys())
+    | set(FLOOR_VALUES.keys())
+    | set(CLIP_VALUES.keys())
+)
 
 
 def reload_config_variables() -> None:
@@ -147,8 +196,17 @@ def reload_config_variables() -> None:
     import importlib
     import sys
 
-    _themes = (
+    # Renamed/removed theme modules can linger in sys.modules; reload would raise
+    # ModuleNotFoundError (spec not found) after the file is gone.
+    for _stale in (
         "config_variables_demographics",
+        "data_pipeline.config_variables_demographics",
+    ):
+        sys.modules.pop(_stale, None)
+
+    _themes = (
+        "config_variables_sipher_weighted",
+        "config_variables_economic",
         "config_variables_local_service",
         "config_variables_public_service",
         "config_variables_transport",

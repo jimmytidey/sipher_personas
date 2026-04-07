@@ -146,7 +146,7 @@ def compute_service_use(df: pd.DataFrame, wave: str = "o") -> pd.Series:
     return out.fillna(0.0).clip(0.0, 1.0).astype(np.float32)
 
 
-# Raw UKHLS jbstat: 1 = self-employed, 2 = paid employment (ft/pt) — see config_variables_demographics.
+# Raw UKHLS jbstat: 1 = self-employed, 2 = paid employment (ft/pt) — see config_variables_sipher_weighted.
 _PAID_OR_SELF_EMPLOYED: frozenset[float] = frozenset({1.0, 2.0})
 
 

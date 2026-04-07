@@ -41,75 +41,22 @@ const GROUP_COLORS = {
   "Other":           "#6b7280",
 };
 
-// Main card stats — must match CLUSTER_VARS in data_pipeline/config_cluster.py
-// (Ethnic group + continuous: age, household size, income, children)
-const NSSEC_LABELS = {
-  0: "Unknown",
-  1: "Large employers & higher management",
-  2: "Higher professional",
-  3: "Lower management & professional",
-  4: "Intermediate",
-  5: "Small employers & own account",
-  6: "Lower supervisory & technical",
-  7: "Semi-routine",
-  8: "Routine",
-};
-
-const HIQUAL_LABELS = {
-  1: "Degree",
-  2: "Other Higher",
-  3: "A-Level",
-  4: "GCSE",
-  5: "Other qualification",
-  6: "No qualification",
-};
-
+// Hard-coded current variables from config_variables_sipher_weighted.py
+// Keys must match cluster CSV headers (VARIABLE_MAP labels). `code` is what we display.
 const STATS = [
-  { key: "Ethnic group", label: "Ethnic group", pctKey: "Ethnic group %" },
-  { key: "Age in years",                           label: "Avg. age",                    unit: " yrs",  round: 1 },
-  { key: "Total monthly personal income (gross)", label: "Monthly income",              unit: "",      fmt: "currency" },
-  { key: "Number of own children in household",   label: "Children living at home",     unit: "",      round: 0 },
-  { key: "Household size",                        label: "Household size",              round: 1 },
+  { key: "Age", code: "doby_dv", round: 1, unit: " yrs" },
+  { key: "Sex (Derived)", code: "sex_dv", pctKey: "Sex (Derived) %" },
+  { key: "Ethnic group", code: "racel_dv", pctKey: "Ethnic group %" },
+  { key: "Highest qualification", code: "hiqual_dv", pctKey: "Highest qualification %" },
+  { key: "Employment status", code: "jbstat" },
+  { key: "Marital status", code: "marstat_dv", pctKey: "Marital status %" },
+  { key: "Housing tenure (Own/Rent)", code: "tenure_dv", pctKey: "Housing tenure (Own/Rent) %" },
+  { key: "Composition of household (LFS)", code: "hhtype_dv", pctKey: "Composition of household (LFS) %" },
+  { key: "Self-rated general health", code: "scsf1", pctKey: "Self-rated general health %" },
 ];
 
-// Non-cluster / contextual variables (expand card)
-const EXTRA_VARS = [
-  { key: "Gender",                                    label: "Gender" },
-  { key: "Gender %",                                  label: "Gender %",                    round: 0 },
-  { key: "Job type (NS-SEC 8)",                     label: "Employment type",             unit: "", lookup: NSSEC_LABELS },
-  { key: "Highest qualification",                   label: "Qual. level",                 unit: "", lookup: HIQUAL_LABELS },
-  { key: "Monthly net pay (take-home)",               label: "Monthly net pay",             fmt: "currency" },
-  { key: "Mental health score (SF-12 MCS)",               label: "Mental health score",      round: 1 },
-  { key: "Physical health score (SF-12 PCS)",             label: "Physical health score",    round: 1 },
-  { key: "Buckner Neighbourhood Cohesion Index",          label: "Neighbourhood cohesion",   round: 1 },
-  { key: "Standard of local services: Public transport",  label: "Local svcs: Transport",    round: 1 },
-  { key: "Standard of local services: Shopping",          label: "Local svcs: Shopping",     round: 1 },
-  { key: "Standard of local services: Leisure",           label: "Local svcs: Leisure",      round: 1 },
-  { key: "Minutes spent travelling to work",              label: "Commute (mins)",           round: 0 },
-  { key: "Environmental habit: public transport use",     label: "PT use habit" },
-  { key: "Miles driven in last 12 months",                label: "Miles driven/yr",          round: 0 },
-  { key: "Has use of a car or van",                       label: "Has car/van" },
-  { key: "Work location",                                 label: "Work location" },
-  { key: "Employment status",                             label: "Employment status" },
-  { key: "Internet use frequency",                        label: "Internet use" },
-  { key: "Access to a laptop",                           label: "Laptop access" },
-  { key: "Has / Access to a smartphone",                 label: "Smartphone" },
-  { key: "Frequency: Browsing websites",                 label: "Browse (freq.)" },
-  { key: "Frequency: Email",                             label: "Email (freq.)" },
-  { key: "Frequency: Looking at Social Media",           label: "Social view (freq.)" },
-  { key: "Frequency: Posting on Social Media",           label: "Social post (freq.)" },
-  { key: "Frequency: Online buying",                     label: "Online buying (freq.)" },
-  { key: "Frequency: Online banking",                  label: "Online banking (freq.)" },
-  { key: "Frequency: Streaming videos",                  label: "Streaming (freq.)" },
-  // config_variables_llm_generated (migration / public services) — keys must match
-  // VARIABLE_MAP labels in data_pipeline/config_variables.py (cluster CSV columns).
-  { key: "Born in the UK (country)",                     label: "Born in UK" },
-  { key: "Year first came to live in Britain (first-generation migrants)", label: "Year arrived in UK", round: 0 },
-  { key: "Service use (12 m): local GP",                  label: "Used GP (12 m)" },
-  { key: "Service use (12 m): local hospital",           label: "Used hospital (12 m)" },
-  { key: "Service use (12 m): advice services (e.g. benefits)", label: "Benefits advice (12 m)" },
-  { key: "GP visits in last 12 months (banded count)",   label: "GP visits (12 m)" },
-];
+// Disabled for now; we only show the current config vars above.
+const EXTRA_VARS = [];
 
 // ----- State -----
 let currentLa    = null;
@@ -231,11 +178,18 @@ laSelect.addEventListener("change", async () => {
 // ----- Group tabs -----
 function buildGroupTabs() {
   const groups = [...new Set(allPersonas.map(p => p.group).filter(Boolean))].sort();
+  const totalPop = allPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
   tabContainer.innerHTML = "";
   ["All", ...groups].forEach(g => {
     const btn = document.createElement("button");
     btn.className = "tab" + (g === currentGroup ? " active" : "");
-    btn.textContent = g;
+    if (g === "All") {
+      btn.textContent = "All";
+    } else {
+      const groupPop = allPersonas.filter(p => p.group === g).reduce((s, p) => s + (Number(p.size) || 0), 0);
+      const pct = totalPop > 0 ? Math.round(groupPop / totalPop * 100) : 0;
+      btn.textContent = `${g} (${pct}%)`;
+    }
     const color = GROUP_COLORS[g] || GROUP_COLORS["Other"];
     if (g !== "All") btn.style.setProperty("--tab-color", color);
     btn.addEventListener("click", () => {
@@ -282,7 +236,10 @@ function renderPersonas() {
     if (persona.group !== lastGroup) {
       lastGroup = persona.group;
       if (currentGroup === "All") {
-        const header = buildGroupHeader(persona.group, filtered.filter(p => p.group === persona.group).length);
+        const groupPersonas = filtered.filter(p => p.group === persona.group);
+        const groupPop = groupPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
+        const pct = totalPop > 0 ? Math.round(groupPop / totalPop * 100) : 0;
+        const header = buildGroupHeader(persona.group, groupPersonas.length, pct);
         grid.appendChild(header);
       }
     }
@@ -293,14 +250,14 @@ function renderPersonas() {
   mainEl.appendChild(grid);
 }
 
-function buildGroupHeader(group, count) {
+function buildGroupHeader(group, count, pct) {
   const el = document.createElement("div");
   el.className = "group-header";
   const color = GROUP_COLORS[group] || GROUP_COLORS["Other"];
   el.innerHTML = `
     <span class="group-dot" style="background:${color}"></span>
     <h2>${group}</h2>
-    <span class="group-count">${count} persona${count !== 1 ? "s" : ""}</span>
+    <span class="group-count">${pct}% of population · ${count} persona${count !== 1 ? "s" : ""}</span>
   `;
   return el;
 }
@@ -337,7 +294,7 @@ function buildCard(persona, totalPop) {
     : `<div class="card-title">${persona.tribe_label ?? "Persona"}</div>`;
 
   // Stats rows
-  const statsHtml = STATS.map(({ key, label, unit, fmt, round, lookup, pctKey }) => {
+  const statsHtml = STATS.map(({ key, code, label, unit, fmt, round, lookup, pctKey }) => {
     const raw = persona[key];
     let val = "—";
     if (pctKey !== undefined) {
@@ -360,7 +317,8 @@ function buildCard(persona, totalPop) {
         else val = String(raw) + (unit || "");
       }
     }
-    return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
+    const statLabel = code ?? label ?? key;
+    return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">${val}</span></div>`;
   }).join("");
 
   const portraitHtml = persona.portrait_url
@@ -372,10 +330,11 @@ function buildCard(persona, totalPop) {
     : "";
 
   // Extra variables for the expanded section (always show a row; — if not in API payload yet)
-  const extraHtml = EXTRA_VARS.map(({ key, label, unit, fmt, round, lookup }) => {
+  const extraHtml = EXTRA_VARS.map(({ key, code, label, unit, fmt, round, lookup }) => {
     const raw = persona[key];
+    const statLabel = code ?? label ?? key;
     if (raw === null || raw === undefined || raw === "") {
-      return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">—</span></div>`;
+      return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">—</span></div>`;
     }
     const num = Number(raw);
     let val;
@@ -383,9 +342,10 @@ function buildCard(persona, totalPop) {
     else if (fmt === "currency" && !isNaN(num)) val = "£" + formatNum(Math.round(num));
     else if (round !== undefined && !isNaN(num)) val = num.toFixed(round) + (unit || "");
     else val = String(raw) + (unit || "");
-    return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
+    return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">${val}</span></div>`;
   }).join("");
 
+  const showExtra = EXTRA_VARS.length > 0;
   card.innerHTML = `
     <div class="card-head">
       ${portraitHtml}
@@ -398,22 +358,25 @@ function buildCard(persona, totalPop) {
       <div class="stats-grid">${statsHtml}</div>
       ${descriptionHtml}
     </div>
-    <button class="card-expand-btn" aria-expanded="false">
+    ${showExtra ? `<button class="card-expand-btn" aria-expanded="false">
       <span>Show all variables</span>
       <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>
-    </button>
-    <div class="card-extra" hidden>
+    </button>` : ""}
+    ${showExtra ? `<div class="card-extra" hidden>
       <div class="stats-grid extra-grid">${extraHtml}</div>
-    </div>
+    </div>` : ""}
   `;
 
-  card.querySelector(".card-expand-btn").addEventListener("click", function () {
-    const extra    = card.querySelector(".card-extra");
-    const expanded = this.getAttribute("aria-expanded") === "true";
-    extra.hidden   = expanded;
-    this.setAttribute("aria-expanded", String(!expanded));
-    this.querySelector("span").textContent = expanded ? "Show all variables" : "Hide variables";
-  });
+  const expandBtn = card.querySelector(".card-expand-btn");
+  if (expandBtn) {
+    expandBtn.addEventListener("click", function () {
+      const extra    = card.querySelector(".card-extra");
+      const expanded = this.getAttribute("aria-expanded") === "true";
+      if (extra) extra.hidden = expanded;
+      this.setAttribute("aria-expanded", String(!expanded));
+      this.querySelector("span").textContent = expanded ? "Show all variables" : "Hide variables";
+    });
+  }
 
   return card;
 }

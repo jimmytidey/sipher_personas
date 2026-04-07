@@ -1,4 +1,4 @@
-# data_pipeline/config_variables_demographics.py
+# data_pipeline/config_variables_sipher_weighted.py
 #
 # Curated demographic + selected health variables (same schema as config_variables.py).
 # Each entry is a dict with:
@@ -7,12 +7,12 @@
 #   categorical - True if categorical, False if continuous
 #   categories  - dict mapping raw numeric code (float) -> English label, or None
 #   group_labels- (optional) post-recode display labels {canonical_code -> label}
-#   fill        - imputation: "mode" | "median" | "zero" | None | numeric
 #   one_hot     - list of category codes to one-hot, or None / True
 #   clip / floor- (optional) bounds for continuous variables
-#   recode      - (optional) {raw_value -> new_value}
+#   recode      - (optional) {raw_value -> new_value} (omit UKHLS negatives — 3a backfill → -1)
 #   backfill    - list of codes triggering wave look-back, or None
-#   xwave       - (optional) True if sourced from xwavedat.pkl
+#   file        - (optional) source file: "xwave" for xwavedat.pkl, "hhresp" for
+#                 household response; omit (or "indresp") for individual response
 #   transform   - (optional) e.g. "birth_year_to_age"
 #
 # Merged into config_variables.VARIABLES with other theme modules (see config_variables.py).
@@ -34,105 +34,40 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "doby_dv": {
         "code":        "doby_dv",
-        "label":       "Age / Year of birth (Derived)",
+        "cluster":     True,
+        "label":       "Age",
         "categorical": False,
         "categories":  None,
-        "fill":        0,
         "one_hot":     None,
         "backfill":    None,
-        "xwave":       True,
+        "file":        "xwave",
         "transform":   "birth_year_to_age",
     },
     "sex_dv": {
         "code":        "sex_dv",
+        "cluster":     True,
         "label":       "Sex (Derived)",
         "categorical": True,
         "backfill":    None,
-        "categories":  {-20.0: "No data from BHPS", -9.0: "Missing", 0.0: "Inconsistent", 1.0: "Male", 2.0: "Female"},
-        "fill":        0.0,
-        "one_hot":     None,
-        "xwave":       True,
-    },
-    # UKHLS ethn_dv (indresp): derived ethnic group — different codebook from racel_dv
-    "ethn_dv": {
-        "code":        "ethn_dv",
-        "label":       "Ethnic group",
-        "categorical": True,
-        "backfill":    None,
-        "xwave":       False,
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-            1.0: "British/English/Scottish/Welsh/Northern Irish",
-            2.0: "Irish",
-            3.0: "Gypsy or Irish traveller",
-            4.0: "Any other White background",
-            5.0: "White and Black Caribbean",
-            6.0: "White and Black African",
-            7.0: "White and Asian",
-            8.0: "Any other Mixed background",
-            9.0: "Indian",
-            10.0: "Pakistani",
-            11.0: "Bangladeshi",
-            12.0: "Chinese",
-            13.0: "Any other Asian background",
-            14.0: "Caribbean",
-            15.0: "African",
-            16.0: "Any other Black background",
-            17.0: "Arab",
-            97.0: "Any other ethnic group",
+            -1.0: "Not provided",
+            0.0: "Inconsistent",
+            1.0: "Male",
+            2.0: "Female",
         },
-        # Collapse to same canonical groups as racel_dv (Gypsy → Other)
-        "recode": {
-            -9.0: 0.0,
-            -8.0: 0.0,
-            -2.0: 0.0,
-            -1.0: 0.0,
-            1.0: 1.0,
-            2.0: 1.0,
-            3.0: 9.0,
-            4.0: 1.0,
-            5.0: 2.0,
-            6.0: 2.0,
-            7.0: 2.0,
-            8.0: 2.0,
-            9.0: 3.0,
-            10.0: 4.0,
-            11.0: 4.0,
-            12.0: 5.0,
-            13.0: 5.0,
-            14.0: 7.0,
-            15.0: 8.0,
-            16.0: 8.0,
-            17.0: 6.0,
-            97.0: 9.0,
-        },
-        "group_labels": {
-            0.0: "Not stated",
-            1.0: "White",
-            2.0: "Mixed",
-            3.0: "Indian",
-            4.0: "Pakistani / Bangladeshi",
-            5.0: "Other Asian",
-            6.0: "Arab",
-            7.0: "Caribbean",
-            8.0: "African",
-            9.0: "Other",
-        },
-        "fill":        0.0,
-        "one_hot":     True,
+        "one_hot":     None,
+        "file":        "xwave",
     },
-    # xwavedat: UKHLS racel_dv — used for CLUSTER_VARS; indresp uses ethn_dv above
+    # xwavedat: UKHLS racel_dv — used for CLUSTER_VARS
     "racel_dv": {
         "code":        "racel_dv",
+        "cluster":     True,
         "label":       "Ethnic group",
-        "xwave":       True,
+        "file":        "xwave",
         "categorical": True,
         "backfill":    None,
         "categories":  {
-            -9.0: "Missing",
+            -1.0: "Not provided",
              1.0: "White: British/English/Scottish/Welsh/N. Irish",
              2.0: "White: Irish",
              3.0: "Gypsy or Irish traveller",
@@ -152,8 +87,8 @@ VARIABLES: dict[str, dict[str, Any]] = {
             17.0: "Arab",
             97.0: "Other ethnic group",
         },
+        # UKHLS negative codes: not in recode — 3a backfill maps them to -1 (“not provided”).
         "recode": {
-            -9.0:  0.0,
              1.0:  1.0,
              2.0:  1.0,
              3.0:  1.0,
@@ -174,7 +109,7 @@ VARIABLES: dict[str, dict[str, Any]] = {
             97.0:  9.0,
         },
         "group_labels": {
-            0.0: "Not stated",
+            -1.0: "Not provided",
             1.0: "White",
             2.0: "Mixed",
             3.0: "Indian",
@@ -185,74 +120,41 @@ VARIABLES: dict[str, dict[str, Any]] = {
             8.0: "African",
             9.0: "Other",
         },
-        "fill":    0,
         "one_hot": True,
     },
     "hiqual_dv": {
         "code":        "hiqual_dv",
+        "cluster":     True,
         "label":       "Highest qualification",
         "categorical": False,
         "backfill":    [-9, -8, -2, -1],
         "categories":  {
-            -9.0: "Missing",     -8.0: "Inapplicable",
-            -2.0: "Refusal",     -1.0: "Don't know",
+            -1.0: "Not provided",
             1.0: "Degree",       2.0: "Other higher degree",
             3.0: "A-level etc",  4.0: "GCSE etc",
             5.0: "Other qualification", 9.0: "No qualification",
         },
-        "fill":        5.0,
         "one_hot":     None,
         "recode":      {9.0: 6.0},
         "group_labels": {
+            -1.0: "Not provided",
             1.0: "Degree",              2.0: "Other higher degree",
             3.0: "A-level etc",         4.0: "GCSE etc",
             5.0: "Other qualification", 6.0: "No qualification",
         },
     },
-    "fimngrs_dv": {
-        "code":        "fimngrs_dv",
-        "label":       "Total monthly personal income (Gross)",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        0.0,
-        "one_hot":     None,
-        "floor":       0,
-        "clip":        8000,
-    },
-    "payn_dv": {
-        "code":        "payn_dv",
-        "label":       "Monthly net pay (take-home)",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "floor":       0,
-        "clip":        8000,
-    },
-    "payo_dv": {
-        "code":        "payo_dv",
-        "label":       "Personal income — administrative / derived (UKHLS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "floor":       0,
-    },
 
     # -------------------------------------------------------------------------
-    # 2. Employment & class
+    # 2. Employment
     # -------------------------------------------------------------------------
     "jbstat": {
         "code":        "jbstat",
+        "cluster":     True,
         "label":       "Employment status",
         "categorical": True,
         "backfill":    None,
         "categories":  {
-            -8.0: "Inapplicable",
-            -1.0: "Missing / not stated",
+            -1.0: "Not provided",
             1.0: "Self-employed",
             2.0: "Paid employment (ft/pt)",
             3.0: "Unemployed",
@@ -270,6 +172,7 @@ VARIABLES: dict[str, dict[str, Any]] = {
             15.0: "On adoption leave",
             97.0: "Doing something else",
         },
+        # UKHLS negative codes: not in recode — 3a backfill maps them to -1 (“not provided”).
         "recode": {
             1.0: 1.0,
             2.0: 1.0,
@@ -287,9 +190,9 @@ VARIABLES: dict[str, dict[str, Any]] = {
             8.0: 8.0,
             10.0: 8.0,
             97.0: 8.0,
-            -1.0: 8.0,
         },
         "group_labels": {
+            -1.0: "Not provided",
             1.0: "Employed",
             3.0: "Unemployed",
             4.0: "Retired",
@@ -297,60 +200,16 @@ VARIABLES: dict[str, dict[str, Any]] = {
             7.0: "Student / training",
             8.0: "Inactive",
         },
-        "fill":        "mode",
         "one_hot":     True,
-    },
-    "jbnssec8_dv": {
-        "code":        "jbnssec8_dv",
-        "label":       "Social Class (NS-SEC 8-class)",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy respondent",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-            1.0: "Large employers & higher management",
-            2.0: "Higher professional",
-            3.0: "Lower management & professional",
-            4.0: "Intermediate",
-            5.0: "Small employers & own account",
-            6.0: "Lower supervisory & technical",
-            7.0: "Semi-routine",
-            8.0: "Routine",
-        },
-        "recode": {
-            -9.0: 0.0,
-            -8.0: 0.0,
-            -7.0: 0.0,
-            -2.0: 0.0,
-            -1.0: 0.0,
-        },
-        "group_labels": {
-            0.0: "Unknown / not applicable",
-            1.0: "Large employers & higher management",
-            2.0: "Higher professional",
-            3.0: "Lower management & professional",
-            4.0: "Intermediate",
-            5.0: "Small employers & own account",
-            6.0: "Lower supervisory & technical",
-            7.0: "Semi-routine",
-            8.0: "Routine",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
     },
     "marstat_dv": {
         "code":        "marstat_dv",
+        "cluster":     True,
         "label":       "Marital status",
         "categorical": True,
         "backfill":    None,
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Under 16 years",
             1.0: "Married/Civil partner",
             2.0: "Living as couple",
@@ -359,31 +218,22 @@ VARIABLES: dict[str, dict[str, Any]] = {
             5.0: "Separated (incl. from civil partner)",
             6.0: "Never married",
         },
-        "fill":        "mode",
-        "one_hot":     None,
+        "one_hot":     True,
     },
 
     # -------------------------------------------------------------------------
     # 3. Household
     # -------------------------------------------------------------------------
-    "hhsize": {
-        "code":        "hhsize",
-        "label":       "Household size",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        1,
-        "one_hot":     None,
-    },
     # UKHLS derived tenure — https://www.understandingsociety.ac.uk/documentation/mainstage/variables/tenure_dv/
     "tenure_dv": {
         "code":        "tenure_dv",
+        "cluster":     True,
         "label":       "Housing tenure (Own/Rent)",
         "categorical": True,
         "backfill":    None,
+        "file":        "hhresp",
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
+            -1.0: "Not provided",
             1.0: "Owned outright",
             2.0: "Owned with mortgage",
             3.0: "Local authority rent",
@@ -393,9 +243,8 @@ VARIABLES: dict[str, dict[str, Any]] = {
             7.0: "Rented private furnished",
             8.0: "Other",
         },
+        # UKHLS negative codes: not in recode — 3a backfill maps them to -1 (“not provided”).
         "recode": {
-            -9.0: 0.0,
-            -8.0: 0.0,
             1.0: 1.0,
             2.0: 1.0,
             3.0: 2.0,
@@ -406,24 +255,23 @@ VARIABLES: dict[str, dict[str, Any]] = {
             8.0: 3.0,
         },
         "group_labels": {
-            0.0: "Not stated / inapplicable",
+            -1.0: "Not provided",
             1.0: "Owner-occupied",
             2.0: "Rented",
             3.0: "Other",
         },
-        "fill":        "mode",
-        "one_hot":     None,
+        "one_hot":     True,
     },
     "hhtype_dv": {
         "code":        "hhtype_dv",
+        "cluster":     True,
         "label":       "Composition of household (LFS)",
         "categorical": True,
         "backfill":    None,
+        "file":        "hhresp",
+        # Raw LFS codes; recode collapses gender and pension-age splits (see sex_dv, doby_dv, jbstat).
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             1.0: "1 male, aged 65+, no children",
             2.0: "1 female, age 60+, no children",
             3.0: "1 adult under pensionable age, no children",
@@ -443,105 +291,71 @@ VARIABLES: dict[str, dict[str, Any]] = {
             22.0: "3 or more adults, no children, excl. any couples",
             23.0: "3 or more adults, 1 or more children, excl. any couples",
         },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "nchild_dv": {
-        "code":        "nchild_dv",
-        "label":       "Number of own children in household",
-        "categorical": False,
-        "backfill":    None,
-        "categories":  None,
-        "fill":        0,
-        "one_hot":     None,
-        "floor":       0,
-        "clip":        7,
+        # UKHLS negative codes: not in recode — 3a backfill maps them to -1 (“not provided”).
+        "recode": {
+            # Lone adult, no children (male 65+ / female 60+ / under PA → one type)
+            1.0: 1.0,
+            2.0: 1.0,
+            3.0: 1.0,
+            4.0: 2.0,
+            5.0: 3.0,
+            # Couple, no children: both under PA vs one+ over PA → one type
+            6.0: 4.0,
+            8.0: 4.0,
+            10.0: 5.0,
+            11.0: 6.0,
+            12.0: 7.0,
+            # Two adults not a couple: drop pension-age split
+            16.0: 8.0,
+            17.0: 8.0,
+            18.0: 9.0,
+            19.0: 10.0,
+            20.0: 11.0,
+            21.0: 12.0,
+            22.0: 13.0,
+            23.0: 14.0,
+        },
+        "group_labels": {
+            -1.0: "Not provided",
+            1.0: "1 adult, no children",
+            2.0: "1 adult, 1 child",
+            3.0: "1 adult, 2+ children",
+            4.0: "Couple, no children",
+            5.0: "Couple, 1 child",
+            6.0: "Couple, 2 children",
+            7.0: "Couple, 3+ children",
+            8.0: "2 adults (not a couple), no children",
+            9.0: "2 adults (not a couple), with children",
+            10.0: "3+ adults (incl. couple), no children",
+            11.0: "3+ adults (incl. couple), 1–2 children",
+            12.0: "3+ adults (incl. couple), 3+ children",
+            13.0: "3+ adults (no couple), no children",
+            14.0: "3+ adults (no couple), with children",
+        },
+        "one_hot":     True,
     },
 
-    # -------------------------------------------------------------------------
-    # 4. Migration & citizenship
-    # -------------------------------------------------------------------------
-    "bornuk_dv": {
-        "code":        "bornuk_dv",
-        "label":       "Born in UK (Derived)",
-        "categorical": True,
-        "xwave":       True,
-        "backfill":    None,
-        "categories":  {
-            -9.0: "Missing",
-            1.0: "Born in UK",
-            2.0: "Not born in UK",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "yr2uk4": {
-        "code":        "yr2uk4",
-        "label":       "Year first came to live in Britain",
-        "categorical": False,
-        "backfill":    [-9, -8, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-        "floor":       1900,
-        "clip":        2030,
-    },
+
 
     # -------------------------------------------------------------------------
     # 5. Health & wellbeing
     # -------------------------------------------------------------------------
-    "sf12mcs_dv": {
-        "code":        "sf12mcs_dv",
-        "label":       "Mental health score (SF-12 MCS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-    },
-    "sf12pcs_dv": {
-        "code":        "sf12pcs_dv",
-        "label":       "Physical health score (SF-12 PCS)",
-        "categorical": False,
-        "backfill":    [-9, -7, -2, -1],
-        "categories":  None,
-        "fill":        "median",
-        "one_hot":     None,
-    },
-    # Newly diagnosed condition (0 = not mentioned, 1 = yes mentioned) — UKDA
-    "hcondncode38": {
-        "code":        "hcondncode38",
-        "label":       "Health condition: Depression",
+    # SF-12 item 1: self-rated general health (1=Excellent → 5=Poor)
+    "scsf1": {
+        "code":        "scsf1",
+        "cluster":     True,
+        "label":       "Self-rated general health",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-            0.0: "Not mentioned",
-            1.0: "Yes mentioned",
+            -1.0: "Not provided",
+            1.0: "Excellent",
+            2.0: "Very good",
+            3.0: "Good",
+            4.0: "Fair",
+            5.0: "Poor",
         },
-        "fill":        "mode",
-        "one_hot":     None,
-    },
-    "hcondncode96": {
-        "code":        "hcondncode96",
-        "label":       "Health condition: None (Healthy baseline)",
-        "categorical": True,
-        "backfill":    [-9, -8, -7, -2, -1],
-        "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
-            0.0: "Not mentioned",
-            1.0: "Yes mentioned",
-        },
-        "fill":        "mode",
-        "one_hot":     None,
+        "one_hot":     False,
     },
 }
 

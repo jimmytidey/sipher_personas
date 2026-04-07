@@ -10,7 +10,6 @@
 #   categorical - True if categorical, False if continuous
 #   categories  - dict mapping raw numeric code (float) -> English label, or None
 #   group_labels- (optional) post-recode display labels
-#   fill        - imputation: "mode" | "median" | "zero" | None | numeric
 #   one_hot     - list of category codes to one-hot, or None / True
 #   clip / floor- (optional) bounds for continuous variables
 #   recode      - (optional) {raw_value -> new_value}
@@ -35,73 +34,57 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "servuse1": {
         "code":        "servuse1",
+        "cluster":     False,
         "label":       "Service use (12 m): local GP",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "hl2gp": {
         "code":        "hl2gp",
+        "cluster":     False,
         "label":       "Visited GP in last 12 months",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "None",
             1.0: "One or two",
             2.0: "Three to five",
             3.0: "Six to ten",
             4.0: "More than ten",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "servuse2": {
         "code":        "servuse2",
+        "cluster":     False,
         "label":       "Service use (12m): local hospital",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "servuse10": {
         "code":        "servuse10",
+        "cluster":     False,
         "label":       "Use of advice services (benefits/debt/legal)",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
 
@@ -110,87 +93,67 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "benbase4": {
         "code":        "benbase4",
+        "cluster":     False,
         "label":       "Receipt: Universal Credit",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "othben6": {
         "code":        "othben6",
+        "cluster":     False,
         "label":       "Receipt: Council Tax Reduction",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "othben8": {
         "code":        "othben8",
+        "cluster":     False,
         "label":       "Receipt: Housing Benefit",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "othben1": {
         "code":        "othben1",
+        "cluster":     False,
         "label":       "Receipt: Foster Allowance",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "othben2": {
         "code":        "othben2",
+        "cluster":     False,
         "label":       "Receipt: Maternity Allowance",
         "categorical": True,
         "backfill":    [-9, -8, -7, -2, -1],
         "categories":  {
-            -9.0: "Missing",
-            -8.0: "Inapplicable",
-            -7.0: "Proxy",
-            -2.0: "Refusal",
-            -1.0: "Don't know",
+            -1.0: "Not provided",
             0.0: "Not mentioned",
             1.0: "Mentioned",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
 
@@ -199,11 +162,11 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "fimnsben_dv": {
         "code":        "fimnsben_dv",
+        "cluster":     False,
         "label":       "Social benefit income amount (total)",
         "categorical": False,
         "backfill":    [-9, -8, -2, -1],
         "categories":  None,
-        "fill":        0.0,
         "one_hot":     None,
         "floor":       0,
         "clip":        15000,
@@ -211,7 +174,7 @@ VARIABLES: dict[str, dict[str, Any]] = {
 }
 
 # -----------------------------------------------------------------------------
-# Convenience exports (same pattern as config_variables_demographics.py)
+# Convenience exports (same pattern as config_variables_sipher_weighted.py)
 # -----------------------------------------------------------------------------
 
 PUBLIC_SERVICE_VARIABLES = VARIABLES

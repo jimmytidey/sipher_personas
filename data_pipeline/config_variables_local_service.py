@@ -1,7 +1,7 @@
 # data_pipeline/config_variables_local_service.py
 #
 # Neighbourhood cohesion and ratings of local services (same schema as config_variables.py).
-# Housing tenure (`tenure_dv`) lives in config_variables_demographics.py.
+# Housing tenure (`tenure_dv`) lives in config_variables_sipher_weighted.py.
 #
 # Each entry is a dict with:
 #   code        - base variable name (wave prefix e.g. o_ handled by ingestion)
@@ -9,13 +9,12 @@
 #   categorical - True if categorical, False if continuous
 #   categories  - dict mapping raw numeric code (float) -> English label, or None
 #   group_labels- (optional) post-recode display labels
-#   fill        - imputation: "mode" | "median" | "zero" | None | numeric
 #   one_hot     - list of category codes to one-hot, or None / True
 #   clip / floor- (optional) bounds for continuous variables
 #   recode      - (optional) {raw_value -> new_value}
 #   backfill    - list of codes triggering wave look-back, or None
 #   bin_width   - (optional) fixed histogram bin width for visualisation
-#   xwave       - (optional) True if sourced from xwavedat.pkl
+#   file        - (optional) "xwave" | "hhresp" | omit for indresp
 #
 # Merged into config_variables.VARIABLES with other theme modules (see config_variables.py).
 #
@@ -36,11 +35,11 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "nbrsnci_dv": {
         "code":        "nbrsnci_dv",
+        "cluster":     False,
         "label":       "Buckner Neighbourhood Cohesion Index",
         "categorical": True,
         "backfill":    [-9, -7, -2, -1],
         "categories":  None,
-        "fill":        "median",
         "one_hot":     None,
         "bin_width":   1,
     },
@@ -50,6 +49,7 @@ VARIABLES: dict[str, dict[str, Any]] = {
     # -------------------------------------------------------------------------
     "locsera": {
         "code":        "locsera",
+        "cluster":     False,
         "label":       "Standard of local services: Schools",
         "categorical": False,
         "backfill":    [-9, -7, -2, -1],
@@ -60,11 +60,11 @@ VARIABLES: dict[str, dict[str, Any]] = {
             4.0: "Poor",
             5.0: "Very Poor/Bad",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "locserd": {
         "code":        "locserd",
+        "cluster":     False,
         "label":       "Standard of local services: Shopping",
         "categorical": False,
         "backfill":    [-9, -7, -2, -1],
@@ -75,11 +75,11 @@ VARIABLES: dict[str, dict[str, Any]] = {
             4.0: "Poor",
             5.0: "Very Poor/Bad",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
     "locsere": {
         "code":        "locsere",
+        "cluster":     False,
         "label":       "Standard of local services: Leisure",
         "categorical": False,
         "backfill":    [-9, -7, -2, -1],
@@ -90,13 +90,12 @@ VARIABLES: dict[str, dict[str, Any]] = {
             4.0: "Poor",
             5.0: "Very Poor/Bad",
         },
-        "fill":        "mode",
         "one_hot":     None,
     },
 }
 
 # -----------------------------------------------------------------------------
-# Convenience exports (same pattern as config_variables_demographics.py)
+# Convenience exports (same pattern as config_variables_sipher_weighted.py)
 # -----------------------------------------------------------------------------
 
 LOCAL_SERVICE_VARIABLES = VARIABLES

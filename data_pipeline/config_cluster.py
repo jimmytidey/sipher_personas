@@ -12,19 +12,17 @@
 WAVE = "o"
 
 # ── K-Means feature variables ─────────────────────────────────────────────────
-# Base codes (no wave prefix). Order is preserved where column order matters.
-# Each name must be a key in VARIABLES (config_variables.py).
-CLUSTER_VARS = [
-    "racel_dv",
-    "doby_dv",  # age in years (after birth_year_to_age in feature engineering)
-    "fimngrs_dv",  # gross monthly personal income (clipped in feature eng)
-    "nchild_dv",
-    "hhsize",
-]
+# Derived from variables with cluster=True in config_variables_*.py.
+# To change which variables are clustered, set "cluster": True/False in the
+# relevant theme file (e.g. config_variables_sipher_weighted.py).
+try:
+    from data_pipeline.config_variables import CLUSTER_VARS
+except ModuleNotFoundError:
+    from config_variables import CLUSTER_VARS
 
 # ── Total cluster budget ─────────────────────────────────────────────────────
 # Shared proportionally across all employment groups.
-MAX_TOTAL_CLUSTERS = 30
+MAX_TOTAL_CLUSTERS = 50
 
 # When True (default), the population is first split by employment status (GROUPS)
 # and K-Means is run independently within each group — producing e.g. "Employed 1",
