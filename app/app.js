@@ -161,20 +161,26 @@ function renderClusters() {
     return;
   }
 
+  // Drop clusters that represent less than 2% of the LA population
+  const clusters = allClusters.filter(c => {
+    const pct = Number(c.pct_of_la);
+    return isNaN(pct) || pct >= 2;
+  });
+
   const methodLabel = { values: "Old school statistical clustering", llm_gemini: "LLM Gemini", llm_claude: "LLM Claude" }[currentClusterType] ?? currentClusterType;
-  const groups = _sortedGroups(allClusters);
+  const groups = _sortedGroups(clusters);
   const isGrouped = groups.length > 0;
 
-  const ladnm = allClusters[0]?.ladnm ?? currentLadcd;
+  const ladnm = clusters[0]?.ladnm ?? currentLadcd;
   const totalPop = allClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
   if (isGrouped) {
     summaryEl.innerHTML =
-      `<strong>${allClusters.length}</strong> ${methodLabel} clusters across ` +
+      `<strong>${clusters.length}</strong> ${methodLabel} clusters across ` +
       `<strong>${groups.length}</strong> employment groups · ` +
       `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
   } else {
     summaryEl.innerHTML =
-      `<strong>${allClusters.length}</strong> ${methodLabel} clusters · ` +
+      `<strong>${clusters.length}</strong> ${methodLabel} clusters · ` +
       `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
   }
 
@@ -184,7 +190,7 @@ function renderClusters() {
 
   if (isGrouped) {
     groups.forEach(group => {
-      const groupClusters = allClusters.filter(c => _empGroup(c) === group);
+      const groupClusters = clusters.filter(c => _empGroup(c) === group);
       const groupPop = groupClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
       const color = _groupColor(group);
 
@@ -202,7 +208,7 @@ function renderClusters() {
       );
     });
   } else {
-    allClusters.forEach(cluster => grid.appendChild(buildCard(cluster)));
+    clusters.forEach(cluster => grid.appendChild(buildCard(cluster)));
   }
 
   mainEl.appendChild(grid);
@@ -229,12 +235,8 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
         })()
       : null;
 
-  const sizeLabel = !isNaN(popSize)
-    ? (pctLabel ? `${formatNum(Math.round(popSize))} people · ${pctLabel}` : `${formatNum(Math.round(popSize))} people`)
-    : "—";
-
-  const respN     = cluster.n_respondents;
-  const respLabel = respN != null ? `${formatNum(respN)} survey respondents` : "";
+  const sizeLabel = pctLabel ?? (isNaN(popSize) ? "—" : `${formatNum(Math.round(popSize))} people`);
+  const popCountLabel = isNaN(popSize) ? null : `${formatNum(Math.round(popSize))} synthetic population records`;
 
   // National clusters have full demographic stats; local clusters have size only for now
   const HEALTH_LABELS = { 1: "Excellent", 2: "Very good", 3: "Good", 4: "Fair", 5: "Poor" };
@@ -300,7 +302,7 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
     </div>
     ${locationBadge}
     ${descHtml}
-    ${respLabel ? `<div class="card-resp-note">${respLabel}</div>` : ""}
+    ${popCountLabel ? `<div class="card-resp-note">${popCountLabel}</div>` : ""}
     ${statsHtml ? `<div class="card-stats"><div class="stats-grid">${statsHtml}</div></div>` : ""}
     ${reasoningHtml}
   `;
