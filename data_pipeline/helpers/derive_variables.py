@@ -1,6 +1,6 @@
 # data_pipeline/helpers/derive_variables.py
 #
-# Composite scores used by 5a_derive_variables.ipynb: digital_use, service_use,
+# Composite scores used by KEEP/5a_derive_variables.ipynb: digital_use, service_use,
 # derived_work_status.
 # Maps UKHLS raw codes to 0–1 component scores, then averages (ignoring missing components).
 

@@ -1,0 +1,11 @@
+cluster_id,tribe_label,size,n_respondents,age,health,sex_dv,sex_dv_pct,jbstat,jbstat_pct,racel_dv,racel_dv_pct,hiqual_dv,hiqual_dv_pct,marstat_dv,marstat_dv_pct,tenure_dv,tenure_dv_pct,hhtype_dv,hhtype_dv_pct
+1,Cluster 1,6511146,4042,79.4,3.0,Female,100,Retired,92,White,100,No qualification,21,Married/Civil partner,55,Owner-occupied,84,"Couple, no children",53
+2,Cluster 2,5963153,3651,78.7,3.0,Male,100,Retired,84,White,100,Degree,26,Married/Civil partner,71,Owner-occupied,86,"Couple, no children",66
+3,Cluster 3,6426470,2301,39.1,2.5,Male,100,Employed,91,White,100,Degree,38,Married/Civil partner,43,Owner-occupied,70,"Couple, 2 children",21
+4,Cluster 4,7199897,3440,59.4,2.7,Male,100,Employed,91,White,100,Degree,31,Married/Civil partner,70,Owner-occupied,82,"Couple, no children",27
+5,Cluster 5,4597116,2847,47.5,2.8,Female,54,Employed,58,Pakistani / Bangladeshi,49,Degree,37,Married/Civil partner,61,Owner-occupied,73,"3+ adults (incl. couple), 1–2 children",22
+6,Cluster 6,2701329,1346,50.9,2.8,Female,62,Employed,61,African,38,Degree,34,Never married,46,Rented,55,"1 adult, no children",20
+7,Cluster 7,6841208,3090,38.6,2.5,Female,100,Employed,81,White,100,Degree,44,Married/Civil partner,41,Owner-occupied,65,"Couple, 2 children",21
+8,Cluster 8,3296480,1247,25.4,2.3,Female,51,Student / training,70,White,98,A-level etc,45,Never married,99,Owner-occupied,74,"3+ adults (incl. couple), 1–2 children",31
+9,Cluster 9,7503187,4438,60.0,2.8,Female,100,Employed,84,White,100,Degree,30,Married/Civil partner,62,Owner-occupied,79,"Couple, no children",28
+10,Cluster 10,1813985,928,51.8,2.6,Female,63,Employed,72,White,70,Degree,47,Married/Civil partner,55,Owner-occupied,64,"Couple, no children",20

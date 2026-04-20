@@ -1,0 +1,121 @@
+ladcd,ladnm,group,cluster_id,tribe_label,size,n_respondents,age,health,sex_dv,sex_dv_pct,jbstat,jbstat_pct,racel_dv,racel_dv_pct,hiqual_dv,hiqual_dv_pct,marstat_dv,marstat_dv_pct,tenure_dv,tenure_dv_pct,hhtype_dv,hhtype_dv_pct
+E09000018,Hounslow,Employed,1,Cluster 1,27797,5390,54.3,2.5,Female,100,Employed,100,White,85,Degree,41,Married/Civil partner,66,Owner-occupied,88,"Couple, no children",24
+E09000018,Hounslow,Employed,2,Cluster 2,31652,1846,45.6,2.6,Female,51,Employed,100,White,80,Degree,39,Married/Civil partner,35,Rented,97,"1 adult, no children",27
+E09000018,Hounslow,Employed,3,Cluster 3,1585,56,49.9,2.5,Female,57,Employed,100,Other,100,Degree,48,Married/Civil partner,55,Owner-occupied,57,"Couple, no children",16
+E09000018,Hounslow,Employed,4,Cluster 4,21003,1726,37.0,2.5,Female,56,Employed,100,White,69,A-level etc,35,Never married,92,Owner-occupied,76,"3+ adults (incl. couple), no children",35
+E09000018,Hounslow,Employed,5,Cluster 5,39975,5208,55.2,2.6,Male,100,Employed,100,White,84,Degree,38,Married/Civil partner,75,Owner-occupied,90,"Couple, no children",25
+E09000018,Hounslow,Inactive,1,Cluster 1,2705,425,59.4,4.5,Female,60,Inactive,100,White,88,GCSE etc,28,Never married,31,Rented,80,"1 adult, no children",55
+E09000018,Hounslow,Inactive,2,Cluster 2,1953,168,47.3,2.8,Female,58,Inactive,100,White,74,Degree,29,Never married,44,Owner-occupied,68,"Couple, no children",18
+E09000018,Hounslow,Inactive,3,Cluster 3,2146,96,57.4,4.4,Female,60,Inactive,100,White,83,No qualification,100,Never married,39,Rented,65,"3+ adults (incl. couple), no children",25
+E09000018,Hounslow,Inactive,4,Cluster 4,2105,254,53.7,4.4,Female,60,Inactive,100,White,80,GCSE etc,32,Never married,36,Rented,51,"2 adults (not a couple), no children",27
+E09000018,Hounslow,Inactive,5,Cluster 5,249,10,54.8,4.4,Female,60,Inactive,100,Other,100,GCSE etc,30,Never married,50,Rented,100,"1 adult, no children",60
+E09000018,Hounslow,On leave,1,Cluster 1,2544,114,58.4,3.4,Female,95,On leave,100,Pakistani / Bangladeshi,53,No qualification,90,Married/Civil partner,82,Owner-occupied,58,"3+ adults (incl. couple), 1–2 children",23
+E09000018,Hounslow,On leave,2,Cluster 2,4691,695,50.2,2.7,Female,94,On leave,100,White,70,Degree,31,Married/Civil partner,84,Owner-occupied,76,"Couple, 2 children",25
+E09000018,Hounslow,On leave,3,Cluster 3,2359,115,45.0,2.9,Female,97,On leave,100,White,61,A-level etc,30,Married/Civil partner,72,Rented,92,"Couple, 3+ children",24
+E09000018,Hounslow,On leave,4,Cluster 4,1809,113,45.4,3.3,Female,91,On leave,100,White,74,GCSE etc,36,Never married,70,Rented,78,"1 adult, 2+ children",42
+E09000018,Hounslow,On leave,5,Cluster 5,130,8,45.8,3.0,Female,100,On leave,100,Other,100,Degree,25,Married/Civil partner,88,Owner-occupied,88,"Couple, 3+ children",38
+E09000018,Hounslow,Retired,1,Cluster 1,4761,341,81.5,3.8,Female,73,Retired,100,White,75,No qualification,60,Married/Civil partner,41,Owner-occupied,73,"3+ adults (incl. couple), no children",43
+E09000018,Hounslow,Retired,2,Cluster 2,7073,1073,83.7,3.4,Female,64,Retired,100,White,95,No qualification,97,Married/Civil partner,49,Owner-occupied,75,"Couple, no children",53
+E09000018,Hounslow,Retired,3,Cluster 3,181,12,79.1,3.1,Female,67,Retired,100,Other,100,Degree,42,Married/Civil partner,67,Owner-occupied,83,"Couple, no children",58
+E09000018,Hounslow,Retired,4,Cluster 4,12680,4349,78.9,2.8,Male,51,Retired,100,White,95,Degree,28,Married/Civil partner,67,Owner-occupied,96,"Couple, no children",61
+E09000018,Hounslow,Retired,5,Cluster 5,3128,477,80.5,3.4,Female,60,Retired,100,White,90,Other qualification,27,Married/Civil partner,33,Rented,92,"1 adult, no children",59
+E09000018,Hounslow,Student / training,1,Cluster 1,2534,95,24.9,2.2,Male,55,Student / training,100,White,66,No qualification,100,Never married,96,Owner-occupied,62,"3+ adults (incl. couple), 1–2 children",21
+E09000018,Hounslow,Student / training,2,Cluster 2,106,7,24.7,2.3,Female,71,Student / training,100,Other,100,GCSE etc,57,Never married,100,Owner-occupied,57,"3+ adults (incl. couple), 1–2 children",43
+E09000018,Hounslow,Student / training,3,Cluster 3,2966,200,29.1,2.4,Female,55,Student / training,100,White,66,A-level etc,44,Never married,87,Rented,94,"1 adult, no children",28
+E09000018,Hounslow,Student / training,4,Cluster 4,4274,494,26.5,2.1,Male,100,Student / training,100,White,67,A-level etc,48,Never married,96,Owner-occupied,84,"3+ adults (incl. couple), 1–2 children",29
+E09000018,Hounslow,Student / training,5,Cluster 5,3798,637,27.3,2.4,Female,100,Student / training,100,White,62,A-level etc,48,Never married,93,Owner-occupied,79,"3+ adults (incl. couple), 1–2 children",32
+E09000018,Hounslow,Unemployed,1,Cluster 1,3504,314,34.1,2.8,Male,64,Unemployed,100,White,61,GCSE etc,33,Never married,95,Owner-occupied,58,"3+ adults (incl. couple), no children",25
+E09000018,Hounslow,Unemployed,2,Cluster 2,2205,210,46.7,3.1,Female,57,Unemployed,100,White,75,GCSE etc,33,Never married,76,Rented,66,"1 adult, no children",63
+E09000018,Hounslow,Unemployed,3,Cluster 3,2775,321,52.2,3.1,Female,52,Unemployed,100,White,54,Degree,27,Married/Civil partner,76,Owner-occupied,57,"Couple, no children",23
+E09000018,Hounslow,Unemployed,4,Cluster 4,117,5,48.0,2.8,Female,80,Unemployed,100,Other,100,Degree,60,Never married,40,Rented,60,"1 adult, no children",20
+E09000018,Hounslow,Unemployed,5,Cluster 5,2845,110,54.5,3.2,Female,56,Unemployed,100,White,66,No qualification,95,Never married,38,Rented,55,"3+ adults (incl. couple), no children",18
+E09000019,Islington,Employed,1,Cluster 1,15719,1507,55.5,2.7,Female,63,Employed,100,White,83,Degree,39,Never married,56,Owner-occupied,76,"1 adult, no children",79
+E09000019,Islington,Employed,2,Cluster 2,32486,2050,38.6,2.5,Female,60,Employed,100,White,71,A-level etc,34,Never married,85,Owner-occupied,77,"3+ adults (incl. couple), no children",36
+E09000019,Islington,Employed,3,Cluster 3,33177,1731,44.9,2.6,Female,54,Employed,100,White,82,Degree,40,Married/Civil partner,34,Rented,97,"1 adult, no children",25
+E09000019,Islington,Employed,4,Cluster 4,40911,9000,54.0,2.5,Male,53,Employed,100,White,85,Degree,41,Married/Civil partner,82,Owner-occupied,90,"Couple, no children",30
+E09000019,Islington,Employed,5,Cluster 5,1138,57,49.9,2.5,Female,56,Employed,100,Other,100,Degree,47,Married/Civil partner,56,Owner-occupied,56,"Couple, no children",16
+E09000019,Islington,Inactive,1,Cluster 1,3458,84,55.8,4.3,Female,60,Inactive,100,White,82,No qualification,100,Never married,44,Rented,69,"3+ adults (incl. couple), no children",29
+E09000019,Islington,Inactive,2,Cluster 2,3421,270,52.9,4.4,Female,64,Inactive,100,White,82,GCSE etc,32,Never married,36,Rented,54,"3+ adults (incl. couple), no children",28
+E09000019,Islington,Inactive,3,Cluster 3,1898,169,46.6,2.8,Female,59,Inactive,100,White,75,Degree,29,Never married,46,Owner-occupied,68,"Couple, no children",17
+E09000019,Islington,Inactive,4,Cluster 4,260,10,54.8,4.4,Female,60,Inactive,100,Other,100,GCSE etc,30,Never married,50,Rented,100,"1 adult, no children",60
+E09000019,Islington,Inactive,5,Cluster 5,4864,478,60.2,4.5,Female,60,Inactive,100,White,89,GCSE etc,28,Married/Civil partner,33,Rented,75,"1 adult, no children",51
+E09000019,Islington,On leave,1,Cluster 1,2033,70,45.4,3.1,Female,96,On leave,100,White,77,GCSE etc,31,Never married,67,Rented,80,"1 adult, 2+ children",67
+E09000019,Islington,On leave,2,Cluster 2,4135,757,48.8,2.7,Female,94,On leave,100,White,69,Degree,30,Married/Civil partner,85,Owner-occupied,65,"Couple, 2 children",26
+E09000019,Islington,On leave,3,Cluster 3,1714,105,56.8,3.3,Female,95,On leave,100,Pakistani / Bangladeshi,53,No qualification,100,Married/Civil partner,80,Owner-occupied,55,"3+ adults (incl. couple), 1–2 children",22
+E09000019,Islington,On leave,4,Cluster 4,1312,71,49.6,3.4,Female,86,On leave,100,White,73,GCSE etc,38,Never married,48,Rented,69,"2 adults (not a couple), with children",21
+E09000019,Islington,On leave,5,Cluster 5,64,8,45.8,3.0,Female,100,On leave,100,Other,100,Degree,25,Married/Civil partner,88,Owner-occupied,88,"Couple, 3+ children",38
+E09000019,Islington,Retired,1,Cluster 1,2713,280,81.6,3.9,Female,72,Retired,100,White,79,No qualification,69,Widowed/surviving civil partner,39,Owner-occupied,64,"3+ adults (incl. couple), no children",42
+E09000019,Islington,Retired,2,Cluster 2,8714,3953,78.4,2.8,Male,50,Retired,100,White,96,Degree,30,Married/Civil partner,66,Owner-occupied,98,"Couple, no children",60
+E09000019,Islington,Retired,3,Cluster 3,2785,566,79.6,3.5,Female,57,Retired,100,White,84,GCSE etc,27,Married/Civil partner,33,Rented,89,"1 adult, no children",58
+E09000019,Islington,Retired,4,Cluster 4,3427,717,83.6,2.9,Female,66,Retired,100,White,96,No qualification,100,Married/Civil partner,59,Owner-occupied,89,"Couple, no children",62
+E09000019,Islington,Retired,5,Cluster 5,3706,378,83.9,4.3,Female,57,Retired,100,White,93,No qualification,92,Widowed/surviving civil partner,37,Rented,64,"1 adult, no children",70
+E09000019,Islington,Student / training,1,Cluster 1,5167,526,26.5,2.1,Male,100,Student / training,100,White,68,A-level etc,48,Never married,97,Owner-occupied,83,"3+ adults (incl. couple), 1–2 children",30
+E09000019,Islington,Student / training,2,Cluster 2,4182,184,29.5,2.5,Female,57,Student / training,100,White,68,A-level etc,44,Never married,85,Rented,94,"1 adult, no children",30
+E09000019,Islington,Student / training,3,Cluster 3,103,7,24.7,2.3,Female,71,Student / training,100,Other,100,GCSE etc,57,Never married,100,Owner-occupied,57,"3+ adults (incl. couple), 1–2 children",43
+E09000019,Islington,Student / training,4,Cluster 4,6268,709,27.3,2.4,Female,100,Student / training,100,White,64,A-level etc,48,Never married,94,Owner-occupied,79,"3+ adults (incl. couple), 1–2 children",34
+E09000019,Islington,Student / training,5,Cluster 5,3086,95,24.9,2.2,Male,55,Student / training,100,White,66,No qualification,100,Never married,96,Owner-occupied,62,"3+ adults (incl. couple), 1–2 children",21
+E09000019,Islington,Unemployed,1,Cluster 1,2141,340,52.1,3.1,Female,50,Unemployed,100,White,60,GCSE etc,28,Married/Civil partner,75,Owner-occupied,56,"Couple, no children",25
+E09000019,Islington,Unemployed,2,Cluster 2,2697,111,54.4,3.2,Female,57,Unemployed,100,White,68,No qualification,96,Never married,40,Rented,55,"3+ adults (incl. couple), no children",17
+E09000019,Islington,Unemployed,3,Cluster 3,5898,345,33.9,2.8,Male,61,Unemployed,100,White,63,GCSE etc,33,Never married,95,Owner-occupied,57,"3+ adults (incl. couple), no children",26
+E09000019,Islington,Unemployed,4,Cluster 4,3141,208,47.4,3.2,Female,56,Unemployed,100,White,74,GCSE etc,33,Never married,74,Rented,67,"1 adult, no children",67
+E09000019,Islington,Unemployed,5,Cluster 5,126,6,44.7,2.5,Female,67,Unemployed,100,Other,100,Degree,50,Never married,50,Rented,67,"3+ adults (no couple), with children",33
+E09000025,Newham,Employed,1,Cluster 1,42842,8025,54.1,2.5,Male,55,Employed,100,White,83,Degree,39,Married/Civil partner,80,Owner-occupied,91,"Couple, no children",26
+E09000025,Newham,Employed,2,Cluster 2,34994,1816,38.1,2.5,Female,58,Employed,100,White,66,A-level etc,34,Never married,88,Owner-occupied,65,"3+ adults (incl. couple), no children",31
+E09000025,Newham,Employed,3,Cluster 3,1529,57,49.9,2.5,Female,56,Employed,100,Other,100,Degree,47,Married/Civil partner,56,Owner-occupied,56,"Couple, no children",16
+E09000025,Newham,Employed,4,Cluster 4,31447,1081,47.3,2.6,Male,57,Employed,100,White,74,Degree,36,Married/Civil partner,65,Rented,97,"Couple, no children",32
+E09000025,Newham,Employed,5,Cluster 5,20646,1770,50.7,2.7,Female,64,Employed,100,White,82,Degree,43,Never married,63,Rented,52,"1 adult, no children",73
+E09000025,Newham,Inactive,1,Cluster 1,3280,249,53.1,4.4,Female,59,Inactive,100,White,78,GCSE etc,32,Never married,36,Rented,55,"2 adults (not a couple), no children",27
+E09000025,Newham,Inactive,2,Cluster 2,3505,165,46.8,2.8,Female,57,Inactive,100,White,74,Degree,28,Never married,46,Owner-occupied,69,"Couple, no children",18
+E09000025,Newham,Inactive,3,Cluster 3,3648,83,55.9,4.3,Female,60,Inactive,100,White,81,No qualification,100,Never married,45,Rented,69,"2 adults (not a couple), no children",28
+E09000025,Newham,Inactive,4,Cluster 4,346,9,55.8,4.3,Female,56,Inactive,100,Other,100,Other higher degree,22,Never married,56,Rented,100,"1 adult, no children",67
+E09000025,Newham,Inactive,5,Cluster 5,3571,409,60.2,4.5,Female,58,Inactive,100,White,88,GCSE etc,26,Never married,31,Rented,80,"1 adult, no children",54
+E09000025,Newham,On leave,1,Cluster 1,2641,109,44.7,3.2,Female,91,On leave,100,White,75,GCSE etc,35,Never married,71,Rented,78,"1 adult, 2+ children",43
+E09000025,Newham,On leave,2,Cluster 2,4139,116,58.3,3.4,Female,94,On leave,100,Pakistani / Bangladeshi,50,No qualification,89,Married/Civil partner,80,Owner-occupied,57,"3+ adults (incl. couple), 1–2 children",22
+E09000025,Newham,On leave,3,Cluster 3,5367,654,49.2,2.7,Female,94,On leave,100,White,67,Degree,31,Married/Civil partner,83,Owner-occupied,73,"Couple, 2 children",25
+E09000025,Newham,On leave,4,Cluster 4,5068,103,45.3,2.9,Female,97,On leave,100,White,62,A-level etc,31,Married/Civil partner,75,Rented,91,"Couple, 3+ children",26
+E09000025,Newham,On leave,5,Cluster 5,154,8,45.8,3.0,Female,100,On leave,100,Other,100,Degree,25,Married/Civil partner,88,Owner-occupied,88,"Couple, 3+ children",38
+E09000025,Newham,Retired,1,Cluster 1,3697,400,80.6,3.4,Female,55,Retired,100,White,88,GCSE etc,25,Married/Civil partner,34,Rented,90,"1 adult, no children",57
+E09000025,Newham,Retired,2,Cluster 2,6370,1128,83.8,3.4,Female,65,Retired,100,White,95,No qualification,89,Married/Civil partner,45,Owner-occupied,73,"1 adult, no children",52
+E09000025,Newham,Retired,3,Cluster 3,8070,3246,78.5,2.8,Male,51,Retired,100,White,92,Degree,27,Married/Civil partner,66,Owner-occupied,94,"Couple, no children",58
+E09000025,Newham,Retired,4,Cluster 4,4898,238,82.1,3.7,Female,74,Retired,100,White,75,No qualification,84,Widowed/surviving civil partner,43,Owner-occupied,73,"3+ adults (incl. couple), no children",40
+E09000025,Newham,Retired,5,Cluster 5,126,12,79.1,3.1,Female,67,Retired,100,Other,100,Degree,42,Married/Civil partner,67,Owner-occupied,83,"Couple, no children",58
+E09000025,Newham,Student / training,1,Cluster 1,7467,192,29.3,2.4,Female,54,Student / training,100,White,67,A-level etc,44,Never married,86,Rented,94,"1 adult, no children",29
+E09000025,Newham,Student / training,2,Cluster 2,6233,635,27.4,2.4,Female,100,Student / training,100,White,61,A-level etc,48,Never married,94,Owner-occupied,77,"3+ adults (incl. couple), 1–2 children",36
+E09000025,Newham,Student / training,3,Cluster 3,5652,482,26.4,2.1,Male,100,Student / training,100,White,66,A-level etc,47,Never married,96,Owner-occupied,83,"3+ adults (incl. couple), 1–2 children",30
+E09000025,Newham,Student / training,4,Cluster 4,210,7,24.7,2.3,Female,71,Student / training,100,Other,100,GCSE etc,57,Never married,100,Owner-occupied,57,"3+ adults (incl. couple), 1–2 children",43
+E09000025,Newham,Student / training,5,Cluster 5,4584,95,24.9,2.2,Male,55,Student / training,100,White,66,No qualification,100,Never married,96,Owner-occupied,62,"3+ adults (incl. couple), 1–2 children",21
+E09000025,Newham,Unemployed,1,Cluster 1,4897,319,52.4,3.1,Male,51,Unemployed,100,White,55,GCSE etc,28,Married/Civil partner,77,Owner-occupied,56,"Couple, no children",22
+E09000025,Newham,Unemployed,2,Cluster 2,5367,118,55.1,3.3,Female,59,Unemployed,100,White,66,No qualification,89,Never married,36,Rented,53,"3+ adults (incl. couple), no children",18
+E09000025,Newham,Unemployed,3,Cluster 3,4104,207,46.3,3.2,Female,59,Unemployed,100,White,71,GCSE etc,33,Never married,77,Rented,72,"1 adult, no children",57
+E09000025,Newham,Unemployed,4,Cluster 4,5962,297,33.7,2.8,Male,65,Unemployed,100,White,61,GCSE etc,35,Never married,94,Owner-occupied,59,"3+ adults (incl. couple), 1–2 children",24
+E09000025,Newham,Unemployed,5,Cluster 5,206,6,44.7,2.5,Female,67,Unemployed,100,Other,100,Degree,50,Never married,50,Rented,67,"3+ adults (no couple), with children",33
+E09000030,Tower Hamlets,Employed,1,Cluster 1,34926,1870,46.1,2.7,Female,53,Employed,100,White,80,Degree,40,Married/Civil partner,33,Rented,97,"1 adult, no children",29
+E09000030,Tower Hamlets,Employed,2,Cluster 2,31385,1962,37.4,2.5,Female,60,Employed,100,White,70,A-level etc,34,Never married,89,Owner-occupied,72,"3+ adults (incl. couple), no children",36
+E09000030,Tower Hamlets,Employed,3,Cluster 3,44745,9589,53.6,2.5,Male,52,Employed,100,White,85,Degree,42,Married/Civil partner,71,Owner-occupied,90,"Couple, no children",25
+E09000030,Tower Hamlets,Employed,4,Cluster 4,737,56,49.6,2.5,Female,55,Employed,100,Other,100,Degree,46,Married/Civil partner,55,Owner-occupied,55,"Couple, no children",16
+E09000030,Tower Hamlets,Employed,5,Cluster 5,8302,358,60.2,2.8,Male,54,Employed,100,White,73,No qualification,90,Married/Civil partner,63,Owner-occupied,59,"Couple, no children",26
+E09000030,Tower Hamlets,Inactive,1,Cluster 1,5088,178,60.4,4.4,Female,61,Inactive,100,White,87,No qualification,100,Never married,37,Rented,77,"1 adult, no children",34
+E09000030,Tower Hamlets,Inactive,2,Cluster 2,2293,164,46.3,2.8,Female,57,Inactive,100,White,74,Degree,30,Never married,46,Owner-occupied,67,"Couple, no children",15
+E09000030,Tower Hamlets,Inactive,3,Cluster 3,3357,227,53.1,4.4,Female,60,Inactive,100,White,79,GCSE etc,33,Never married,42,Rented,58,"2 adults (not a couple), no children",32
+E09000030,Tower Hamlets,Inactive,4,Cluster 4,147,10,54.8,4.4,Female,60,Inactive,100,Other,100,GCSE etc,30,Never married,50,Rented,100,"1 adult, no children",60
+E09000030,Tower Hamlets,Inactive,5,Cluster 5,2855,393,57.7,4.5,Female,60,Inactive,100,White,88,GCSE etc,33,Married/Civil partner,35,Rented,75,"1 adult, no children",45
+E09000030,Tower Hamlets,On leave,1,Cluster 1,2685,112,45.2,3.3,Female,91,On leave,100,White,74,GCSE etc,36,Never married,71,Rented,76,"1 adult, 2+ children",41
+E09000030,Tower Hamlets,On leave,2,Cluster 2,5052,694,49.9,2.7,Female,94,On leave,100,White,69,Degree,30,Married/Civil partner,83,Owner-occupied,73,"Couple, 2 children",25
+E09000030,Tower Hamlets,On leave,3,Cluster 3,3245,103,57.2,3.3,Female,95,On leave,100,Pakistani / Bangladeshi,54,No qualification,100,Married/Civil partner,81,Owner-occupied,56,"3+ adults (incl. couple), 1–2 children",22
+E09000030,Tower Hamlets,On leave,4,Cluster 4,2258,106,44.8,2.8,Female,97,On leave,100,White,63,A-level etc,31,Married/Civil partner,74,Rented,92,"Couple, 3+ children",25
+E09000030,Tower Hamlets,On leave,5,Cluster 5,54,8,45.8,3.0,Female,100,On leave,100,Other,100,Degree,25,Married/Civil partner,88,Owner-occupied,88,"Couple, 3+ children",38
+E09000030,Tower Hamlets,Retired,1,Cluster 1,1821,558,75.3,3.1,Male,52,Retired,100,White,78,Degree,29,Married/Civil partner,63,Owner-occupied,88,"3+ adults (incl. couple), no children",55
+E09000030,Tower Hamlets,Retired,2,Cluster 2,2692,216,82.2,3.6,Female,70,Retired,100,White,80,No qualification,98,Widowed/surviving civil partner,41,Owner-occupied,67,"3+ adults (incl. couple), no children",42
+E09000030,Tower Hamlets,Retired,3,Cluster 3,5145,2929,78.6,2.8,Male,51,Retired,100,White,96,Degree,30,Married/Civil partner,66,Owner-occupied,98,"Couple, no children",69
+E09000030,Tower Hamlets,Retired,4,Cluster 4,6157,1039,83.6,3.4,Female,63,Retired,100,White,95,No qualification,99,Married/Civil partner,48,Owner-occupied,70,"Couple, no children",52
+E09000030,Tower Hamlets,Retired,5,Cluster 5,2160,523,80.0,3.5,Female,57,Retired,100,White,89,Other qualification,28,Married/Civil partner,34,Rented,93,"1 adult, no children",61
+E09000030,Tower Hamlets,Student / training,1,Cluster 1,1948,87,26.4,2.1,Female,57,Student / training,100,White,54,A-level etc,51,Never married,98,Rented,92,"3+ adults (incl. couple), 1–2 children",30
+E09000030,Tower Hamlets,Student / training,2,Cluster 2,4697,507,26.5,2.1,Male,100,Student / training,100,White,68,A-level etc,48,Never married,97,Owner-occupied,84,"3+ adults (incl. couple), 1–2 children",30
+E09000030,Tower Hamlets,Student / training,3,Cluster 3,2605,120,31.1,2.6,Female,53,Student / training,100,White,75,A-level etc,40,Never married,78,Rented,97,"1 adult, no children",47
+E09000030,Tower Hamlets,Student / training,4,Cluster 4,4714,675,27.3,2.4,Female,100,Student / training,100,White,63,A-level etc,48,Never married,93,Owner-occupied,79,"3+ adults (incl. couple), 1–2 children",32
+E09000030,Tower Hamlets,Student / training,5,Cluster 5,3138,95,24.9,2.2,Male,55,Student / training,100,White,66,No qualification,100,Never married,96,Owner-occupied,62,"3+ adults (incl. couple), 1–2 children",21
+E09000030,Tower Hamlets,Unemployed,1,Cluster 1,2798,205,47.3,3.1,Female,57,Unemployed,100,White,74,GCSE etc,32,Never married,75,Rented,67,"1 adult, no children",67
+E09000030,Tower Hamlets,Unemployed,2,Cluster 2,3095,212,35.1,3.3,Male,67,Unemployed,100,White,87,GCSE etc,38,Never married,93,Owner-occupied,56,"3+ adults (incl. couple), no children",24
+E09000030,Tower Hamlets,Unemployed,3,Cluster 3,3025,139,33.9,2.1,Male,55,Unemployed,100,Pakistani / Bangladeshi,34,Degree,32,Never married,93,Owner-occupied,55,"3+ adults (incl. couple), no children",29
+E09000030,Tower Hamlets,Unemployed,4,Cluster 4,4021,106,54.3,3.2,Female,55,Unemployed,100,White,66,No qualification,98,Never married,39,Rented,56,"3+ adults (incl. couple), no children",17
+E09000030,Tower Hamlets,Unemployed,5,Cluster 5,3049,330,51.9,3.1,Female,51,Unemployed,100,White,56,GCSE etc,27,Married/Civil partner,77,Owner-occupied,56,"Couple, no children",24

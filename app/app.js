@@ -2,379 +2,315 @@
    Archetypes – App Logic
    ========================================================= */
 
-// In dev the frontend runs on :3000 and the API on :8000.
-// In production (Azure / single-process) both are on the same origin.
 const API_BASE = window.location.port === "3000" ? "http://localhost:8000" : "";
 
-// Read ?test=true from the page URL
-const IS_TEST = new URLSearchParams(window.location.search).get("test") === "true";
-
-// Append &test=true to every API path when in test mode
-function apiPath(path) {
-  if (!IS_TEST) return path;
-  const sep = path.includes("?") ? "&" : "?";
-  return path + sep + "test=true";
-}
-
-/** Escape HTML, then render **bold** and newlines for gpt_description (markdown-lite). */
-function formatGptDescriptionHtml(raw) {
-  if (!raw) return "";
-  const esc = (s) =>
-    s
-      .replace(/&/g, "&amp;")
-      .replace(/</g, "&lt;")
-      .replace(/>/g, "&gt;")
-      .replace(/"/g, "&quot;");
-  let t = esc(String(raw));
-  t = t.replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>");
-  t = t.replace(/\n/g, "<br>");
-  return t;
-}
-
-const GROUP_COLORS = {
-  "Employed":        "#3b82f6",
-  "Self-employed":   "#8b5cf6",
-  "Retired":         "#f59e0b",
-  "Unemployed":      "#ef4444",
-  "Student":         "#10b981",
-  "LT sick/disabled":"#f97316",
-  "Other":           "#6b7280",
-};
-
-// Hard-coded current variables from config_variables_sipher_weighted.py
-// Keys must match cluster CSV headers (VARIABLE_MAP labels). `code` is what we display.
-const STATS = [
-  { key: "Age", code: "doby_dv", round: 1, unit: " yrs" },
-  { key: "Sex (Derived)", code: "sex_dv", pctKey: "Sex (Derived) %" },
-  { key: "Ethnic group", code: "racel_dv", pctKey: "Ethnic group %" },
-  { key: "Highest qualification", code: "hiqual_dv", pctKey: "Highest qualification %" },
-  { key: "Employment status", code: "jbstat" },
-  { key: "Marital status", code: "marstat_dv", pctKey: "Marital status %" },
-  { key: "Housing tenure (Own/Rent)", code: "tenure_dv", pctKey: "Housing tenure (Own/Rent) %" },
-  { key: "Composition of household (LFS)", code: "hhtype_dv", pctKey: "Composition of household (LFS) %" },
-  { key: "Self-rated general health", code: "scsf1", pctKey: "Self-rated general health %" },
-];
-
-// Disabled for now; we only show the current config vars above.
-const EXTRA_VARS = [];
-
 // ----- State -----
-let currentLa    = null;
-let currentGroup = "All";
-let currentMode  = "local";    // "local" | "national"
-let allPersonas  = [];
+const currentLevel     = "local";
+let currentClusterType = "values";  // 'values' | 'llm_gemini' | 'llm_claude'
+let currentLadcd       = null;
+let allClusters        = [];
 
 // ----- DOM refs -----
-const laSelect     = document.getElementById("la-select");
-const tabContainer = document.getElementById("group-tabs");
-const mainEl       = document.getElementById("main-content");
-const summaryEl    = document.getElementById("summary-bar");
-const siteIntro    = document.getElementById("site-intro");
-const modeToggle   = document.getElementById("mode-toggle");
+const clusterTypeSelect = document.getElementById("cluster-type");
+const laSelect          = document.getElementById("la-select");
+const mainEl            = document.getElementById("main-content");
+const summaryEl         = document.getElementById("summary-bar");
 
-function setSiteIntroVisible(show) {
-  if (siteIntro) siteIntro.hidden = !show;
-}
-
-function modeApiPath(path) {
-  const sep = path.includes("?") ? "&" : "?";
-  return path + sep + `mode=${currentMode}`;
-}
-
-function fullApiPath(path) {
-  return modeApiPath(apiPath(path));
-}
-
-// ----- Mode toggle -----
-if (modeToggle) {
-  modeToggle.addEventListener("click", async (e) => {
-    const btn = e.target.closest(".mode-btn");
-    if (!btn || btn.dataset.mode === currentMode) return;
-
-    currentMode = btn.dataset.mode;
-    modeToggle.querySelectorAll(".mode-btn").forEach(b =>
-      b.classList.toggle("active", b.dataset.mode === currentMode)
-    );
-
-    // Reload LA list for new mode (available LAs may differ)
-    currentLa    = null;
-    currentGroup = "All";
-    allPersonas  = [];
-    laSelect.value = "";
-    tabContainer.innerHTML = "";
-    mainEl.innerHTML = "";
-    summaryEl.textContent = "";
-    setSiteIntroVisible(false);
-
-    renderState("loading", "Loading local authorities…");
-    try {
-      const las = await apiFetch(fullApiPath("/las"));
-      populateLaSelect(las);
-    } catch (e) {
-      renderState("error", `Could not load LAs for ${currentMode} mode: ${e.message}`);
-    }
-  });
+// ----- Palette -----
+const CLUSTER_PALETTE = [
+  "#4f46e5", "#0891b2", "#059669", "#d97706", "#dc2626",
+  "#7c3aed", "#db2777", "#ea580c", "#65a30d", "#0284c7",
+];
+function clusterColor(id) {
+  return CLUSTER_PALETTE[(id - 1) % CLUSTER_PALETTE.length];
 }
 
 // ----- Boot -----
 async function init() {
-  // Show test-mode banner if ?test=true
-  if (IS_TEST) {
-    const banner = document.createElement("div");
-    banner.id = "test-banner";
-    banner.textContent = "⚠️ TEST MODE — showing data_test/ output";
-    document.body.prepend(banner);
-  }
+  renderState("loading", "Loading…");
+  _readUrlState();
+  await _applyState();
+}
 
-  renderState("loading", "Loading local authorities…");
-  try {
-    const las = await apiFetch(fullApiPath("/las"));
-    populateLaSelect(las);
-  } catch (e) {
-    renderState("error", `Could not reach API at ${API_BASE}. Is it running?<br><code>uvicorn api.main:app --reload</code>`);
+// ----- URL state sync -----
+function _readUrlState() {
+  const params = new URLSearchParams(window.location.hash.slice(1));
+  const type   = params.get("type");
+  const la     = params.get("la");
+  if (type) currentClusterType = type;
+  if (la)   currentLadcd = la;
+  clusterTypeSelect.value = currentClusterType;
+}
+
+function _writeUrlState() {
+  const params = new URLSearchParams();
+  params.set("type", currentClusterType);
+  if (currentLadcd) params.set("la", currentLadcd);
+  const hash = "#" + params.toString();
+  if (window.location.hash !== hash) {
+    history.pushState(null, "", hash);
   }
 }
 
-function populateLaSelect(las) {
-  const label = document.querySelector('label[for="la-select"]');
-  if (label) {
-    label.textContent =
-      las.length > 0
-        ? `Local authority (${las.length} in this dataset)`
-        : "Local authority";
-  }
-  laSelect.innerHTML = '<option value="">— Select a local authority —</option>';
-  las.forEach(({ code, name }) => {
-    const opt = document.createElement("option");
-    opt.value = code;
-    opt.textContent = `${name} (${code})`;
-    laSelect.appendChild(opt);
-  });
-  laSelect.disabled = false;
-  setSiteIntroVisible(true);
-  renderState("empty", "");
-}
-
-laSelect.addEventListener("change", async () => {
-  const code = laSelect.value;
-  if (!code) {
-    setSiteIntroVisible(true);
-    renderState("empty", "");
-    return;
-  }
-  currentLa    = code;
-  currentGroup = "All";
-  setSiteIntroVisible(false);
-  renderState("loading", "Loading personas…");
-  try {
-    allPersonas = await apiFetch(fullApiPath(`/la/${code}/personas`));
-    buildGroupTabs();
-    renderPersonas();
-  } catch (e) {
-    renderState("error", `Failed to load personas for ${code}: ${e.message}`);
-  }
+window.addEventListener("popstate", async () => {
+  _readUrlState();
+  _syncLevelUi();
+  await _applyState();
 });
 
-// ----- Group tabs -----
-function buildGroupTabs() {
-  const groups = [...new Set(allPersonas.map(p => p.group).filter(Boolean))].sort();
-  const totalPop = allPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
-  tabContainer.innerHTML = "";
-  ["All", ...groups].forEach(g => {
-    const btn = document.createElement("button");
-    btn.className = "tab" + (g === currentGroup ? " active" : "");
-    if (g === "All") {
-      btn.textContent = "All";
-    } else {
-      const groupPop = allPersonas.filter(p => p.group === g).reduce((s, p) => s + (Number(p.size) || 0), 0);
-      const pct = totalPop > 0 ? Math.round(groupPop / totalPop * 100) : 0;
-      btn.textContent = `${g} (${pct}%)`;
-    }
-    const color = GROUP_COLORS[g] || GROUP_COLORS["Other"];
-    if (g !== "All") btn.style.setProperty("--tab-color", color);
-    btn.addEventListener("click", () => {
-      currentGroup = g;
-      document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
-      btn.classList.add("active");
-      renderPersonas();
-    });
-    tabContainer.appendChild(btn);
+// Apply current state vars to the UI and fetch — shared by init + popstate
+async function _applyState() {
+  await populateLaDropdown(currentLadcd);
+}
+
+// ----- Employment status grouping -----
+// Canonical display order for employment groups (jbstat labels from pipeline)
+const _EMP_ORDER = [
+  "Employed", "Self-employed", "Unemployed", "Retired",
+  "Student", "Maternity", "Family care", "LT sick/disabled", "Other",
+];
+
+// Colours keyed by group position in _EMP_ORDER
+const _EMP_PALETTE = [
+  "#0891b2", // Employed      — teal
+  "#7c3aed", // Self-employed — violet
+  "#dc2626", // Unemployed    — red
+  "#f59e0b", // Retired       — amber
+  "#10b981", // Student       — green
+  "#db2777", // Maternity     — pink
+  "#ea580c", // Family care   — orange
+  "#6b7280", // LT sick       — grey
+  "#4f46e5", // Other         — indigo
+];
+
+function _empGroup(cluster) {
+  // Prefer the explicit group column (set by HIERARCHICAL_CLUSTER in notebooks 14/15);
+  // fall back to the modal jbstat value that cluster_summary.py always writes.
+  const g = cluster.group;
+  if (g != null && String(g).trim() !== "" && String(g).trim() !== "None" && isNaN(Number(g))) return String(g).trim();
+  const j = cluster.jbstat;
+  if (j != null && String(j).trim() !== "") return String(j).trim();
+  return null;
+}
+
+function _sortedGroups(clusters) {
+  const found = [...new Set(clusters.map(_empGroup).filter(Boolean))];
+  // Sort by canonical order; unknowns go to the end
+  return found.sort((a, b) => {
+    const ai = _EMP_ORDER.indexOf(a);
+    const bi = _EMP_ORDER.indexOf(b);
+    if (ai === -1 && bi === -1) return a.localeCompare(b);
+    if (ai === -1) return 1;
+    if (bi === -1) return -1;
+    return ai - bi;
   });
+}
+
+function _groupColor(groupName) {
+  const i = _EMP_ORDER.indexOf(groupName);
+  return i >= 0 ? _EMP_PALETTE[i] : "#4f46e5";
+}
+
+// ----- Type / LA change handlers -----
+clusterTypeSelect.addEventListener("change", async () => {
+  currentClusterType = clusterTypeSelect.value;
+  await populateLaDropdown(currentLadcd);   // keep LA selection when switching type
+});
+
+laSelect.addEventListener("change", () => {
+  currentLadcd = laSelect.value || null;
+  loadClusters();
+});
+
+// ----- Populate LA dropdown -----
+async function populateLaDropdown(desiredLadcd = null) {
+  laSelect.innerHTML = '<option value="">— loading —</option>';
+  renderState("loading", "Loading Local Authorities…");
+  try {
+    const las = await apiFetch(`/local-las?cluster_type=${currentClusterType}`);
+    laSelect.innerHTML = las.length
+      ? las.map(la => `<option value="${la.code}">${la.name}</option>`).join("")
+      : '<option value="">No LAs available</option>';
+    const match = desiredLadcd && las.find(la => la.code === desiredLadcd);
+    currentLadcd = match ? match.code : (las.length ? las[0].code : null);
+    if (currentLadcd) laSelect.value = currentLadcd;
+    await loadClusters();
+  } catch (e) {
+    laSelect.innerHTML = '<option value="">Error loading LAs</option>';
+    renderState("error", `Could not load LAs: ${e.message}`);
+  }
+}
+
+// ----- Load clusters -----
+async function loadClusters() {
+  renderState("loading", "Loading clusters…");
+  try {
+    if (!currentLadcd) { renderState("empty", "Select a Local Authority."); return; }
+    allClusters = await apiFetch(`/local-clusters?ladcd=${currentLadcd}&cluster_type=${currentClusterType}`);
+    _writeUrlState();
+    renderClusters();
+  } catch (e) {
+    renderState("error", `Could not load clusters: ${e.message}<br><small>Is the API running? <code>uvicorn api.main:app --reload</code></small>`);
+  }
 }
 
 // ----- Render -----
-function renderPersonas() {
-  const filtered = currentGroup === "All"
-    ? allPersonas
-    : allPersonas.filter(p => p.group === currentGroup);
-
-  if (filtered.length === 0) {
-    mainEl.innerHTML = "";
-    summaryEl.textContent = "";
-    renderState("empty", "No personas found for the selected filter.");
+function renderClusters() {
+  if (!allClusters.length) {
+    renderState("empty", "No clusters found. Run the pipeline first.");
     return;
   }
 
-  // Sort: by group then tribe_label
-  filtered.sort((a, b) =>
-    (a.group || "").localeCompare(b.group || "") ||
-    (a.tribe_label || "").localeCompare(b.tribe_label || "")
-  );
+  const methodLabel = { values: "Old school statistical clustering", llm_gemini: "LLM Gemini", llm_claude: "LLM Claude" }[currentClusterType] ?? currentClusterType;
+  const groups = _sortedGroups(allClusters);
+  const isGrouped = groups.length > 0;
 
-  const laName = laSelect.options[laSelect.selectedIndex]?.text ?? currentLa;
-  const modeLabel = currentMode === "national" ? " · national clusters" : " · local clusters";
-  summaryEl.innerHTML = `Showing <strong>${filtered.length}</strong> persona${filtered.length !== 1 ? "s" : ""} for <strong>${laName}</strong><span class="mode-label">${modeLabel}</span>`;
+  const ladnm = allClusters[0]?.ladnm ?? currentLadcd;
+  const totalPop = allClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
+  if (isGrouped) {
+    summaryEl.innerHTML =
+      `<strong>${allClusters.length}</strong> ${methodLabel} clusters across ` +
+      `<strong>${groups.length}</strong> employment groups · ` +
+      `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
+  } else {
+    summaryEl.innerHTML =
+      `<strong>${allClusters.length}</strong> ${methodLabel} clusters · ` +
+      `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
+  }
 
-  const totalPop = allPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
-
+  mainEl.innerHTML = "";
   const grid = document.createElement("div");
   grid.className = "persona-grid";
 
-  let lastGroup = null;
-  filtered.forEach(persona => {
-    // Group section header
-    if (persona.group !== lastGroup) {
-      lastGroup = persona.group;
-      if (currentGroup === "All") {
-        const groupPersonas = filtered.filter(p => p.group === persona.group);
-        const groupPop = groupPersonas.reduce((s, p) => s + (Number(p.size) || 0), 0);
-        const pct = totalPop > 0 ? Math.round(groupPop / totalPop * 100) : 0;
-        const header = buildGroupHeader(persona.group, groupPersonas.length, pct);
-        grid.appendChild(header);
-      }
-    }
-    grid.appendChild(buildCard(persona, totalPop));
-  });
+  if (isGrouped) {
+    groups.forEach(group => {
+      const groupClusters = allClusters.filter(c => _empGroup(c) === group);
+      const groupPop = groupClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
+      const color = _groupColor(group);
 
-  mainEl.innerHTML = "";
+      const header = document.createElement("div");
+      header.className = "group-header";
+      header.innerHTML = `
+        <span class="group-dot" style="background:${color}"></span>
+        <h2>${group}</h2>
+        <span class="group-count">${groupClusters.length} cluster${groupClusters.length !== 1 ? "s" : ""} · ${formatNum(Math.round(groupPop))} people</span>
+      `;
+      grid.appendChild(header);
+
+      groupClusters.forEach((cluster, idx) =>
+        grid.appendChild(buildCard(cluster, { groupColor: color, groupIndex: idx + 1 }))
+      );
+    });
+  } else {
+    allClusters.forEach(cluster => grid.appendChild(buildCard(cluster)));
+  }
+
   mainEl.appendChild(grid);
 }
 
-function buildGroupHeader(group, count, pct) {
-  const el = document.createElement("div");
-  el.className = "group-header";
-  const color = GROUP_COLORS[group] || GROUP_COLORS["Other"];
-  el.innerHTML = `
-    <span class="group-dot" style="background:${color}"></span>
-    <h2>${group}</h2>
-    <span class="group-count">${pct}% of population · ${count} persona${count !== 1 ? "s" : ""}</span>
-  `;
-  return el;
-}
-
-function buildCard(persona, totalPop) {
-  const color = GROUP_COLORS[persona.group] || GROUP_COLORS["Other"];
-
-  const card = document.createElement("div");
+function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
+  const color = groupColor ?? clusterColor(cluster.cluster_id);
+  const badgeLabel = groupColor && groupIndex != null
+    ? `${_empGroup(cluster) ?? "Group"} · ${groupIndex}`
+    : `Cluster ${cluster.cluster_id}`;
+  const card  = document.createElement("div");
   card.className = "card";
   card.style.setProperty("--card-color", color);
 
-  const clusterN = Number(persona.size);
-  const countPart =
-    persona.size != null && persona.size !== "" && !isNaN(clusterN) && clusterN >= 0
-      ? `${formatNum(Math.round(clusterN))} people`
+  const popSize  = Number(cluster.size);
+  const pctLabel = cluster.pct_of_la != null
+    ? `${cluster.pct_of_la}% of LA`
+    : cluster.size != null
+      ? (() => {
+          const totalPop = allClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
+          return totalPop > 0 && !isNaN(popSize)
+            ? `${((popSize / totalPop) * 100).toFixed(1)}% of LA`
+            : null;
+        })()
       : null;
-  const pctPart =
-    totalPop > 0 && !isNaN(clusterN) && clusterN >= 0
-      ? `${((clusterN / totalPop) * 100).toFixed(1)}% of LA`
-      : null;
-  const pct =
-    pctPart && countPart
-      ? `${pctPart} (${countPart})`
-      : pctPart
-        ? pctPart
-        : countPart
-          ? countPart
-          : "—";
 
-  // GPT-generated title & description (may be absent before notebook 9 is run)
-  const gptTitle = persona.gpt_title;
-  const titleBlockHtml = gptTitle
-    ? `<div class="card-gpt-title">${gptTitle}</div><div class="card-subtitle">${persona.tribe_label ?? ""}</div>`
-    : `<div class="card-title">${persona.tribe_label ?? "Persona"}</div>`;
+  const sizeLabel = !isNaN(popSize)
+    ? (pctLabel ? `${formatNum(Math.round(popSize))} people · ${pctLabel}` : `${formatNum(Math.round(popSize))} people`)
+    : "—";
 
-  // Stats rows
-  const statsHtml = STATS.map(({ key, code, label, unit, fmt, round, lookup, pctKey }) => {
-    const raw = persona[key];
-    let val = "—";
-    if (pctKey !== undefined) {
-      const pRaw = persona[pctKey];
-      if (raw !== null && raw !== undefined && raw !== "") {
-        const pNum = Number(pRaw);
-        const pctStr =
-          pRaw !== null && pRaw !== undefined && pRaw !== "" && !Number.isNaN(pNum)
-            ? ` (${pNum}%)`
-            : "";
-        val = `${raw}${pctStr}`;
+  const respN     = cluster.n_respondents;
+  const respLabel = respN != null ? `${formatNum(respN)} survey respondents` : "";
+
+  // National clusters have full demographic stats; local clusters have size only for now
+  const HEALTH_LABELS = { 1: "Excellent", 2: "Very good", 3: "Good", 4: "Fair", 5: "Poor" };
+
+  const STAT_DEFS = [
+    { key: "age",          label: "Age (mean)",                    unit: " yrs", round: 1 },
+    { key: "racel_dv",     label: "Ethnicity (modal)",             pctKey: "racel_dv_pct" },
+    { key: "hiqual_dv",    label: "Qualification (modal)",         pctKey: "hiqual_dv_pct" },
+    { key: "marstat_dv",   label: "Marital status",                pctKey: "marstat_dv_pct" },
+    { key: "tenure_dv",    label: "Housing tenure",                pctKey: "tenure_dv_pct" },
+    { key: "hhtype_dv",    label: "Household type",                pctKey: "hhtype_dv_pct" },
+    { key: "health",       label: "Self-reported health (mean)",   round: 1, labelMap: HEALTH_LABELS },
+  ];
+
+  const statsHtml = STAT_DEFS.map(({ key, label, unit, round, pctKey, labelMap }) => {
+    const raw = cluster[key];
+    if (raw == null || raw === "") return "";
+    let val;
+    if (pctKey) {
+      const pct = cluster[pctKey];
+      val = pct != null ? `${raw} (${pct}%)` : String(raw);
+    } else if (round !== undefined) {
+      const num = Number(raw);
+      if (isNaN(num)) {
+        val = String(raw);
+      } else if (labelMap) {
+        const text = labelMap[Math.round(num)] ?? "";
+        val = text ? `${text} (${num.toFixed(round)})` : num.toFixed(round);
+      } else {
+        val = num.toFixed(round) + (unit || "");
       }
     } else {
-      const num = Number(raw);
-      if (raw !== null && raw !== undefined && raw !== "" && !(num < 0)) {
-        if (lookup) val = lookup[Math.round(num)] ?? String(Math.round(num));
-        else if (fmt === "currency") val = "£" + formatNum(Math.round(num));
-        else if (fmt === "number") val = formatNum(Math.round(num));
-        else if (round !== undefined) val = num.toFixed(round) + (unit || "");
-        else val = String(raw) + (unit || "");
-      }
+      val = String(raw) + (unit || "");
     }
-    const statLabel = code ?? label ?? key;
-    return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">${val}</span></div>`;
+    return `<div class="stat-item"><span class="stat-label">${label}</span><span class="stat-value">${val}</span></div>`;
   }).join("");
 
-  const portraitHtml = persona.portrait_url
-    ? `<img class="card-portrait" src="${API_BASE}${persona.portrait_url}" alt="${persona.gpt_title || persona.tribe_label}" />`
+  const locationBadge = cluster.ladnm
+    ? `<div class="card-location">${cluster.ladnm}</div>`
     : "";
 
-  const descriptionHtml = persona.gpt_description
-    ? `<div class="card-description">${formatGptDescriptionHtml(persona.gpt_description)}</div>`
+  const descHtml = cluster.tribe_description
+    ? `<div class="card-description">${cluster.tribe_description}</div>`
     : "";
 
-  // Extra variables for the expanded section (always show a row; — if not in API payload yet)
-  const extraHtml = EXTRA_VARS.map(({ key, code, label, unit, fmt, round, lookup }) => {
-    const raw = persona[key];
-    const statLabel = code ?? label ?? key;
-    if (raw === null || raw === undefined || raw === "") {
-      return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">—</span></div>`;
-    }
-    const num = Number(raw);
-    let val;
-    if (lookup && !isNaN(num)) val = lookup[Math.round(num)] ?? String(Math.round(num));
-    else if (fmt === "currency" && !isNaN(num)) val = "£" + formatNum(Math.round(num));
-    else if (round !== undefined && !isNaN(num)) val = num.toFixed(round) + (unit || "");
-    else val = String(raw) + (unit || "");
-    return `<div class="stat-item"><span class="stat-label">${statLabel}</span><span class="stat-value">${val}</span></div>`;
-  }).join("");
+  const reasoningText = (cluster.reasoning ?? "").trim();
+  const reasoningHtml = reasoningText ? `
+    <button class="card-expand-btn" aria-expanded="false">
+      <span>LLM reasoning</span>
+      <svg class="expand-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>
+    </button>
+    <div class="card-extra card-reasoning" hidden>
+      <p class="reasoning-text">${reasoningText}</p>
+    </div>` : "";
 
-  const showExtra = EXTRA_VARS.length > 0;
   card.innerHTML = `
     <div class="card-head">
-      ${portraitHtml}
+      <div class="cluster-badge" style="background:${color}">${badgeLabel}</div>
       <div class="card-head-text">
-        <div class="card-title-block">${titleBlockHtml}</div>
-        <span class="card-size">${pct}</span>
+        <div class="card-title">${cluster.tribe_label}</div>
+        <span class="card-size">${sizeLabel}</span>
       </div>
     </div>
-    <div class="card-stats">
-      <div class="stats-grid">${statsHtml}</div>
-      ${descriptionHtml}
-    </div>
-    ${showExtra ? `<button class="card-expand-btn" aria-expanded="false">
-      <span>Show all variables</span>
-      <svg class="expand-icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>
-    </button>` : ""}
-    ${showExtra ? `<div class="card-extra" hidden>
-      <div class="stats-grid extra-grid">${extraHtml}</div>
-    </div>` : ""}
+    ${locationBadge}
+    ${descHtml}
+    ${respLabel ? `<div class="card-resp-note">${respLabel}</div>` : ""}
+    ${statsHtml ? `<div class="card-stats"><div class="stats-grid">${statsHtml}</div></div>` : ""}
+    ${reasoningHtml}
   `;
 
   const expandBtn = card.querySelector(".card-expand-btn");
   if (expandBtn) {
-    expandBtn.addEventListener("click", function () {
-      const extra    = card.querySelector(".card-extra");
-      const expanded = this.getAttribute("aria-expanded") === "true";
-      if (extra) extra.hidden = expanded;
-      this.setAttribute("aria-expanded", String(!expanded));
-      this.querySelector("span").textContent = expanded ? "Show all variables" : "Hide variables";
+    expandBtn.addEventListener("click", () => {
+      const expanded = expandBtn.getAttribute("aria-expanded") === "true";
+      expandBtn.setAttribute("aria-expanded", String(!expanded));
+      card.querySelector(".card-reasoning").hidden = expanded;
     });
   }
 
@@ -385,11 +321,10 @@ function buildCard(persona, totalPop) {
 function renderState(type, message) {
   const icons = { loading: "⏳", empty: "🗺️", error: "⚠️" };
   summaryEl.textContent = "";
-  const textHtml = message ? `<p>${message}</p>` : "";
   mainEl.innerHTML = `
     <div class="state-msg">
       <div class="icon">${icons[type] ?? ""}</div>
-      ${textHtml}
+      ${message ? `<p>${message}</p>` : ""}
     </div>
   `;
 }
@@ -397,7 +332,17 @@ function renderState(type, message) {
 // ----- Utils -----
 async function apiFetch(path) {
   const res = await fetch(API_BASE + path);
-  if (!res.ok) throw new Error(`HTTP ${res.status}`);
+  if (!res.ok) {
+    let msg = `HTTP ${res.status}`;
+    try {
+      const body = await res.json();
+      if (body?.detail !== undefined) {
+        const d = body.detail;
+        msg += `: ${typeof d === "string" ? d : JSON.stringify(d)}`;
+      }
+    } catch { /* ignore */ }
+    throw new Error(msg);
+  }
   return res.json();
 }
 
@@ -408,3 +353,4 @@ function formatNum(n) {
 
 // ----- Start -----
 init();
+

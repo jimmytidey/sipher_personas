@@ -4,63 +4,35 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Archetypes</title>
-  <link rel="stylesheet" href="style.css?v=19" />
+  <link rel="stylesheet" href="style.css?v=24" />
 </head>
 <body>
 
   <header>
-    <h1>Synthetic Population Clusters
-    </h1>
+    <h1>Population Clusters</h1>
   </header>
 
   <div class="controls">
-    <div class="mode-toggle" id="mode-toggle" role="group" aria-label="Clustering level">
-      <button class="mode-btn active" data-mode="local">Local clusters</button>
-      <button class="mode-btn" data-mode="national">National clusters</button>
-    </div>
-
-    <label for="la-select">Local authority</label>
-    <select id="la-select" disabled>
-      <option value="">Loading…</option>
+    <label for="cluster-type">Cluster method</label>
+    <select id="cluster-type">
+      <option value="values">Old school statistical clustering</option>
+      <option value="llm_gemini">LLM Gemini</option>
+      <option value="llm_claude">LLM Claude</option>
     </select>
 
-    <div class="group-tabs" id="group-tabs"></div>
+    <span id="la-control" style="display:flex; align-items:center; gap:8px;">
+      <label for="la-select">Local Authority</label>
+      <select id="la-select" style="min-width:220px;">
+        <option value="">— loading LAs —</option>
+      </select>
+    </span>
   </div>
 
   <main>
-    <!-- Edit the copy below to explain how the site works for first-time visitors -->
-    <section class="site-intro" id="site-intro" aria-label="About this tool">
-      <h2>What is this?</h2>
-      
-      <p>'Synthetic users' are a hot topic in user research - conducting research byasking an LLM to respond to questions 'as though' it is a user with particular characteristics. This approach is very hard to validate.</p>
-
-
-      <p>This work explores the hypothesis that a more robust approach could be to supply the LLM with detailed high-quality data about a user group, relying on the LLM only to summarise the most salient aspects of those users.</p>
-
-      <p>
-        Use the dropdown to choose a local authority. The list is built from the cluster data file served by the API — only authorities that appear in that export are shown (for example a four-borough test run or all London boroughs, depending on how the pipeline was built).
-      </p>
-      <p>
-        Each area shows demographic clusters based on age, employment status, ethnicity, education and income. For each cluster the LLM is given further background information and comparative data to support a short description and a profile image.
-      </p>
-
-      <p>It uses ChatGPT to write the description and title of each cluster and generate a portrait image.</p>
-
-      <p>The data comes from the UK Household Longitudinal Study (UKHLS).</p>
-
-      <p>Annonymnity is preserved by using <a href="https://github.com/open-data-science-society/sipher" target="_blank">Sipher</a>, which takes the UKHLS data and creates a synthetic population of 52 million people.</p>
-
-      <p>Sipher's approach is to randomise the locations of respondents in a way that keeps overall statistical validity while making it very hard to identify any individual respondents.</p>
-
-      <p>Custom code uses 'k-means clustering' to group the respondents into clusters.</p>
-
-
-    </section>
-
     <p class="summary-bar" id="summary-bar"></p>
     <div id="main-content"></div>
   </main>
 
-  <script src="app.js?v=29"></script>
+  <script src="app.js?v=42"></script>
 </body>
 </html>

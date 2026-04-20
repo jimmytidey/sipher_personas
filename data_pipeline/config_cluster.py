@@ -1,48 +1,33 @@
-# ── Regional Cluster Config ───────────────────────────────────────────────────
+# data_pipeline/config_cluster.py
 #
-# Defines how to cluster the population.
-#
-# MAX_TOTAL_CLUSTERS : total cluster budget shared across all employment groups.
-#   Each group receives clusters in proportion to its share of the population,
-#   so large groups get more tribes than small ones.
-#   Actual tribes per group = max(1, round(MAX_TOTAL_CLUSTERS * n_group / n_total))
-#   and is further capped by MIN_CLUSTER_SIZE in the notebook.
-# ─────────────────────────────────────────────────────────────────────────────
+# Clustering configuration shared across pipeline notebooks.
 
-WAVE = "o"
-
-# ── K-Means feature variables ─────────────────────────────────────────────────
-# Derived from variables with cluster=True in config_variables_*.py.
-# To change which variables are clustered, set "cluster": True/False in the
-# relevant theme file (e.g. config_variables_sipher_weighted.py).
 try:
-    from data_pipeline.config_variables import CLUSTER_VARS
+    from data_pipeline.config_variables import WAVE, GROUPS
 except ModuleNotFoundError:
-    from config_variables import CLUSTER_VARS
+    from config_variables import WAVE, GROUPS
 
-# ── Total cluster budget ─────────────────────────────────────────────────────
-# Shared proportionally across all employment groups.
-MAX_TOTAL_CLUSTERS = 50
+# Fixed number of K-Means clusters to fit.
+N_CLUSTERS = 10
 
-# When True (default), the population is first split by employment status (GROUPS)
-# and K-Means is run independently within each group — producing e.g. "Employed 1",
-# "Retired 2" etc.
-# When False, the entire unit population is clustered together in one pass using
-# MAX_TOTAL_CLUSTERS clusters.
-USE_GROUPED_CLUSTERING = True
+# ── Local-level clustering ─────────────────────────────────────────────────────
+# Number of clusters to fit per Local Authority.
+N_CLUSTERS_LOCAL = 5
 
-# ── Grouping variable ─────────────────────────────────────────────────────────
-# Base code (without wave prefix) of the OHE variable used to split the population.
-GROUP_VAR = "jbstat"
-
-# Ordered list of canonical group names matching the OHE category labels in
-# config_variables.py. The last entry with no matching OHE column acts as a
-# catch-all for anyone not assigned to a named group.
-GROUPS = [
-    "Employed",    # paid employment, self-employed, apprenticeship, furlough, laid off
-    "Retired",
-    "Unemployed",
-    "Student",     # full-time student + govt training
-    "On leave",    # maternity, parental, adoption, family care
-    "Inactive",    # LT sick/disabled, unpaid family business, other, missing
+# Test mode: when True, only process the LAs listed in TEST_LA_CODES.
+# Set to False (or None) to run all LAs.
+TEST_MODE = True
+TEST_LA_CODES = [
+    "E09000030",  # Tower Hamlets  (includes Bethnal Green ward)
+    "E09000019",  # Islington
+    "E09000018",  # Hounslow
+    "E09000025",  # Newham
 ]
+
+# ── Hierarchical clustering ────────────────────────────────────────────────────
+# When set to a column base name (without wave prefix), each LA is first split by
+# the unique values of that column and N_CLUSTERS_LOCAL clusters are fitted
+# independently within each group.  The summary CSV will contain a `group` column
+# identifying which group each cluster row belongs to.
+# Set to False to disable and cluster the entire LA population as a single group.
+HIERARCHICAL_CLUSTER = "jbstat_eng"

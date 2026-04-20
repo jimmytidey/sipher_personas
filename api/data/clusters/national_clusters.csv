@@ -1,0 +1,5 @@
+tribe_label,size,Age,Sex (Derived),Sex (Derived) %,Ethnic group,Ethnic group %,Highest qualification,Employment status,Marital status,Marital status %,Housing tenure (Own/Rent),Housing tenure (Own/Rent) %,Composition of household (LFS),Composition of household (LFS) %,Self-rated general health,Self-rated general health %,cluster_level
+1,1048,50.8,Female,52,Indian,100,2.5,Employed: 64% | Retired: 13% | Student / training: 9%,Married/Civil partner,65,Owner-occupied,88,"3+ adults (incl. couple), no children",23,Good,39,national
+2,1518,27.2,Female,56,White,66,3.3,Student / training: 94% | Employed: 3% | Unemployed: 2%,Never married,94,Owner-occupied,70,"3+ adults (incl. couple), 1–2 children",30,Very good,41,national
+3,18587,61.7,Female,54,White,92,2.7,Employed: 60% | Retired: 33% | On leave: 3%,Married/Civil partner,64,Owner-occupied,100,"Couple, no children",37,Good,36,national
+4,6177,53.6,Female,59,White,78,3.3,Employed: 57% | Retired: 17% | Inactive: 11%,Married/Civil partner,35,Rented,96,"1 adult, no children",25,Good,34,national

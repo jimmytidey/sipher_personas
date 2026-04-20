@@ -1,9 +1,0 @@
-tribe_label,size,Age,Sex (Derived),Sex (Derived) %,Ethnic group,Ethnic group %,Highest qualification,Employment status,Marital status,Marital status %,Housing tenure (Own/Rent),Housing tenure (Own/Rent) %,Composition of household (LFS),Composition of household (LFS) %,Self-rated general health,Self-rated general health %,unit_id,la_name,cluster_level,group
-Employed 1,70709,1972.2,Male,59,White,57,3.0,2.0: 60% | Retired: 17% | Employed: 13%,Married/Civil partner,89,Rented,48,"3+ adults (incl. couple), 1–2 children",22,Good,39,E09000018,Hounslow,national,Employed
-Employed 2,58881,1975.4,Female,59,White,55,3.7,2.0: 50% | Retired: 19% | Unemployed: 10%,Never married,58,Rented,26,22.0,20,Good,34,E09000018,Hounslow,national,Employed
-Employed 1,56283,1976.3,Male,57,White,76,2.6,2.0: 64% | Retired: 14% | Employed: 12%,Married/Civil partner,78,Rented,48,"Couple, 2 children",20,Good,35,E09000019,Islington,national,Employed
-Employed 2,71376,1979.6,Female,56,White,67,3.4,2.0: 52% | Retired: 13% | Unemployed: 10%,Never married,67,Other,21,"1 adult, 2+ children",23,Good,34,E09000019,Islington,national,Employed
-Employed 1,68120,1974.7,Male,64,White,39,3.2,2.0: 60% | Employed: 14% | Retired: 12%,Married/Civil partner,90,Rented,42,"3+ adults (incl. couple), 1–2 children",20,Good,39,E09000025,Newham,national,Employed
-Employed 2,73220,1978.8,Female,55,White,34,3.9,2.0: 49% | Unemployed: 15% | Retired: 13%,Never married,61,Rented,23,22.0,23,Good,34,E09000025,Newham,national,Employed
-Employed 2,66162,1980.2,Female,53,White,56,3.7,2.0: 51% | Unemployed: 13% | Retired: 12%,Never married,66,Other,22,"1 adult, 2+ children",22,Good,33,E09000030,Tower Hamlets,national,Employed
-Employed 1,60399,1976.6,Male,60,White,61,2.9,2.0: 64% | Employed: 11% | Retired: 11%,Married/Civil partner,83,Rented,44,"3+ adults (incl. couple), 1–2 children",20,Good,38,E09000030,Tower Hamlets,national,Employed

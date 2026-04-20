@@ -1,5 +1,0 @@
-tribe_label,size,Continuous test variable,Binary test variable,3-way categorical test variable,Cat3 = Low,Cat3 = High,unit_id,cluster_level,group
-Employed 1,25,21.2,Yes,Low,Yes,No,E99000001,LA,Employed
-Employed 2,25,81.2,No,High,No,Yes,E99000001,LA,Employed
-Employed 1,25,21.2,Yes,Low,Yes,No,E99000002,LA,Employed
-Employed 2,25,81.2,No,High,No,Yes,E99000002,LA,Employed

@@ -29,25 +29,29 @@
 # Variable blocks live in theme modules (merged in order below).
 
 import copy
+from collections.abc import Collection
+
+# Repo-root ``data/`` directory name (notebooks use ``f"../{DATA_FOLDER}/…"`` from data_pipeline/).
+DATA_FOLDER = "data"
 
 # Notebooks often run with cwd=data_pipeline/ and use `import config_variables` (flat).
 # In that case `data_pipeline` is not a package on sys.path — use same-directory imports.
 try:
-    from data_pipeline.config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
-    from data_pipeline.config_variables_economic import VARIABLES as _VAR_ECONOMIC
-    from data_pipeline.config_variables_digital import VARIABLES as _VAR_DIGITAL
-    from data_pipeline.config_variables_derived import VARIABLES as _VAR_DERIVED
-    from data_pipeline.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
-    from data_pipeline.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
-    from data_pipeline.config_variables_transport import VARIABLES as _VAR_TRANSPORT
+    from data_pipeline.config.config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
+    from data_pipeline.config.config_variables_economic import VARIABLES as _VAR_ECONOMIC
+    from data_pipeline.config.config_variables_digital import VARIABLES as _VAR_DIGITAL
+    from data_pipeline.config.config_variables_derived import VARIABLES as _VAR_DERIVED
+    from data_pipeline.config.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
+    from data_pipeline.config.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
+    from data_pipeline.config.config_variables_transport import VARIABLES as _VAR_TRANSPORT
 except ModuleNotFoundError:  # pragma: no cover
-    from config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
-    from config_variables_economic import VARIABLES as _VAR_ECONOMIC
-    from config_variables_digital import VARIABLES as _VAR_DIGITAL
-    from config_variables_derived import VARIABLES as _VAR_DERIVED
-    from config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
-    from config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
-    from config_variables_transport import VARIABLES as _VAR_TRANSPORT
+    from config.config_variables_sipher_weighted import VARIABLES as _VAR_DEMOGRAPHICS
+    from config.config_variables_economic import VARIABLES as _VAR_ECONOMIC
+    from config.config_variables_digital import VARIABLES as _VAR_DIGITAL
+    from config.config_variables_derived import VARIABLES as _VAR_DERIVED
+    from config.config_variables_local_service import VARIABLES as _VAR_LOCAL_SERVICE
+    from config.config_variables_public_service import VARIABLES as _VAR_PUBLIC_SERVICE
+    from config.config_variables_transport import VARIABLES as _VAR_TRANSPORT
 
 
 def _merge_variable_dicts(*parts):
@@ -91,6 +95,20 @@ CONTINUOUS_VARS  = {k for k, v in VARIABLES.items() if not v["categorical"]}
 
 CLUSTER_VARS = [k for k, v in VARIABLES.items() if v.get("cluster")]
 
+# UKHLS wave prefix for engineered columns (must match 3a primary + 4a input pickle).
+# Wave k is the SIPHER-aligned cohort (all SIPHER pidps with a k-wave interview); o is newer but smaller.
+WAVE = "k"
+
+# Step 12 group baselines: jbstat one-hot column names (last catch-all uses col is None).
+GROUPS = [
+    "Employed",
+    "Retired",
+    "Unemployed",
+    "Student",
+    "On leave",
+    "Inactive",
+]
+
 # Variables shown in the regional cluster summary table (all variables now included)
 SUMMARY_VARS = list(VARIABLES.keys())
 
@@ -106,7 +124,7 @@ def expected_ohe_column_names(wave: str, base: str) -> list[str]:
     Columns use the _eng infix — e.g. o_racel_dv_eng_1, o_racel_dv_eng_not_answered —
     reflecting that OHE is always derived from the feature-engineered (recoded) values.
 
-    Must stay aligned with 4a_feature_eng_ukhls.ipynb step 5.
+    Must stay aligned with 4a_feature_eng_ukhls.ipynb (OHE sub-step in the numbered list).
     """
     one_hot_spec = ONE_HOT_VARS[base]
     var_def = VARIABLES[base]
@@ -183,8 +201,27 @@ _ENG_VARS = (
 )
 
 
+def preferred_summary_column(wave: str, base: str, columns: Collection[str]) -> str | None:
+    """
+    DataFrame column to use for tribe / persona summaries (e.g. ``build_dna_row``).
+
+    Step 4a stores transformed or recoded scalars in ``{wave}_{base}_eng`` (age from
+    ``birth_year_to_age``, recoded jbstat, etc.). The raw ``{wave}_{base}`` column
+    may still hold pre-engineering values (e.g. year of birth for ``doby_dv``).
+    Feature-engineered tables are written under ``data/4_feature_eng/{wave}_feature_eng.pkl``.
+    """
+    colset = set(columns)
+    eng = f"{wave}_{base}_eng"
+    raw = f"{wave}_{base}"
+    if base in _ENG_VARS and eng in colset:
+        return eng
+    if raw in colset:
+        return raw
+    return None
+
+
 def reload_config_variables() -> None:
-    """Reload theme modules, ``config_cluster``, LLM vars, and this module.
+    """Reload theme modules, LLM vars, and this module.
 
     Call from Jupyter after editing ``config_variables_*.py`` so changes apply
     without restarting the kernel. Then re-import names from ``config_variables``::
@@ -217,9 +254,6 @@ def reload_config_variables() -> None:
         for key in (base, f"data_pipeline.{base}"):
             if key in sys.modules:
                 importlib.reload(sys.modules[key])
-    for key in ("config_cluster", "data_pipeline.config_cluster"):
-        if key in sys.modules:
-            importlib.reload(sys.modules[key])
     for key in ("config_variables", "data_pipeline.config_variables"):
         if key in sys.modules:
             importlib.reload(sys.modules[key])
