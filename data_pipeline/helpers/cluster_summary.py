@@ -27,7 +27,7 @@ def _label_maps_from_config() -> dict[str, dict[float, str]]:
         import data_pipeline.config_variables as cv  # noqa: PLC0415
         out: dict[str, dict[float, str]] = {}
         for base, vdef in cv.VARIABLES.items():
-            src = vdef.get("group_labels") or vdef.get("categories") or {}
+            src = vdef.get("categories") or vdef.get("group_labels") or {}
             out[base] = {float(k): str(v) for k, v in src.items()}
         return out
     except Exception:
@@ -90,8 +90,22 @@ def make_cluster_summary(
                 label = _SEX_LABELS.get(mode_val, str(int(mode_val)))
             else:
                 label = label_maps.get(base, {}).get(mode_val, str(int(mode_val)))
-            rec[base]              = label
-            rec[f"{base}_pct"]     = mode_pct
+            rec[base]          = label
+            rec[f"{base}_pct"] = mode_pct
+
+            # Second-place value (stored when modal < 50%)
+            remaining = vals[vals != mode_val]
+            if mode_pct < 50 and len(remaining) > 0:
+                modes2 = remaining.mode()
+                if len(modes2) > 0:
+                    val2 = float(modes2.iloc[0])
+                    pct2 = round(int((vals == val2).sum()) / len(grp) * 100)
+                    if base == "sex_dv":
+                        label2 = _SEX_LABELS.get(val2, str(int(val2)))
+                    else:
+                        label2 = label_maps.get(base, {}).get(val2, str(int(val2)))
+                    rec[f"{base}_2"]     = label2
+                    rec[f"{base}_2_pct"] = pct2
 
         rows.append(rec)
 

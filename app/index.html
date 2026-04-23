@@ -3,13 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Archetypes</title>
+  <title>LLM Personas</title>
   <link rel="stylesheet" href="style.css?v=24" />
 </head>
 <body>
 
+  <!-- About modal -->
+  <div id="about-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modal-title">
+    <div class="modal-box">
+      <h2 id="modal-title">About this project</h2>
+      <div class="modal-body">
+        <p>There is lots of interest in "synthetic user" research, where LLMs are used to simulate responses to interviews or surveys. These simulations are often "black boxes"—combining data in ways that are hard to verify, which creates significant concerns in public sector work.</p>
+        <p>Rather than asking an LLM to simulate human behavior, this prototype uses LLMs as a tool to cluster and synthesise patterns from verifiable data. I'm using the SIPHER dataset (derived from the UK Census and the UK Household Longitudinal Study) to generate representative "personas" at the Local Authority level.</p>
+        <p><strong>Current Scope:</strong> To explore the datasets and LLM capabilities, this prototype uses data for four London boroughs.</p>
+        <p>See <a href="#" id="about-to-research">Research Design</a> and <a href="#" id="about-to-methodology">Methodology</a> for more information.</p>
+      </div>
+      <button id="modal-close" class="modal-close-btn">Got it</button>
+    </div>
+  </div>
+
+  <!-- Research design modal -->
+  <div id="research-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="research-modal-title">
+    <div class="modal-box modal-box--wide">
+      <h2 id="research-modal-title">Research design</h2>
+      <div class="modal-body">
+        <h3>Hypothesis</h3>
+        <p>LLM assisted processing, filtering and presentation of social research data in a transparent, explainable way can provide actionable user insights that could be more accountable in the public sector than black box 'synthetic user' research tools.</p>
+
+        <h3>Next steps</h3>
+        <ul>
+          <li>Initial demos of the prototype indicate that 'employment type by local authority' is not an appropriate population segmentation for common research objectives.</li>
+          <li>Responding to this, I would like to allow the user more control over the sub-population that they cluster on to create 'personas'.</li>
+          <li>Identifying real-world projects for qualitative concept testing — are data-led personas a useful output? Do people naturally gravitate to 'simulated users' instead? Is the data resolution good enough? What other datasets should be added?</li>
+        </ul>
+
+        <h3>Broader research questions</h3>
+        <p><strong>Transparency &amp; Explainability</strong></p>
+        <ul>
+          <li>How do users interpret the "reasoning" provided by the tool?</li>
+          <li>How can explanations of how the data is derived provide transparency without overwhelming?</li>
+          <li>How are limitations communicated?</li>
+          <li>How can we detect, evaluate and communicate biases introduced by the LLM?</li>
+          <li>Does the tool introduce new types of errors that users are not accustomed to managing?</li>
+        </ul>
+        <p><strong>Utility</strong></p>
+        <ul>
+          <li>Where would this fit into a research process?</li>
+          <li>How do outcomes compare with traditional research methods in terms of accuracy and relevance?</li>
+          <li>How does it compare to 'black box' synthetic user tools in terms of accuracy and relevance?</li>
+          <li>Where could this alternative to synthetic user research be most applicable and compelling?</li>
+        </ul>
+      </div>
+      <button id="research-modal-close" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Methodology modal -->
+  <div id="methodology-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="methodology-modal-title">
+    <div class="modal-box modal-box--wide">
+      <h2 id="methodology-modal-title">Detailed methodology</h2>
+      <div class="modal-body">
+        <p>This experiment uses the Sipher dataset. Sipher is a 'synthetic population'. For every MSOA, it provides a list of IDs that link to respondents in the UK Household Longitudinal Study (UKHLS). The demographics (age, sex, ethnicity, education, employment status, marital status, housing status and self-reported health) of the UKHLS respondents are selected so that the overall synthetic population of the MSOA matches the outcome of the last census. This means that individuals in the population are real people, but they are most likely not from the MSOA in question, providing a strong degree of anonymity. It also means that statistical features of the population at MSOA level — averages and distributions — match the census. The UKHLS has about 20,000 respondents, so each respondent is represented in the synthetic dataset many times.</p>
+
+        <h3>Step 1 — Construct the population</h3>
+        <p>The synthetic population is constructed by connecting the Sipher ID lists back to the UKHLS data.</p>
+
+        <h3>Step 2 — Group MSOAs into LAs</h3>
+        <p>Respondent records are aggregated from MSOA to Local Authority level.</p>
+
+        <h3>Step 3 — Group by employment status within each LA</h3>
+        <p>A process of hierarchical clustering is applied to the Sipher data. Within each LA, the population is grouped by employment status. This is because clustering the whole LA is too computationally difficult for LLMs.</p>
+
+        <h3>Step 4 — Cluster</h3>
+        <p>For each employment status group, a clustering process is applied. Three approaches to clustering are presented in the UI:</p>
+        <ul>
+          <li><strong>K-means clustering</strong> on simplified demographics (the raw data is too high-dimensional for reasonable clustering).</li>
+          <li><strong>Claude and Gemini clustering.</strong> The demographic data of 100 UKHLS respondents are sent to the LLM with a prompt that asks for between three and eight clusters to be identified. The 100 respondents are selected as the most common within the employment status group for that LA. Because Sipher is a synthetic dataset, an individual respondent can appear in the data many times, so the top 100 respondents might represent between 3,000 and 10,000 people.</li>
+        </ul>
+
+        <h3>Step 5 — Calculate average demographics per cluster</h3>
+        <p>The cards in the UI are generated by calculating the average demographics of each cluster.</p>
+      </div>
+      <button id="methodology-modal-close" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+
+  <!-- Reasoning modal -->
+  <div id="reasoning-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="reasoning-modal-title">
+    <div class="modal-box">
+      <h2 id="reasoning-modal-title">LLM reasoning</h2>
+      <div class="modal-body">
+        <p id="reasoning-modal-text" class="reasoning-text"></p>
+      </div>
+      <button id="reasoning-modal-close" class="modal-close-btn">Close</button>
+    </div>
+  </div>
+
   <header>
-    <h1>Population Clusters</h1>
+    <h1>LLM Personas</h1>
+    <div class="header-actions">
+      <button id="about-btn" class="about-btn">About</button>
+      <button id="methodology-btn" class="about-btn">Methodology</button>
+      <button id="research-btn" class="about-btn">Research design</button>
+    </div>
   </header>
 
   <div class="controls">
@@ -17,7 +113,7 @@
     <select id="cluster-type">
       <option value="values">Old school statistical clustering</option>
       <option value="llm_gemini">LLM Gemini</option>
-      <option value="llm_claude">LLM Claude</option>
+      <option value="llm_claude" selected>LLM Claude</option>
     </select>
 
     <span id="la-control" style="display:flex; align-items:center; gap:8px;">
@@ -34,5 +130,94 @@
   </main>
 
   <script src="app.js?v=42"></script>
+  <script>
+    (function () {
+      const modal    = document.getElementById('about-modal');
+      const closeBtn = document.getElementById('modal-close');
+      const aboutBtn = document.getElementById('about-btn');
+
+      function openModal()  { modal.classList.add('is-open'); }
+      function closeModal() { modal.classList.remove('is-open'); }
+
+      // Show on first visit (localStorage flag)
+      if (!localStorage.getItem('archetypes-modal-seen')) {
+        openModal();
+      }
+
+      closeBtn.addEventListener('click', function () {
+        localStorage.setItem('archetypes-modal-seen', '1');
+        closeModal();
+      });
+
+      // Close on backdrop click
+      modal.addEventListener('click', function (e) {
+        if (e.target === modal) {
+          localStorage.setItem('archetypes-modal-seen', '1');
+          closeModal();
+        }
+      });
+
+      aboutBtn.addEventListener('click', openModal);
+
+      // Methodology modal
+      const methodologyModal    = document.getElementById('methodology-modal');
+      const methodologyCloseBtn = document.getElementById('methodology-modal-close');
+      const methodologyBtn      = document.getElementById('methodology-btn');
+
+      methodologyBtn.addEventListener('click', function () {
+        methodologyModal.classList.add('is-open');
+      });
+      methodologyCloseBtn.addEventListener('click', function () {
+        methodologyModal.classList.remove('is-open');
+      });
+      methodologyModal.addEventListener('click', function (e) {
+        if (e.target === methodologyModal) methodologyModal.classList.remove('is-open');
+      });
+
+      // Research design modal
+      const researchModal    = document.getElementById('research-modal');
+      const researchCloseBtn = document.getElementById('research-modal-close');
+      const researchBtn      = document.getElementById('research-btn');
+
+      researchBtn.addEventListener('click', function () {
+        researchModal.classList.add('is-open');
+      });
+      researchCloseBtn.addEventListener('click', function () {
+        researchModal.classList.remove('is-open');
+      });
+      researchModal.addEventListener('click', function (e) {
+        if (e.target === researchModal) researchModal.classList.remove('is-open');
+      });
+
+      // Links inside About modal → other modals
+      document.getElementById('about-to-research').addEventListener('click', function (e) {
+        e.preventDefault();
+        closeModal();
+        researchModal.classList.add('is-open');
+      });
+      document.getElementById('about-to-methodology').addEventListener('click', function (e) {
+        e.preventDefault();
+        closeModal();
+        methodologyModal.classList.add('is-open');
+      });
+
+      // Reasoning modal
+      const reasoningModal     = document.getElementById('reasoning-modal');
+      const reasoningCloseBtn  = document.getElementById('reasoning-modal-close');
+      const reasoningText      = document.getElementById('reasoning-modal-text');
+
+      window.openReasoningModal = function (text) {
+        reasoningText.textContent = text;
+        reasoningModal.classList.add('is-open');
+      };
+
+      reasoningCloseBtn.addEventListener('click', function () {
+        reasoningModal.classList.remove('is-open');
+      });
+      reasoningModal.addEventListener('click', function (e) {
+        if (e.target === reasoningModal) reasoningModal.classList.remove('is-open');
+      });
+    })();
+  </script>
 </body>
 </html>

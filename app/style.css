@@ -47,6 +47,98 @@ header {
 header h1 { font-size: 18px; font-weight: 700; letter-spacing: -.3px; }
 header span { font-size: 13px; opacity: .75; }
 
+.header-actions {
+  margin-left: auto;
+  display: flex;
+  gap: 8px;
+}
+.about-btn {
+  background: rgba(255,255,255,.15);
+  border: 1px solid rgba(255,255,255,.35);
+  color: #fff;
+  padding: 5px 14px;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: background .15s;
+}
+.about-btn:hover { background: rgba(255,255,255,.25); }
+
+/* ----- Modal ----- */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,.45);
+  z-index: 1000;
+  align-items: center;
+  justify-content: center;
+}
+.modal-overlay.is-open { display: flex; }
+
+.modal-box {
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 8px 32px rgba(0,0,0,.2);
+  max-width: 560px;
+  width: calc(100% - 48px);
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.modal-box h2 {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+}
+.modal-body {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.modal-body p {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+.modal-body h3 {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text);
+  margin-top: 4px;
+}
+.modal-body ul {
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.modal-body ul li {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--text-muted);
+}
+.modal-box--wide {
+  max-width: 720px;
+  max-height: 80vh;
+  overflow-y: auto;
+}
+.modal-close-btn {
+  align-self: flex-end;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: opacity .15s;
+}
+.modal-close-btn:hover { opacity: .85; }
+
 /* ----- Controls bar ----- */
 .controls {
   background: var(--surface);
@@ -181,6 +273,18 @@ main {
   font-size: 12px;
   color: var(--text-muted);
 }
+.group-header .reasoning-link {
+  font-size: 12px;
+  color: var(--accent);
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  margin-left: 4px;
+}
+.group-header .reasoning-link:hover { opacity: .75; }
 
 /* ----- Card ----- */
 .card {

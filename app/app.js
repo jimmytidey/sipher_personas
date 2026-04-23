@@ -6,7 +6,7 @@ const API_BASE = window.location.port === "3000" ? "http://localhost:8000" : "";
 
 // ----- State -----
 const currentLevel     = "local";
-let currentClusterType = "values";  // 'values' | 'llm_gemini' | 'llm_claude'
+let currentClusterType = "llm_claude";  // 'values' | 'llm_gemini' | 'llm_claude'
 let currentLadcd       = null;
 let allClusters        = [];
 
@@ -161,11 +161,7 @@ function renderClusters() {
     return;
   }
 
-  // Drop clusters that represent less than 2% of the LA population
-  const clusters = allClusters.filter(c => {
-    const pct = Number(c.pct_of_la);
-    return isNaN(pct) || pct >= 2;
-  });
+  const clusters = allClusters;
 
   const methodLabel = { values: "Old school statistical clustering", llm_gemini: "LLM Gemini", llm_claude: "LLM Claude" }[currentClusterType] ?? currentClusterType;
   const groups = _sortedGroups(clusters);
@@ -196,11 +192,18 @@ function renderClusters() {
 
       const header = document.createElement("div");
       header.className = "group-header";
+      const reasoningForGroup = (groupClusters[0]?.reasoning ?? "").trim();
       header.innerHTML = `
         <span class="group-dot" style="background:${color}"></span>
         <h2>${group}</h2>
         <span class="group-count">${groupClusters.length} cluster${groupClusters.length !== 1 ? "s" : ""} · ${formatNum(Math.round(groupPop))} people</span>
+        ${reasoningForGroup ? `<button class="reasoning-link">LLM reasoning</button>` : ""}
       `;
+      if (reasoningForGroup) {
+        header.querySelector(".reasoning-link").addEventListener("click", () => {
+          window.openReasoningModal(reasoningForGroup);
+        });
+      }
       grid.appendChild(header);
 
       groupClusters.forEach((cluster, idx) =>
@@ -243,21 +246,28 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
 
   const STAT_DEFS = [
     { key: "age",          label: "Age (mean)",                    unit: " yrs", round: 1 },
-    { key: "racel_dv",     label: "Ethnicity (modal)",             pctKey: "racel_dv_pct" },
-    { key: "hiqual_dv",    label: "Qualification (modal)",         pctKey: "hiqual_dv_pct" },
-    { key: "marstat_dv",   label: "Marital status",                pctKey: "marstat_dv_pct" },
-    { key: "tenure_dv",    label: "Housing tenure",                pctKey: "tenure_dv_pct" },
-    { key: "hhtype_dv",    label: "Household type",                pctKey: "hhtype_dv_pct" },
+    { key: "jbstat",       label: "Employment status",             pctKey: "jbstat_pct",      key2: "jbstat_2",      pct2Key: "jbstat_2_pct" },
+    { key: "racel_dv",     label: "Ethnicity (modal)",             pctKey: "racel_dv_pct",    key2: "racel_dv_2",    pct2Key: "racel_dv_2_pct" },
+    { key: "hiqual_dv",    label: "Qualification (modal)",         pctKey: "hiqual_dv_pct",   key2: "hiqual_dv_2",   pct2Key: "hiqual_dv_2_pct" },
+    { key: "marstat_dv",   label: "Marital status",                pctKey: "marstat_dv_pct",  key2: "marstat_dv_2",  pct2Key: "marstat_dv_2_pct" },
+    { key: "tenure_dv",    label: "Housing tenure",                pctKey: "tenure_dv_pct",   key2: "tenure_dv_2",   pct2Key: "tenure_dv_2_pct" },
+    { key: "hhtype_dv",    label: "Household type",                pctKey: "hhtype_dv_pct",   key2: "hhtype_dv_2",   pct2Key: "hhtype_dv_2_pct" },
     { key: "health",       label: "Self-reported health (mean)",   round: 1, labelMap: HEALTH_LABELS },
   ];
 
-  const statsHtml = STAT_DEFS.map(({ key, label, unit, round, pctKey, labelMap }) => {
+  const statsHtml = STAT_DEFS.map(({ key, label, unit, round, pctKey, key2, pct2Key, labelMap }) => {
     const raw = cluster[key];
     if (raw == null || raw === "") return "";
     let val;
     if (pctKey) {
       const pct = cluster[pctKey];
-      val = pct != null ? `${raw} (${pct}%)` : String(raw);
+      val = pct != null ? `${displayLabel(raw)} (${pct}%)` : displayLabel(String(raw));
+      // Append second value if modal < 50% and second value exists
+      const raw2 = cluster[key2];
+      const pct2 = cluster[pct2Key];
+      if (Number(pct) < 50 && raw2 != null && raw2 !== "") {
+        val += pct2 != null ? `; ${displayLabel(raw2)} (${pct2}%)` : `; ${displayLabel(raw2)}`;
+      }
     } else if (round !== undefined) {
       const num = Number(raw);
       if (isNaN(num)) {
@@ -283,14 +293,6 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
     : "";
 
   const reasoningText = (cluster.reasoning ?? "").trim();
-  const reasoningHtml = reasoningText ? `
-    <button class="card-expand-btn" aria-expanded="false">
-      <span>LLM reasoning</span>
-      <svg class="expand-icon" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 6 8 10 12 6"/></svg>
-    </button>
-    <div class="card-extra card-reasoning" hidden>
-      <p class="reasoning-text">${reasoningText}</p>
-    </div>` : "";
 
   card.innerHTML = `
     <div class="card-head">
@@ -304,17 +306,7 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
     ${descHtml}
     ${popCountLabel ? `<div class="card-resp-note">${popCountLabel}</div>` : ""}
     ${statsHtml ? `<div class="card-stats"><div class="stats-grid">${statsHtml}</div></div>` : ""}
-    ${reasoningHtml}
   `;
-
-  const expandBtn = card.querySelector(".card-expand-btn");
-  if (expandBtn) {
-    expandBtn.addEventListener("click", () => {
-      const expanded = expandBtn.getAttribute("aria-expanded") === "true";
-      expandBtn.setAttribute("aria-expanded", String(!expanded));
-      card.querySelector(".card-reasoning").hidden = expanded;
-    });
-  }
 
   return card;
 }
@@ -346,6 +338,14 @@ async function apiFetch(path) {
     throw new Error(msg);
   }
   return res.json();
+}
+
+// Shorten verbose category labels for display only
+const _LABEL_ALIASES = {
+  "White: British/English/Scottish/Welsh/N. Irish": "White: British",
+};
+function displayLabel(val) {
+  return _LABEL_ALIASES[val] ?? val;
 }
 
 function formatNum(n) {

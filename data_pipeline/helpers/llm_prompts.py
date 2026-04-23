@@ -9,18 +9,15 @@ Import with:
     )
 """
 
-# Maps numeric jbstat codes (as stored in the hierarchical-cluster column) to
-# human-readable employment labels used in prompt context.
+# Maps feature-engineered (recoded) jbstat_eng group codes to human-readable labels.
+# Keys are the 6 canonical codes produced by the jbstat recode in config_variables.
 EMP_LABELS: dict[int, str] = {
-    1: "Self-employed",
-    2: "Employed",
+    1: "Employed",            # includes: self-employed, paid employment, furlough, temp laid off
     3: "Unemployed",
     4: "Retired",
-    5: "On leave / maternity",
-    6: "Family care",
-    7: "Student / in training",
-    8: "Long-term sick or disabled",
-    97: "Other employment status",
+    5: "On leave",            # includes: maternity, family care, shared/adoption parental leave
+    7: "Student / training",  # includes: student, govt training scheme, apprenticeship
+    8: "Inactive",            # includes: LT sick/disabled, unpaid family business, other
 }
 
 
@@ -44,17 +41,20 @@ def allocate_clusters(
     group_populations: dict,
     total_clusters: int,
     min_per_group: int = 1,
+    max_per_group: int | None = None,
 ) -> dict:
     """
     Proportionally allocate ``total_clusters`` across groups weighted by population.
 
     Uses the largest-remainder method so allocations sum to exactly ``total_clusters``.
-    Every group receives at least ``min_per_group`` clusters.
+    Every group receives at least ``min_per_group`` clusters and at most
+    ``max_per_group`` clusters (if specified).
 
     Args:
         group_populations: {group_key: population_count} mapping.
         total_clusters:    total cluster budget to distribute.
         min_per_group:     minimum clusters per group (default 1).
+        max_per_group:     maximum clusters per group (default None = no cap).
 
     Returns:
         {group_key: n_clusters} dict with the same keys as ``group_populations``.
@@ -65,7 +65,8 @@ def allocate_clusters(
     if not groups:
         return {}
     if total_pop == 0:
-        return {g: min_per_group for g in groups}
+        base = min_per_group if max_per_group is None else min(min_per_group, max_per_group)
+        return {g: base for g in groups}
 
     exact = {g: total_clusters * group_populations[g] / total_pop for g in groups}
     result = {g: max(min_per_group, int(exact[g])) for g in groups}
@@ -78,6 +79,10 @@ def allocate_clusters(
             result[g] += 1
     # If remaining < 0 the minimum constraints forced over-allocation — accept it.
 
+    # Apply per-group ceiling after proportional allocation
+    if max_per_group is not None:
+        result = {g: min(v, max_per_group) for g, v in result.items()}
+
     return result
 
 
@@ -87,7 +92,7 @@ VARIABLE CODEBOOK — each profile row: age|sex|eth|edu|emp|mar|ten|hh|health  (
   sex:    1=Male 2=Female
   eth:    1=White British  2=White Irish  4=White Other  5=Mixed White/Black Carib  7=Mixed White/Asian  8=Mixed Other  9=Asian Indian  10=Asian Pakistani  11=Asian Bangladeshi  12=Asian Chinese  14=Black Caribbean  15=Black African  17=Arab  97=Other
   edu:    1=Degree  2=Other higher  3=A-level  4=GCSE  5=Other qual  9=No qual
-  emp:    1=Self-employed  2=Employed  3=Unemployed  4=Retired  5=Maternity  6=Family care  7=Student  8=LT sick/disabled  97=Other
+  emp:    1=Self-employed  2=Paid employment  3=Unemployed  4=Retired  5=Maternity leave  6=Family care / home  7=Student  8=LT sick/disabled  9=Govt training  10=Unpaid family business  11=Apprenticeship  12=Furlough  13=Temp laid off  14=Shared parental leave  15=Adoption leave  97=Other
   mar:    1=Married  2=Cohabiting  3=Widowed  4=Divorced  5=Separated  6=Single
   ten:    1=Owned outright  2=Mortgage  3=Council rent  4=Housing assoc  5=Employer rent  6=Private unfurn  7=Private furn
   hh:     1=Solo M 65+  2=Solo F 60+  3=Solo adult  4=Single parent 1c  5=Single parent 2+c  6=Couple no child  8=Couple (pensionable age)  10=Couple+1c  11=Couple+2c  12=Couple+3+c  16=2 adults  17=2 adults (pensionable)  18=2 adults+child  19=3+ couple  22=3+ no couple
