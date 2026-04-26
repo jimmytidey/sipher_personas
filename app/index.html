@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>LLM Personas</title>
+  <title>UK population personas</title>
   <link rel="stylesheet" href="style.css?v=24" />
 </head>
 <body>
@@ -15,7 +15,8 @@
       <div class="modal-body">
         <p>There is lots of interest in "synthetic user" research, where LLMs are used to simulate responses to interviews or surveys. These simulations are often "black boxes"—combining data in ways that are hard to verify, which creates significant concerns in public sector work.</p>
         <p>Rather than asking an LLM to simulate human behavior, this prototype uses LLMs as a tool to cluster and synthesise patterns from verifiable data. I'm using the SIPHER dataset (derived from the UK Census and the UK Household Longitudinal Study) to generate representative "personas" at the Local Authority level.</p>
-        <p><strong>Current Scope:</strong> To explore the datasets and LLM capabilities, this prototype uses data for four London boroughs.</p>
+        <p><strong>Current Scope:</strong> To explore the datasets and LLM capabilities, this prototype uses data for four London boroughs, plus two other LAs to give some more diversity.</p>
+        <p>Could the analysis of the data be affected by biases in LLMs? Yes, absolutely, and one goal of this project is to explore that issue.</p>
         <p>See <a href="#" id="about-to-research">Research Design</a> and <a href="#" id="about-to-methodology">Methodology</a> for more information.</p>
       </div>
       <button id="modal-close" class="modal-close-btn">Got it</button>
@@ -45,6 +46,7 @@
           <li>How are limitations communicated?</li>
           <li>How can we detect, evaluate and communicate biases introduced by the LLM?</li>
           <li>Does the tool introduce new types of errors that users are not accustomed to managing?</li>
+          <li>Evaluate and communicate LLM biases</li>
         </ul>
         <p><strong>Utility</strong></p>
         <ul>
@@ -78,6 +80,7 @@
         <p>For each employment status group, a clustering process is applied. Three approaches to clustering are presented in the UI:</p>
         <ul>
           <li><strong>K-means clustering</strong> on simplified demographics (the raw data is too high-dimensional for reasonable clustering).</li>
+          <li><strong>Vector embedding clustering.</strong> Convert each profile into a string, embed using <code>text-embedding-3-small</code>, then cluster on the vectors.</li>
           <li><strong>Claude and Gemini clustering.</strong> The demographic data of 100 UKHLS respondents are sent to the LLM with a prompt that asks for between three and eight clusters to be identified. The 100 respondents are selected as the most common within the employment status group for that LA. Because Sipher is a synthetic dataset, an individual respondent can appear in the data many times, so the top 100 respondents might represent between 3,000 and 10,000 people.</li>
         </ul>
 
@@ -100,18 +103,20 @@
   </div>
 
   <header>
-    <h1>LLM Personas</h1>
+    <h1>UK population personas</h1>
     <div class="header-actions">
       <button id="about-btn" class="about-btn">About</button>
       <button id="methodology-btn" class="about-btn">Methodology</button>
       <button id="research-btn" class="about-btn">Research design</button>
+      <a href="https://github.com/jimmytidey/sipher_personas" target="_blank" rel="noopener noreferrer" class="about-btn github-btn">GitHub</a>
     </div>
   </header>
 
   <div class="controls">
     <label for="cluster-type">Cluster method</label>
     <select id="cluster-type">
-      <option value="values">Old school statistical clustering</option>
+      <option value="embedding">Vector embedding (k-means)</option>
+      <option value="values">Values (k-means)</option>
       <option value="llm_gemini">LLM Gemini</option>
       <option value="llm_claude" selected>LLM Claude</option>
     </select>
@@ -125,7 +130,7 @@
   </div>
 
   <main>
-    <p class="summary-bar" id="summary-bar"></p>
+    <p class="summary-bar" id="summary-bar" style="display:none"></p>
     <div id="main-content"></div>
   </main>
 

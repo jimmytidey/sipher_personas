@@ -187,3 +187,104 @@ def build_user_prompt(
         f'  "assignments": array of exactly {len(profiles_weights)} integers, each in the range 0 to len(clusters)-1, '
         f"one per profile in the same order."
     )
+
+
+# ── Cluster-labelling helpers ─────────────────────────────────────────────────
+
+LABEL_SYSTEM_PROMPT = (
+    "You are a social scientist naming pre-computed demographic clusters for a UK "
+    "local-area population study. "
+    "Each cluster is described by its aggregate statistics. "
+    "Your task is to give every cluster in the group a vivid, specific, plain-English name "
+    "that captures what makes that cluster distinctive *relative to the others in the same group*. "
+    "Good names are concrete and descriptive: 'Young South Asian Renters' or "
+    "'Older White Homeowners' beat 'Group A' or 'Mixed Demographics'. "
+    "Cluster names must be plain text: no quotes, commas within names, or line breaks. "
+    "IMPORTANT: Your response must be a raw JSON object only. "
+    "Do NOT wrap it in code fences. Do NOT include any explanation outside the JSON."
+)
+
+
+def _fmt_row(row: "pd.Series") -> str:
+    """Format a single cluster-summary row as a compact readable stat block."""
+    parts: list[str] = []
+
+    # Size
+    parts.append(f"  population: {int(row['size']):,}  (n respondents: {int(row['n_respondents'])})")
+
+    # Continuous
+    if "age" in row and not _isnan(row["age"]):
+        parts.append(f"  age (mean): {row['age']}")
+    if "health" in row and not _isnan(row["health"]):
+        health_labels = {1: "Excellent", 2: "Very good", 3: "Good", 4: "Fair", 5: "Poor"}
+        hval = row["health"]
+        hlabel = health_labels.get(round(float(hval)), str(hval))
+        parts.append(f"  health (mean): {hval} ({hlabel})")
+
+    # Categorical
+    for col in ("sex_dv", "racel_dv", "hiqual_dv", "marstat_dv", "tenure_dv", "hhtype_dv"):
+        val = row.get(col)
+        pct = row.get(f"{col}_pct")
+        if val is not None and not _isnan(val):
+            line = f"  {col}: {val} ({int(pct)}%)" if pct is not None and not _isnan(pct) else f"  {col}: {val}"
+            val2 = row.get(f"{col}_2")
+            pct2 = row.get(f"{col}_2_pct")
+            if val2 is not None and not _isnan(val2):
+                line += f", {val2} ({int(pct2)}%)"
+            parts.append(line)
+
+    return "\n".join(parts)
+
+
+def _isnan(v) -> bool:
+    try:
+        import math
+        return math.isnan(float(v))
+    except (TypeError, ValueError):
+        return v is None
+
+
+def build_label_prompt(
+    group_summary: "pd.DataFrame",
+    group_label: str,
+    la_name: str,
+    employment_group: str | None = None,
+) -> str:
+    """
+    Build the user-turn prompt for a labelling call.
+
+    ``group_summary`` is a slice of the summary DataFrame for one LA × group,
+    with columns produced by ``make_cluster_summary``.  Each row becomes a
+    labelled stat block; the LLM must return one label per cluster.
+
+    Returns the prompt string.  Expected JSON response shape::
+
+        {"labels": ["Name for cluster 1", "Name for cluster 2", ...]}
+    """
+    n = len(group_summary)
+    header = (
+        f"Context: {la_name}"
+        + (f" — {group_label}" if group_label else "")
+        + (f" (employment group: {employment_group})" if employment_group else "")
+        + f"\n\nThere are {n} clusters in this group. "
+        "Give each one a vivid, specific name and a 1–2 sentence plain-English description "
+        "that captures what makes that cluster distinctive relative to the others. "
+        "Names should be concrete and specific (3–6 words). "
+        "Descriptions should read naturally and mention the key demographic characteristics."
+    )
+
+    blocks: list[str] = []
+    for _, row in group_summary.iterrows():
+        cid = int(row["cluster_id"])
+        blocks.append(f"Cluster {cid}:\n{_fmt_row(row)}")
+
+    body = "\n\n".join(blocks)
+
+    footer = (
+        f'\nReturn a raw JSON object with exactly two keys:\n'
+        f'  "labels": an array of exactly {n} plain-text name strings, one per cluster in the order listed above.\n'
+        f'  "descriptions": an array of exactly {n} plain-text description strings (1–2 sentences each), same order.\n'
+        "No code fences, no other keys."
+    )
+
+    return f"{header}\n\n{body}\n{footer}"

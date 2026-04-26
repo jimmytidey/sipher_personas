@@ -9,6 +9,7 @@ const currentLevel     = "local";
 let currentClusterType = "llm_claude";  // 'values' | 'llm_gemini' | 'llm_claude'
 let currentLadcd       = null;
 let allClusters        = [];
+let groupTotals        = {}; // group_label → total_population for current LA
 
 // ----- DOM refs -----
 const clusterTypeSelect = document.getElementById("cluster-type");
@@ -64,30 +65,40 @@ async function _applyState() {
 }
 
 // ----- Employment status grouping -----
-// Canonical display order for employment groups (jbstat labels from pipeline)
+// Maps numeric jbstat_eng group codes (as strings) to display labels.
+// Must match EMP_LABELS in data_pipeline/helpers/llm_prompts.py.
+const _EMP_GROUP_LABELS = {
+  "1": "Employed",
+  "3": "Unemployed",
+  "4": "Retired",
+  "5": "On leave",
+  "7": "Student / training",
+  "8": "Inactive",
+};
+
+// Canonical display order for employment groups
 const _EMP_ORDER = [
-  "Employed", "Self-employed", "Unemployed", "Retired",
-  "Student", "Maternity", "Family care", "LT sick/disabled", "Other",
+  "Employed", "Unemployed", "Retired", "On leave", "Student / training", "Inactive",
 ];
 
 // Colours keyed by group position in _EMP_ORDER
 const _EMP_PALETTE = [
-  "#0891b2", // Employed      — teal
-  "#7c3aed", // Self-employed — violet
-  "#dc2626", // Unemployed    — red
-  "#f59e0b", // Retired       — amber
-  "#10b981", // Student       — green
-  "#db2777", // Maternity     — pink
-  "#ea580c", // Family care   — orange
-  "#6b7280", // LT sick       — grey
-  "#4f46e5", // Other         — indigo
+  "#0891b2", // Employed          — teal
+  "#dc2626", // Unemployed        — red
+  "#f59e0b", // Retired           — amber
+  "#db2777", // On leave          — pink
+  "#10b981", // Student/training  — green
+  "#6b7280", // Inactive          — grey
 ];
 
 function _empGroup(cluster) {
-  // Prefer the explicit group column (set by HIERARCHICAL_CLUSTER in notebooks 14/15);
-  // fall back to the modal jbstat value that cluster_summary.py always writes.
+  // Resolve numeric group column (e.g. "1.0", "5.0") to a display label.
   const g = cluster.group;
-  if (g != null && String(g).trim() !== "" && String(g).trim() !== "None" && isNaN(Number(g))) return String(g).trim();
+  if (g != null && String(g).trim() !== "" && String(g).trim() !== "None") {
+    const key = String(Math.round(Number(g)));
+    if (_EMP_GROUP_LABELS[key]) return _EMP_GROUP_LABELS[key];
+  }
+  // Fall back to raw jbstat value if group is absent / unrecognised
   const j = cluster.jbstat;
   if (j != null && String(j).trim() !== "") return String(j).trim();
   return null;
@@ -146,7 +157,12 @@ async function loadClusters() {
   renderState("loading", "Loading clusters…");
   try {
     if (!currentLadcd) { renderState("empty", "Select a Local Authority."); return; }
-    allClusters = await apiFetch(`/local-clusters?ladcd=${currentLadcd}&cluster_type=${currentClusterType}`);
+    [allClusters] = await Promise.all([
+      apiFetch(`/local-clusters?ladcd=${currentLadcd}&cluster_type=${currentClusterType}`),
+      apiFetch(`/la-group-totals?ladcd=${currentLadcd}`).then(rows => {
+        groupTotals = Object.fromEntries(rows.map(r => [r.group_label, r.total_population]));
+      }).catch(() => { groupTotals = {}; }),
+    ]);
     _writeUrlState();
     renderClusters();
   } catch (e) {
@@ -163,22 +179,13 @@ function renderClusters() {
 
   const clusters = allClusters;
 
-  const methodLabel = { values: "Old school statistical clustering", llm_gemini: "LLM Gemini", llm_claude: "LLM Claude" }[currentClusterType] ?? currentClusterType;
+  const methodLabel = { embedding: "Vector embedding (k-means)", values: "Values (k-means)", llm_gemini: "LLM Gemini", llm_claude: "LLM Claude" }[currentClusterType] ?? currentClusterType;
   const groups = _sortedGroups(clusters);
   const isGrouped = groups.length > 0;
 
   const ladnm = clusters[0]?.ladnm ?? currentLadcd;
   const totalPop = allClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
-  if (isGrouped) {
-    summaryEl.innerHTML =
-      `<strong>${clusters.length}</strong> ${methodLabel} clusters across ` +
-      `<strong>${groups.length}</strong> employment groups · ` +
-      `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
-  } else {
-    summaryEl.innerHTML =
-      `<strong>${clusters.length}</strong> ${methodLabel} clusters · ` +
-      `<strong>${ladnm}</strong> · synthetic population <strong>${formatNum(totalPop)}</strong>`;
-  }
+  summaryEl.textContent = "";
 
   mainEl.innerHTML = "";
   const grid = document.createElement("div");
@@ -186,8 +193,15 @@ function renderClusters() {
 
   if (isGrouped) {
     groups.forEach(group => {
-      const groupClusters = clusters.filter(c => _empGroup(c) === group);
+      const groupClusters = clusters.filter(c => _empGroup(c) === group).sort((a, b) => (Number(b.size) || 0) - (Number(a.size) || 0));
       const groupPop = groupClusters.reduce((s, c) => s + (Number(c.size) || 0), 0);
+      const groupTotal = groupTotals[group] || 0;
+      const coveragePct = groupTotal > 0 ? ((groupPop / groupTotal) * 100).toFixed(1) : null;
+      const coverageStr = coveragePct && groupTotal > 0
+        ? ` · ${coveragePct}% of ${formatNum(groupTotal)} ${group.toLowerCase()} people in ${ladnm}`
+        : "";
+      // Attach clustered-group pop to each cluster for use in buildCard
+      groupClusters.forEach(c => { c._groupPop = groupPop; c._groupLabel = group; });
       const color = _groupColor(group);
 
       const header = document.createElement("div");
@@ -196,7 +210,7 @@ function renderClusters() {
       header.innerHTML = `
         <span class="group-dot" style="background:${color}"></span>
         <h2>${group}</h2>
-        <span class="group-count">${groupClusters.length} cluster${groupClusters.length !== 1 ? "s" : ""} · ${formatNum(Math.round(groupPop))} people</span>
+        <span class="group-count">${groupClusters.length} cluster${groupClusters.length !== 1 ? "s" : ""} · ${formatNum(Math.round(groupPop))} people clustered${coverageStr}</span>
         ${reasoningForGroup ? `<button class="reasoning-link">LLM reasoning</button>` : ""}
       `;
       if (reasoningForGroup) {
@@ -211,7 +225,7 @@ function renderClusters() {
       );
     });
   } else {
-    clusters.forEach(cluster => grid.appendChild(buildCard(cluster)));
+    [...clusters].sort((a, b) => (Number(b.size) || 0) - (Number(a.size) || 0)).forEach(cluster => grid.appendChild(buildCard(cluster)));
   }
 
   mainEl.appendChild(grid);
@@ -227,7 +241,12 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
   card.style.setProperty("--card-color", color);
 
   const popSize  = Number(cluster.size);
-  const pctLabel = cluster.pct_of_la != null
+  const groupPop = Number(cluster._groupPop) || 0;
+  const groupLabel = cluster._groupLabel || null;
+  const pctOfGroup = groupPop > 0 && !isNaN(popSize)
+    ? `${((popSize / groupPop) * 100).toFixed(1)}% of clustered ${groupLabel ?? "group"}`
+    : null;
+  const pctOfLa = cluster.pct_of_la != null
     ? `${cluster.pct_of_la}% of LA`
     : cluster.size != null
       ? (() => {
@@ -238,7 +257,7 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
         })()
       : null;
 
-  const sizeLabel = pctLabel ?? (isNaN(popSize) ? "—" : `${formatNum(Math.round(popSize))} people`);
+  const sizeLabel = pctOfGroup ?? pctOfLa ?? (isNaN(popSize) ? "—" : `${formatNum(Math.round(popSize))} people`);
   const popCountLabel = isNaN(popSize) ? null : `${formatNum(Math.round(popSize))} synthetic population records`;
 
   // National clusters have full demographic stats; local clusters have size only for now
@@ -246,6 +265,7 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
 
   const STAT_DEFS = [
     { key: "age",          label: "Age (mean)",                    unit: " yrs", round: 1 },
+    { key: "sex_dv",       label: "Sex",                           pctKey: "sex_dv_pct",      key2: "sex_dv_2",      pct2Key: "sex_dv_2_pct" },
     { key: "jbstat",       label: "Employment status",             pctKey: "jbstat_pct",      key2: "jbstat_2",      pct2Key: "jbstat_2_pct" },
     { key: "racel_dv",     label: "Ethnicity (modal)",             pctKey: "racel_dv_pct",    key2: "racel_dv_2",    pct2Key: "racel_dv_2_pct" },
     { key: "hiqual_dv",    label: "Qualification (modal)",         pctKey: "hiqual_dv_pct",   key2: "hiqual_dv_2",   pct2Key: "hiqual_dv_2_pct" },
@@ -296,7 +316,6 @@ function buildCard(cluster, { groupColor = null, groupIndex = null } = {}) {
 
   card.innerHTML = `
     <div class="card-head">
-      <div class="cluster-badge" style="background:${color}">${badgeLabel}</div>
       <div class="card-head-text">
         <div class="card-title">${cluster.tribe_label}</div>
         <span class="card-size">${sizeLabel}</span>

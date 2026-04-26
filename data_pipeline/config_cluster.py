@@ -22,6 +22,8 @@ TEST_LA_CODES = [
     "E09000019",  # Islington
     "E09000018",  # Hounslow
     "E09000025",  # Newham
+    "E06000047",  # County Durham
+    "E06000009",  # Blackpool
 ]
 
 # ── Hierarchical clustering ────────────────────────────────────────────────────

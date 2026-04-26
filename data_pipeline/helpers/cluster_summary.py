@@ -22,16 +22,23 @@ _CONTINU_VARS = [
 ]
 
 
-def _label_maps_from_config() -> dict[str, dict[float, str]]:
+def _label_maps_from_config() -> tuple[dict, dict]:
+    """Return (category_maps, group_maps) where:
+    - category_maps: {base: {float_code: label}} from 'categories' — for raw columns
+    - group_maps:    {base: {float_code: label}} from 'group_labels' — for _eng columns
+    """
     try:
         import data_pipeline.config_variables as cv  # noqa: PLC0415
-        out: dict[str, dict[float, str]] = {}
+        cat_out: dict[str, dict[float, str]] = {}
+        grp_out: dict[str, dict[float, str]] = {}
         for base, vdef in cv.VARIABLES.items():
-            src = vdef.get("categories") or vdef.get("group_labels") or {}
-            out[base] = {float(k): str(v) for k, v in src.items()}
-        return out
+            cats = vdef.get("categories") or {}
+            grps = vdef.get("group_labels") or {}
+            cat_out[base] = {float(k): str(v) for k, v in cats.items()}
+            grp_out[base] = {float(k): str(v) for k, v in grps.items()}
+        return cat_out, grp_out
     except Exception:
-        return {}
+        return {}, {}
 
 
 def make_cluster_summary(
@@ -48,7 +55,7 @@ def make_cluster_summary(
         age (mean), health (mean)
         <base>, <base>_pct  for each categorical variable in _CATEG_VARS
     """
-    label_maps = _label_maps_from_config()
+    category_maps, group_maps = _label_maps_from_config()
     rows: list[dict] = []
 
     for cluster_id, grp in df.groupby(cluster_col):
@@ -71,11 +78,18 @@ def make_cluster_summary(
                     rec[out_key] = round(float(vals.mean()), 1)
 
         # Categorical modal value + percentage
-        # Prefer raw numeric column (what the LLM was given) over _eng string labels.
+        # For jbstat prefer the _eng column (remapped group codes 1/3/4/5/7/8)
+        # over the raw column (fine-grained codes that include e.g. 6=Family care).
+        # For all other variables prefer the raw numeric column.
         for base in _CATEG_VARS:
             eng_col = f"{wave}_{base}_eng"
             raw_col = f"{wave}_{base}"
-            col = raw_col if raw_col in grp.columns else (eng_col if eng_col in grp.columns else None)
+            if base == "jbstat":
+                col = eng_col if eng_col in grp.columns else (raw_col if raw_col in grp.columns else None)
+                label_maps = group_maps   # _eng values match group_labels keys
+            else:
+                col = raw_col if raw_col in grp.columns else (eng_col if eng_col in grp.columns else None)
+                label_maps = category_maps  # raw values match categories keys
             if col is None:
                 continue
             vals = pd.to_numeric(grp[col], errors="coerce").dropna()

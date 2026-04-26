@@ -15,6 +15,7 @@ from data_pipeline.helpers.llm_prompts import (
     SYSTEM_PROMPT,
     build_user_prompt,
     sanitise_name,
+    resolve_emp_label,
 )
 
 # ── Profile encoding ──────────────────────────────────────────────────────────
@@ -113,6 +114,11 @@ def load_and_prepare(
         n_dropped = n_before - len(df_merged)
         if n_dropped:
             print(f"  Dropped {n_dropped:,} rows with missing/unknown group value.", flush=True)
+        # Map numeric jbstat group codes → standard human-readable labels so that
+        # the CSV output matches notebooks 11 and 12 (e.g. 1.0 → "Employed").
+        df_merged["group"] = df_merged["group"].map(
+            lambda v: resolve_emp_label(v) or str(int(float(v)))
+        )
     print(f"  Merged: {len(df_merged):,} rows", flush=True)
 
     print("  Building compact profile encodings …", flush=True)

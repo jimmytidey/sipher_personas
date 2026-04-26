@@ -276,9 +276,15 @@ def local_las(
                 f"Run data_pipeline/{step_map.get(cluster_type, '?')}_*.ipynb to generate it."
             ),
         )
-    df = pd.read_csv(csv_path, usecols=["ladcd", "ladnm"], dtype=str)
+    try:
+        df = pd.read_csv(csv_path, dtype=str)
+        df.columns = df.columns.str.strip()
+    except Exception:
+        return []
+    if "ladcd" not in df.columns or "ladnm" not in df.columns:
+        return []
     agg = (
-        df.drop_duplicates("ladcd")
+        df[["ladcd", "ladnm"]].drop_duplicates("ladcd")
         .sort_values("ladnm")
         .rename(columns={"ladcd": "code", "ladnm": "name"})
     )
@@ -317,6 +323,19 @@ def local_clusters(
         la_df["pct_of_la"] = (la_df["size"] / total_pop * 100).round(1)
 
     return la_df.where(la_df.notna(), other=None).to_dict(orient="records")
+
+
+@app.get("/la-group-totals")
+def la_group_totals(
+    ladcd: str = Query(..., description="LA code, e.g. E09000025"),
+) -> list[dict[str, Any]]:
+    """Total synthetic population per employment group for one LA."""
+    path = _CLUSTERS_DIR / "la_group_totals.csv"
+    if not path.exists():
+        raise HTTPException(status_code=404, detail="la_group_totals.csv not found. Run generate_la_group_totals.py.")
+    df = pd.read_csv(path, dtype={"ladcd": str})
+    result = df[df["ladcd"] == ladcd]
+    return result.where(result.notna(), other=None).to_dict(orient="records")
 
 
 @app.get("/national-clusters")
