@@ -6,7 +6,7 @@ const API_BASE = window.location.port === "3000" ? "http://localhost:8000" : "";
 
 // ----- State -----
 const currentLevel     = "local";
-let currentClusterType = "llm_claude";  // 'values' | 'llm_gemini' | 'llm_claude'
+let currentClusterType = "values";  // 'values' | 'embedding' | 'llm_gemini' | 'llm_claude'
 let currentLadcd       = null;
 let allClusters        = [];
 let groupTotals        = {}; // group_label → total_population for current LA
@@ -61,6 +61,7 @@ window.addEventListener("popstate", async () => {
 
 // Apply current state vars to the UI and fetch — shared by init + popstate
 async function _applyState() {
+  updateMethodDescription(currentClusterType);
   await populateLaDropdown(currentLadcd);
 }
 
@@ -122,9 +123,38 @@ function _groupColor(groupName) {
   return i >= 0 ? _EMP_PALETTE[i] : "#4f46e5";
 }
 
+// ----- Method descriptions -----
+const _METHOD_DESCRIPTIONS = {
+  values: `<p>This approach uses classic K-means clustering on the Sipher data to produce representative personas, then uses Gemini to label and write a description of the clusters.</p>
+<p>Of the four approaches, this is the most traditional and the most transparent — the K-means algorithm is simple maths with limited potential for unknown biases to creep in.</p>
+<p>It is also the lowest cost and quickest to run. On the other hand, it might not be making the most of LLMs' capacity for processing the dataset.</p>`,
+  embedding: `<p>In this approach, vector embeddings are created using the natural language descriptions of people from the population and then the vectors are clustered.</p>
+<p>Further testing would be needed to evaluate this in comparison with the clustering based on the demographic stats. Superficially, the results are quite similar to the Values (K-means) approach.</p>`,
+  llm_gemini: `<p><strong>These results are not statistically valid.</strong> This clustering approach sent descriptions of the 100 most prevalent profiles to Gemini and asked it to cluster them. (ChatGPT was also tried but would just hang.)</p>
+<p>The finding: scaling this approach to a large population (over, say, 500) would be expensive and challenging, but it could be used on smaller population segments.</p>
+<p>This maximises the input of the LLM, which may beneficially draw on the LLM's background social understanding at the cost of introducing bias and reducing transparency.</p>`,
+  llm_claude: `<p><strong>These results are not statistically valid.</strong> This clustering approach sent descriptions of the 100 most prevalent profiles to Claude and asked it to cluster them. (ChatGPT was also tried but would just hang.)</p>
+<p>The finding: scaling this approach to a large population (over, say, 500) would be expensive and challenging, but it could be used on smaller population segments.</p>
+<p>This maximises the input of the LLM, which may beneficially draw on the LLM's background social understanding at the cost of introducing bias and reducing transparency.</p>`,
+};
+
+const _methodDescEl     = document.getElementById("method-description");
+const _methodDescInner  = _methodDescEl.querySelector(".method-description-inner");
+
+function updateMethodDescription(type) {
+  const html = _METHOD_DESCRIPTIONS[type];
+  if (html) {
+    _methodDescInner.innerHTML = html;
+    _methodDescEl.style.display = "";
+  } else {
+    _methodDescEl.style.display = "none";
+  }
+}
+
 // ----- Type / LA change handlers -----
 clusterTypeSelect.addEventListener("change", async () => {
   currentClusterType = clusterTypeSelect.value;
+  updateMethodDescription(currentClusterType);
   await populateLaDropdown(currentLadcd);   // keep LA selection when switching type
 });
 

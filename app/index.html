@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>UK population personas</title>
-  <link rel="stylesheet" href="style.css?v=24" />
+  <title>UK population personas — clustering prototype</title>
+  <link rel="stylesheet" href="style.css?v=25" />
 </head>
 <body>
 
@@ -13,11 +13,10 @@
     <div class="modal-box">
       <h2 id="modal-title">About this project</h2>
       <div class="modal-body">
-        <p>There is lots of interest in "synthetic user" research, where LLMs are used to simulate responses to interviews or surveys. These simulations are often "black boxes"—combining data in ways that are hard to verify, which creates significant concerns in public sector work.</p>
-        <p>Rather than asking an LLM to simulate human behavior, this prototype uses LLMs as a tool to cluster and synthesise patterns from verifiable data. I'm using the SIPHER dataset (derived from the UK Census and the UK Household Longitudinal Study) to generate representative "personas" at the Local Authority level.</p>
-        <p><strong>Current Scope:</strong> To explore the datasets and LLM capabilities, this prototype uses data for four London boroughs, plus two other LAs to give some more diversity.</p>
-        <p>Could the analysis of the data be affected by biases in LLMs? Yes, absolutely, and one goal of this project is to explore that issue.</p>
-        <p>See <a href="#" id="about-to-research">Research Design</a> and <a href="#" id="about-to-methodology">Methodology</a> for more information.</p>
+        <p>There is growing interest in "synthetic user" research, where LLMs are used to simulate responses to interviews or surveys. These models often draw on opaque training data, making it difficult to verify the origins or logic behind the resulting insights.</p>
+        <p>I built this project to test a more transparent alternative. Instead of asking an LLM to "simulate" a person, I am using LLMs to process and synthesize patterns from high quality survey data. I am using the SIPHER dataset (derived from the UK Census and the UK Household Longitudinal Study) to generate representative personas at the local authority level. My goal is to create a tool where researchers can see how data is processed.</p>
+        <p>This prototype currently shows six local authorities – running the processing pipeline is moderately expensive so I've limited the scope. I've demonstrated four approaches to using LLMs to create personas.</p>
+        <p>See my <a href="#" id="about-to-research">Research Design</a> and <a href="#" id="about-to-methodology">Methodology</a> to learn more about my approach to building accountable AI for public sector research.</p>
       </div>
       <button id="modal-close" class="modal-close-btn">Got it</button>
     </div>
@@ -103,7 +102,7 @@
   </div>
 
   <header>
-    <h1>UK population personas</h1>
+    <h1>UK population personas — clustering prototype</h1>
     <div class="header-actions">
       <button id="about-btn" class="about-btn">About</button>
       <button id="methodology-btn" class="about-btn">Methodology</button>
@@ -115,10 +114,10 @@
   <div class="controls">
     <label for="cluster-type">Cluster method</label>
     <select id="cluster-type">
+      <option value="values" selected>Values (k-means)</option>
       <option value="embedding">Vector embedding (k-means)</option>
-      <option value="values">Values (k-means)</option>
       <option value="llm_gemini">LLM Gemini</option>
-      <option value="llm_claude" selected>LLM Claude</option>
+      <option value="llm_claude">LLM Claude</option>
     </select>
 
     <span id="la-control" style="display:flex; align-items:center; gap:8px;">
@@ -130,11 +129,14 @@
   </div>
 
   <main>
+    <div id="method-description" class="method-description" style="display:none">
+      <div class="method-description-inner"></div>
+    </div>
     <p class="summary-bar" id="summary-bar" style="display:none"></p>
     <div id="main-content"></div>
   </main>
 
-  <script src="app.js?v=42"></script>
+  <script src="app.js?v=43"></script>
   <script>
     (function () {
       const modal    = document.getElementById('about-modal');

@@ -196,6 +196,28 @@ select:focus { outline: 2px solid var(--accent); border-color: transparent; }
   color: var(--tab-color, var(--accent));
 }
 
+/* ----- Method description banner ----- */
+.method-description {
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 16px 20px;
+  margin-top: 24px;
+  margin-bottom: 30px;
+  width: 50%;
+}
+.method-description-inner {
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--text-muted);
+}
+.method-description-inner p {
+  margin: 0 0 10px;
+  break-inside: avoid;
+}
+.method-description-inner p:last-child { margin-bottom: 0; }
+
 /* ----- Main content ----- */
 main {
   padding: 24px;
